@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "name": "DroneTraining",
+  "maps": [
+    {
+      "name": "Flight",
+      "id": "838bf5d5-b6d1-47fb-8290-aa5409a4fd12",
+      "actions": [
+        { "name": "Roll", "type": "Value", "id": "597e6d03-fd8d-42c2-b438-082d18279094", "expectedControlType": "Axis" },
+        { "name": "Pitch", "type": "Value", "id": "9af8ed47-cc57-45f7-9d08-f3af6896f9da", "expectedControlType": "Axis" },
+        { "name": "Throttle", "type": "Value", "id": "90e0b910-8af8-41e5-a993-4c2fe9bb4f98", "expectedControlType": "Axis" },
+        { "name": "Yaw", "type": "Value", "id": "ff5bfa1d-7e6d-4bce-91fe-6590bc6f4a82", "expectedControlType": "Axis" },
+        { "name": "ModeCine", "type": "Button", "id": "440400a6-11ba-4123-95a9-4e2057de72c0", "expectedControlType": "Button" },
+        { "name": "ModeNormal", "type": "Button", "id": "7ff0f665-e6d7-43ed-bc1f-7c10f6ecb305", "expectedControlType": "Button" },
+        { "name": "ModeSport", "type": "Button", "id": "7742049c-bd06-4c09-a58a-6ecf0055b8df", "expectedControlType": "Button" }
+      ],
+      "bindings": [
+        { "path": "<Joystick>/x", "action": "Roll" },
+        { "path": "<Gamepad>/leftStick/x", "action": "Roll" },
+        { "path": "<Keyboard>/a", "action": "Roll", "isPartOfComposite": true, "name": "negative" },
+        { "path": "<Keyboard>/d", "action": "Roll", "isPartOfComposite": true, "name": "positive" },
+        { "path": "<Joystick>/y", "action": "Pitch" },
+        { "path": "<Gamepad>/leftStick/y", "action": "Pitch" },
+        { "path": "<Joystick>/z", "action": "Throttle" },
+        { "path": "<Gamepad>/rightTrigger", "action": "Throttle" },
+        { "path": "<Joystick>/rx", "action": "Yaw" },
+        { "path": "<Gamepad>/rightStick/x", "action": "Yaw" },
+        { "path": "<Keyboard>/1", "action": "ModeCine" },
+        { "path": "<Keyboard>/2", "action": "ModeNormal" },
+        { "path": "<Keyboard>/3", "action": "ModeSport" }
+      ]
+    }
+  ],
+  "controlSchemes": []
+}
