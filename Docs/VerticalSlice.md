@@ -36,14 +36,14 @@ The most important tuning values are exposed on ScriptableObjects and controller
 
 - `maxHorizontalSpeed`
 - `horizontalAcceleration`
-- `horizontalBrakeAcceleration`
+- `horizontalStopStrength`
 - `maxVerticalSpeed`
 - `verticalAcceleration`
 - `maxYawRateDegrees`
 - `tiltLimitDegrees`
 - `tiltSmoothing`
-- `inputDeadzone`
-- `inputExpo`
+- `stickDeadzone`
+- `stickExpo`
 - `hoverBoxSize` / `targetAltitude`
 
 These values are intentionally inspector-driven so the classroom feel can be tuned without rewriting control logic.

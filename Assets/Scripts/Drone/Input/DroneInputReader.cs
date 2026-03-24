@@ -12,8 +12,16 @@ namespace DroneSim.Drone.Input
         public DroneMode RequestedMode;
     }
 
+    /// <summary>
+    /// Purpose: Reads device input through Unity Input System and exposes a normalized input frame.
+    /// Does NOT: decide drone physics, mode tuning, or stabilization behavior.
+    /// Fits in sim: first live runtime stage before controller logic.
+    /// Depends on: DroneInputConfig binding/filter fields and Unity InputAction runtime.
+    /// </summary>
     public class DroneInputReader : MonoBehaviour
     {
+        [Header("Configuration")]
+        [Tooltip("Input profile that defines axis bindings, deadzone, expo, and smoothing.")]
         [SerializeField] private DroneInputConfig config;
 
         private InputAction rollAction;
@@ -36,15 +44,9 @@ namespace DroneSim.Drone.Input
             RebuildActions();
         }
 
-        private void OnEnable()
-        {
-            RebuildActions();
-        }
+        private void OnEnable() => RebuildActions();
 
-        private void OnDisable()
-        {
-            DisableActions();
-        }
+        private void OnDisable() => DisableActions();
 
         private void Update()
         {
@@ -59,7 +61,7 @@ namespace DroneSim.Drone.Input
                 ReadAxis(yawAction),
                 ReadThrottle());
 
-            float smoothing = 1f - Mathf.Exp(-config.inputResponse * Time.unscaledDeltaTime);
+            float smoothing = 1f - Mathf.Exp(-config.inputSmoothing * Time.unscaledDeltaTime);
             smoothedAxes = Vector4.Lerp(smoothedAxes, rawAxes, smoothing);
 
             currentInput.Roll = smoothedAxes.x;
@@ -96,13 +98,13 @@ namespace DroneSim.Drone.Input
 
             float value = action.ReadValue<float>();
             float magnitude = Mathf.Abs(value);
-            if (magnitude <= config.deadzone)
+            if (magnitude <= config.stickDeadzone)
             {
                 return 0f;
             }
 
-            float normalized = Mathf.InverseLerp(config.deadzone, 1f, magnitude);
-            float curved = Mathf.Pow(normalized, config.expo);
+            float normalized = Mathf.InverseLerp(config.stickDeadzone, 1f, magnitude);
+            float curved = Mathf.Pow(normalized, config.stickExpo);
             return curved * Mathf.Sign(value);
         }
 
