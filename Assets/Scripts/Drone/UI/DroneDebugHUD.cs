@@ -16,6 +16,7 @@ namespace DroneSim.Drone.UI
 
         private GUIStyle panelStyle;
         private GUIStyle labelStyle;
+        private Texture2D panelBackground;
 
         public void Initialize(
             DroneInputReader reader,
@@ -81,14 +82,25 @@ namespace DroneSim.Drone.UI
             }
 
             panelStyle = new GUIStyle(GUI.skin.box);
-            panelStyle.normal.background = Texture2D.whiteTexture;
+            panelBackground = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+            panelBackground.SetPixel(0, 0, new Color(0.05f, 0.07f, 0.09f, 0.9f));
+            panelBackground.Apply();
+            panelStyle.normal.background = panelBackground;
 
             labelStyle = new GUIStyle(GUI.skin.label)
             {
                 fontSize = 14,
                 richText = false
             };
-            labelStyle.normal.textColor = Color.white;
+            labelStyle.normal.textColor = new Color(0.92f, 0.95f, 0.98f);
+        }
+
+        private void OnDestroy()
+        {
+            if (panelBackground != null)
+            {
+                Destroy(panelBackground);
+            }
         }
     }
 }

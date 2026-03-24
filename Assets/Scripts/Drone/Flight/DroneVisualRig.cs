@@ -64,13 +64,10 @@ namespace DroneSim.Drone.Flight
             Renderer renderer = part.GetComponent<Renderer>();
             if (renderer != null)
             {
-                Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-                if (shader == null)
-                {
-                    shader = Shader.Find("Standard");
-                }
-
-                Material material = new Material(shader);
+                Material baseMaterial = renderer.sharedMaterial;
+                Material material = baseMaterial != null
+                    ? new Material(baseMaterial)
+                    : new Material(Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
                 material.color = color;
                 renderer.sharedMaterial = material;
             }

@@ -87,15 +87,7 @@ namespace DroneSim.Drone.Bootstrap
             Renderer renderer = ground.GetComponent<Renderer>();
             if (renderer != null)
             {
-                Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-                if (shader == null)
-                {
-                    shader = Shader.Find("Standard");
-                }
-
-                Material material = new Material(shader);
-                material.color = new Color(0.21f, 0.26f, 0.22f);
-                renderer.sharedMaterial = material;
+                renderer.sharedMaterial = CreateCompatibleMaterial(renderer, new Color(0.21f, 0.26f, 0.22f));
             }
         }
 
@@ -146,15 +138,7 @@ namespace DroneSim.Drone.Bootstrap
             Renderer renderer = marker.GetComponent<Renderer>();
             if (renderer != null)
             {
-                Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-                if (shader == null)
-                {
-                    shader = Shader.Find("Standard");
-                }
-
-                Material material = new Material(shader);
-                material.color = color;
-                renderer.sharedMaterial = material;
+                renderer.sharedMaterial = CreateCompatibleMaterial(renderer, color);
             }
         }
 
@@ -167,16 +151,19 @@ namespace DroneSim.Drone.Bootstrap
             Renderer renderer = edge.GetComponent<Renderer>();
             if (renderer != null)
             {
-                Shader shader = Shader.Find("Universal Render Pipeline/Lit");
-                if (shader == null)
-                {
-                    shader = Shader.Find("Standard");
-                }
-
-                Material material = new Material(shader);
-                material.color = new Color(0.3f, 0.9f, 0.9f);
-                renderer.sharedMaterial = material;
+                renderer.sharedMaterial = CreateCompatibleMaterial(renderer, new Color(0.3f, 0.9f, 0.9f));
             }
+        }
+
+        private static Material CreateCompatibleMaterial(Renderer renderer, Color color)
+        {
+            Material baseMaterial = renderer.sharedMaterial;
+            Material material = baseMaterial != null
+                ? new Material(baseMaterial)
+                : new Material(Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
+
+            material.color = color;
+            return material;
         }
     }
 
