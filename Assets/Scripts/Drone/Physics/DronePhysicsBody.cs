@@ -2,9 +2,17 @@ using UnityEngine;
 
 namespace DroneSim.Drone.Physics
 {
+    /// <summary>
+    /// Purpose: Thin Rigidbody wrapper for applying controller commands and exposing readable flight state.
+    /// Does NOT: choose control targets or mode behavior.
+    /// Fits in sim: physics plant layer used by controller, training, telemetry, and HUD.
+    /// Depends on: Unity Rigidbody configured for upright stabilized drone behavior.
+    /// </summary>
     [RequireComponent(typeof(Rigidbody))]
     public class DronePhysicsBody : MonoBehaviour
     {
+        [Header("Physics reference")]
+        [Tooltip("Rigidbody used as the simulated drone body.")]
         [SerializeField] private Rigidbody body;
 
         public Rigidbody Body => body;

@@ -2,9 +2,19 @@ using UnityEngine;
 
 namespace DroneSim.Drone.Flight
 {
+    /// <summary>
+    /// Purpose: Ensures a lightweight visual drone model exists, including a tilt root for attitude feedback.
+    /// Does NOT: control flight or physics.
+    /// Fits in sim: visual representation layer driven indirectly by controller tilt updates.
+    /// Depends on: DJIStyleFlightController using TiltRoot for local visual pitch/roll.
+    /// </summary>
     public class DroneVisualRig : MonoBehaviour
     {
+        [Header("Visual rig")]
+        [Tooltip("Child transform that receives visual pitch/roll tilt from the controller.")]
         [SerializeField] private Transform tiltRoot;
+
+        [Tooltip("If true, placeholder visuals are auto-built on Awake when no mesh exists.")]
         [SerializeField] private bool buildOnAwake = true;
 
         public Transform TiltRoot => tiltRoot != null ? tiltRoot : transform;

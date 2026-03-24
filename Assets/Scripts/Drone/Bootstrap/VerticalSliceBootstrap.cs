@@ -7,17 +7,35 @@ using UnityEngine;
 
 namespace DroneSim.Drone.Bootstrap
 {
+    /// <summary>
+    /// Purpose: Runtime assembly entry point for the vertical-slice training scene.
+    /// Does NOT: implement flight dynamics itself.
+    /// Fits in sim: wiring layer that instantiates/initializes input, flight, physics, training, UI, and camera.
+    /// Depends on: resources (prefab/config assets) and core drone MonoBehaviours.
+    /// </summary>
     public class VerticalSliceBootstrap : MonoBehaviour
     {
         [Header("Resources")]
+        [Tooltip("Resources path for drone prefab. If missing, a basic runtime drone object is created.")]
         [SerializeField] private string dronePrefabResourcePath = "DroneTrainerDrone";
+
+        [Tooltip("Resources path for DroneInputConfig asset.")]
         [SerializeField] private string inputConfigResourcePath = "Configs/DroneInputConfig";
+
+        [Tooltip("Resources path for Cine mode config asset.")]
         [SerializeField] private string cineConfigResourcePath = "Configs/DroneModeCine";
+
+        [Tooltip("Resources path for Normal mode config asset.")]
         [SerializeField] private string normalConfigResourcePath = "Configs/DroneModeNormal";
+
+        [Tooltip("Resources path for Sport mode config asset.")]
         [SerializeField] private string sportConfigResourcePath = "Configs/DroneModeSport";
 
-        [Header("Layout")]
+        [Header("Initial layout")]
+        [Tooltip("Initial world spawn position of the drone.")]
         [SerializeField] private Vector3 droneSpawnPosition = new Vector3(0f, 1.25f, -4f);
+
+        [Tooltip("Initial follow camera offset from drone position.")]
         [SerializeField] private Vector3 cameraOffset = new Vector3(0f, 4f, -8f);
 
         private void Start()
@@ -167,6 +185,12 @@ namespace DroneSim.Drone.Bootstrap
         }
     }
 
+    /// <summary>
+    /// Purpose: Minimal smooth follow camera for the vertical slice.
+    /// Does NOT: handle collisions, advanced camera framing, or cinematic transitions.
+    /// Fits in sim: simple observer camera created by VerticalSliceBootstrap.
+    /// Depends on: target transform provided during Initialize.
+    /// </summary>
     public class SimpleFollowCamera : MonoBehaviour
     {
         private Transform target;
