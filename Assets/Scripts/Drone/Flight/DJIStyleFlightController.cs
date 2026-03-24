@@ -76,7 +76,7 @@ namespace DroneSim.Drone.Flight
             float yawBlend = 1f - Mathf.Exp(-config.yawResponse * Time.fixedDeltaTime);
             currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
 
-            Vector3 gravityAssist = Vector3.up * (-Physics.gravity.y * hoverGravityCompensationMultiplier);
+            Vector3 gravityAssist = Vector3.up * (-UnityEngine.Physics.gravity.y * hoverGravityCompensationMultiplier);
             lastCommandedAcceleration = worldAcceleration + gravityAssist + Vector3.up * verticalAcceleration;
             physicsBody.ApplyWorldAcceleration(lastCommandedAcceleration);
             physicsBody.ApplyYawStep(currentYawRate * Time.fixedDeltaTime);

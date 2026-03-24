@@ -75,7 +75,7 @@ namespace DroneSim.Drone.Bootstrap
 
         private static void EnsurePhysicsSettings()
         {
-            Physics.gravity = new Vector3(0f, -9.81f, 0f);
+            UnityEngine.Physics.gravity = new Vector3(0f, -9.81f, 0f);
         }
 
         private void CreateGround()
