@@ -30,6 +30,7 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private GameObject sceneDrone;
         [SerializeField] private SimpleTrainingScenario sceneTrainingScenario;
         [SerializeField] private DroneDebugHUD sceneHud;
+        [SerializeField] private RawJoystickDiagnosticsOverlay sceneJoystickDiagnostics;
         [SerializeField] private Camera sceneCamera;
 
         [Header("Resources")]
@@ -66,6 +67,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneDrone = null;
                 sceneTrainingScenario = null;
                 sceneHud = null;
+                sceneJoystickDiagnostics = null;
                 sceneCamera = null;
             }
 
@@ -107,6 +109,7 @@ namespace DroneSim.Drone.Bootstrap
             SimpleTrainingScenario scenario = ResolveOrCreateTrainingScenario(physicsBody);
             DroneDebugHUD hud = ResolveOrCreateHud(inputReader, physicsBody, controller, scenario, telemetry);
             _ = hud;
+            ResolveOrCreateJoystickDiagnostics();
 
             EnsureGround();
             EnsureMarkers();
@@ -179,6 +182,23 @@ namespace DroneSim.Drone.Bootstrap
 
             sceneHud.Initialize(inputReader, physicsBody, controller, scenario, telemetry);
             return sceneHud;
+        }
+
+
+        private RawJoystickDiagnosticsOverlay ResolveOrCreateJoystickDiagnostics()
+        {
+            if (sceneJoystickDiagnostics == null)
+            {
+                sceneJoystickDiagnostics = FindFirstObjectByType<RawJoystickDiagnosticsOverlay>();
+            }
+
+            if (sceneJoystickDiagnostics == null)
+            {
+                GameObject diagnosticsObject = new GameObject("RawJoystickDiagnostics");
+                sceneJoystickDiagnostics = diagnosticsObject.AddComponent<RawJoystickDiagnosticsOverlay>();
+            }
+
+            return sceneJoystickDiagnostics;
         }
 
         private static void EnsurePhysicsSettings()

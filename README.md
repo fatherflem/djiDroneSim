@@ -63,6 +63,30 @@ Mode switching defaults:
 
 Keyboard/gamepad fallback bindings are included for editor testing.
 
+
+## Raw joystick diagnostics overlay (temporary input debugging)
+
+A runtime diagnostics overlay is now available to inspect what Unity Input System reports from your radio/joystick without changing flight behavior.
+
+How to use:
+1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity` and press Play.
+2. The bootstrap creates `RawJoystickDiagnostics` automatically if it is missing.
+3. Toggle the overlay with **BackQuote** ( ` ) or **F1**.
+4. Move one stick axis at a time and watch:
+   - control name
+   - live value
+   - exact Input System path (for example `<Joystick>/x`)
+5. Axes above the configured threshold are highlighted, making it easier to identify active controls.
+
+Inspector options on `RawJoystickDiagnosticsOverlay`:
+- `Activity Threshold`: ignores tiny jitter and controls highlight/log behavior.
+- `Show Only Changing Controls`: shows only currently active axes/buttons.
+- `Log Moving Axes`: writes active axis path/value to Console with throttling.
+
+Tip for mapping Mode 2 sticks:
+- Move only one stick direction at a time and note which control path changes strongly (typically near ±1.0).
+- Record the four paths for: left horizontal, left vertical, right horizontal, right vertical.
+
 ## Input deadzone note
 
 A practical deadzone is often around **0.12-0.18** depending on radio jitter and calibration quality.
