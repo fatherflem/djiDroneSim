@@ -53,6 +53,17 @@ namespace DroneSim.Drone.Training
             droneBody = body;
         }
 
+
+        private void Reset()
+        {
+            droneBody = FindFirstObjectByType<DronePhysicsBody>();
+        }
+
+        private void Awake()
+        {
+            droneBody ??= FindFirstObjectByType<DronePhysicsBody>();
+        }
+
         private void Update()
         {
             if (droneBody == null)

@@ -48,6 +48,24 @@ namespace DroneSim.Drone.UI
             telemetryRecorder = recorder;
         }
 
+
+        private void Reset()
+        {
+            inputReader = FindFirstObjectByType<DroneInputReader>();
+            physicsBody = FindFirstObjectByType<DronePhysicsBody>();
+            flightController = FindFirstObjectByType<DJIStyleFlightController>();
+            trainingScenario = FindFirstObjectByType<SimpleTrainingScenario>();
+            telemetryRecorder = FindFirstObjectByType<TelemetryRecorder>();
+        }
+
+        private void Awake()
+        {
+            if (inputReader == null || physicsBody == null || flightController == null)
+            {
+                Reset();
+            }
+        }
+
         private void OnGUI()
         {
             if (inputReader == null || physicsBody == null || flightController == null)

@@ -15,12 +15,38 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 - A simple hover-box training drill plus telemetry/debug HUD.
 - Runtime bootstrap that can assemble a runnable test setup quickly.
 
-## Quick start (test scene / bootstrap)
+## Quick start (scene-authored default)
 
 1. Open the project in **Unity 6**.
 2. Open scene: `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 3. Press Play.
-4. The `VerticalSliceBootstrap` script creates/initializes the training environment, drone systems, and debug HUD.
+4. The scene now includes authored runtime objects (drone instance, training scenario, HUD), and bootstrap only fills in missing pieces as a fallback.
+
+## Scene + prefab workflow
+
+### What is scene-authored
+- `DroneTrainingVerticalSlice` now contains authored gameplay objects in the hierarchy:
+  - `DroneTrainerDrone` (the playable drone instance).
+  - `TrainingScenario` (`SimpleTrainingScenario`).
+  - `DebugHUD` (`DroneDebugHUD`).
+- These references are inspector-wired in the scene so Unity developers can inspect and tweak them directly.
+
+### What the prefab contains
+- `Assets/Resources/DroneTrainerDrone.prefab` contains the core drone stack:
+  - `Rigidbody` + collider
+  - `DroneVisualRig`
+  - `DronePhysicsBody`
+  - `DroneInputReader`
+  - `DJIStyleFlightController`
+  - `TelemetryRecorder`
+- The flight controller now auto-resolves its visual tilt root from `DroneVisualRig`, so dropping this prefab into a scene works without bootstrap-specific initialization.
+
+### When bootstrap is used
+- `VerticalSliceBootstrap` is now an **optional fallback/debug helper** with modes:
+  - `Disabled`
+  - `FallbackOnly` (default; only creates missing objects and wires dependencies)
+  - `ForceRuntimeBuild`
+- Use it when you want a quick runtime-built test setup, or when authored scene pieces are intentionally absent.
 
 ## Expected controller mapping (Mode 2)
 
