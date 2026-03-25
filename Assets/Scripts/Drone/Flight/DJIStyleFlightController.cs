@@ -73,6 +73,24 @@ namespace DroneSim.Drone.Flight
             sportConfig = sport;
         }
 
+
+        private void Reset()
+        {
+            AutoWireReferences();
+        }
+
+        private void Awake()
+        {
+            AutoWireReferences();
+        }
+
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+            {
+                AutoWireReferences();
+            }
+        }
         private void FixedUpdate()
         {
             if (inputReader == null || physicsBody == null || ActiveConfig == null)
@@ -131,6 +149,23 @@ namespace DroneSim.Drone.Flight
             Quaternion targetTilt = Quaternion.Euler(pitchTilt, 0f, rollTilt);
             float blend = 1f - Mathf.Exp(-config.tiltSmoothing * Time.fixedDeltaTime);
             visualTiltRoot.localRotation = Quaternion.Slerp(visualTiltRoot.localRotation, targetTilt, blend);
+        }
+
+
+        private void AutoWireReferences()
+        {
+            inputReader ??= GetComponent<DroneInputReader>();
+            physicsBody ??= GetComponent<DronePhysicsBody>();
+
+            if (visualTiltRoot == null)
+            {
+                DroneVisualRig visualRig = GetComponent<DroneVisualRig>();
+                if (visualRig != null)
+                {
+                    visualRig.EnsureVisuals();
+                    visualTiltRoot = visualRig.TiltRoot;
+                }
+            }
         }
 
         private DroneFlightModeConfig GetActiveConfig()

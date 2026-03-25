@@ -8,13 +8,30 @@ using UnityEngine;
 namespace DroneSim.Drone.Bootstrap
 {
     /// <summary>
-    /// Purpose: Runtime assembly entry point for the vertical-slice training scene.
+    /// Purpose: Optional runtime assembly helper for the vertical-slice scene.
     /// Does NOT: implement flight dynamics itself.
-    /// Fits in sim: wiring layer that instantiates/initializes input, flight, physics, training, UI, and camera.
-    /// Depends on: resources (prefab/config assets) and core drone MonoBehaviours.
+    /// Fits in sim: fallback wiring layer when scene-authored objects are missing.
+    /// Depends on: scene-authored references first, then Resources/config assets as fallback.
     /// </summary>
     public class VerticalSliceBootstrap : MonoBehaviour
     {
+        private enum BootstrapMode
+        {
+            Disabled = 0,
+            FallbackOnly = 1,
+            ForceRuntimeBuild = 2
+        }
+
+        [Header("Bootstrap mode")]
+        [Tooltip("Disabled keeps the scene fully authored. FallbackOnly creates only missing objects. ForceRuntimeBuild always rebuilds everything at runtime.")]
+        [SerializeField] private BootstrapMode bootstrapMode = BootstrapMode.FallbackOnly;
+
+        [Header("Scene-authored references (preferred)")]
+        [SerializeField] private GameObject sceneDrone;
+        [SerializeField] private SimpleTrainingScenario sceneTrainingScenario;
+        [SerializeField] private DroneDebugHUD sceneHud;
+        [SerializeField] private Camera sceneCamera;
+
         [Header("Resources")]
         [Tooltip("Resources path for drone prefab. If missing, a basic runtime drone object is created.")]
         [SerializeField] private string dronePrefabResourcePath = "DroneTrainerDrone";
@@ -32,32 +49,36 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private string sportConfigResourcePath = "Configs/DroneModeSport";
 
         [Header("Initial layout")]
-        [Tooltip("Initial world spawn position of the drone.")]
         [SerializeField] private Vector3 droneSpawnPosition = new Vector3(0f, 1.25f, -4f);
-
-        [Tooltip("Initial follow camera offset from drone position.")]
         [SerializeField] private Vector3 cameraOffset = new Vector3(0f, 4f, -8f);
 
         private void Start()
         {
+            if (bootstrapMode == BootstrapMode.Disabled)
+            {
+                return;
+            }
+
             EnsurePhysicsSettings();
-            CreateGround();
-            CreateMarkers();
-            EnsureLight();
+
+            if (bootstrapMode == BootstrapMode.ForceRuntimeBuild)
+            {
+                sceneDrone = null;
+                sceneTrainingScenario = null;
+                sceneHud = null;
+                sceneCamera = null;
+            }
 
             DroneInputConfig inputConfig = Resources.Load<DroneInputConfig>(inputConfigResourcePath);
             DroneFlightModeConfig cineConfig = Resources.Load<DroneFlightModeConfig>(cineConfigResourcePath);
             DroneFlightModeConfig normalConfig = Resources.Load<DroneFlightModeConfig>(normalConfigResourcePath);
             DroneFlightModeConfig sportConfig = Resources.Load<DroneFlightModeConfig>(sportConfigResourcePath);
 
-            GameObject dronePrefab = Resources.Load<GameObject>(dronePrefabResourcePath);
-            GameObject drone = dronePrefab != null
-                ? Instantiate(dronePrefab, droneSpawnPosition, Quaternion.identity)
-                : new GameObject("DroneRoot");
-
-            if (dronePrefab == null)
+            GameObject drone = ResolveOrCreateDrone();
+            if (drone == null)
             {
-                drone.transform.position = droneSpawnPosition;
+                Debug.LogError("VerticalSliceBootstrap could not find or create a drone.");
+                return;
             }
 
             DroneVisualRig visualRig = drone.GetComponent<DroneVisualRig>() ?? drone.AddComponent<DroneVisualRig>();
@@ -72,7 +93,10 @@ namespace DroneSim.Drone.Bootstrap
             physicsBody.Initialize(body);
 
             DroneInputReader inputReader = drone.GetComponent<DroneInputReader>() ?? drone.AddComponent<DroneInputReader>();
-            inputReader.Initialize(inputConfig);
+            if (inputReader.Config == null)
+            {
+                inputReader.Initialize(inputConfig);
+            }
 
             DJIStyleFlightController controller = drone.GetComponent<DJIStyleFlightController>() ?? drone.AddComponent<DJIStyleFlightController>();
             controller.Initialize(inputReader, physicsBody, visualRig.TiltRoot, cineConfig, normalConfig, sportConfig);
@@ -80,20 +104,149 @@ namespace DroneSim.Drone.Bootstrap
             TelemetryRecorder telemetry = drone.GetComponent<TelemetryRecorder>() ?? drone.AddComponent<TelemetryRecorder>();
             telemetry.Initialize(physicsBody, controller);
 
-            GameObject trainingObject = new GameObject("TrainingScenario");
-            SimpleTrainingScenario scenario = trainingObject.AddComponent<SimpleTrainingScenario>();
-            scenario.Initialize(physicsBody);
+            SimpleTrainingScenario scenario = ResolveOrCreateTrainingScenario(physicsBody);
+            DroneDebugHUD hud = ResolveOrCreateHud(inputReader, physicsBody, controller, scenario, telemetry);
+            _ = hud;
 
-            GameObject hudObject = new GameObject("DebugHUD");
-            DroneDebugHUD hud = hudObject.AddComponent<DroneDebugHUD>();
-            hud.Initialize(inputReader, physicsBody, controller, scenario, telemetry);
+            EnsureGround();
+            EnsureMarkers();
+            EnsureLight();
+            EnsureFollowCamera(drone.transform);
+        }
 
-            CreateFollowCamera(drone.transform);
+        private GameObject ResolveOrCreateDrone()
+        {
+            if (sceneDrone != null)
+            {
+                return sceneDrone;
+            }
+
+            DJIStyleFlightController authoredController = FindFirstObjectByType<DJIStyleFlightController>();
+            if (authoredController != null)
+            {
+                sceneDrone = authoredController.gameObject;
+                return sceneDrone;
+            }
+
+            GameObject dronePrefab = Resources.Load<GameObject>(dronePrefabResourcePath);
+            GameObject drone = dronePrefab != null
+                ? Instantiate(dronePrefab, droneSpawnPosition, Quaternion.identity)
+                : new GameObject("DroneRoot");
+
+            if (dronePrefab == null)
+            {
+                drone.transform.position = droneSpawnPosition;
+            }
+
+            sceneDrone = drone;
+            return drone;
+        }
+
+        private SimpleTrainingScenario ResolveOrCreateTrainingScenario(DronePhysicsBody physicsBody)
+        {
+            if (sceneTrainingScenario == null)
+            {
+                sceneTrainingScenario = FindFirstObjectByType<SimpleTrainingScenario>();
+            }
+
+            if (sceneTrainingScenario == null)
+            {
+                GameObject trainingObject = new GameObject("TrainingScenario");
+                sceneTrainingScenario = trainingObject.AddComponent<SimpleTrainingScenario>();
+            }
+
+            sceneTrainingScenario.Initialize(physicsBody);
+            return sceneTrainingScenario;
+        }
+
+        private DroneDebugHUD ResolveOrCreateHud(
+            DroneInputReader inputReader,
+            DronePhysicsBody physicsBody,
+            DJIStyleFlightController controller,
+            SimpleTrainingScenario scenario,
+            TelemetryRecorder telemetry)
+        {
+            if (sceneHud == null)
+            {
+                sceneHud = FindFirstObjectByType<DroneDebugHUD>();
+            }
+
+            if (sceneHud == null)
+            {
+                GameObject hudObject = new GameObject("DebugHUD");
+                sceneHud = hudObject.AddComponent<DroneDebugHUD>();
+            }
+
+            sceneHud.Initialize(inputReader, physicsBody, controller, scenario, telemetry);
+            return sceneHud;
         }
 
         private static void EnsurePhysicsSettings()
         {
             UnityEngine.Physics.gravity = new Vector3(0f, -9.81f, 0f);
+        }
+
+        private void EnsureGround()
+        {
+            if (GameObject.Find("Ground") != null)
+            {
+                return;
+            }
+
+            CreateGround();
+        }
+
+        private void EnsureMarkers()
+        {
+            if (GameObject.Find("HoverBoxEdge") != null || GameObject.Find("Marker") != null)
+            {
+                return;
+            }
+
+            CreateMarkers();
+        }
+
+        private void EnsureLight()
+        {
+            if (FindFirstObjectByType<Light>() != null)
+            {
+                return;
+            }
+
+            GameObject lightObject = new GameObject("Sun");
+            Light light = lightObject.AddComponent<Light>();
+            light.type = LightType.Directional;
+            light.intensity = 1.2f;
+            light.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
+        }
+
+        private void EnsureFollowCamera(Transform target)
+        {
+            if (sceneCamera == null)
+            {
+                sceneCamera = Camera.main;
+            }
+
+            if (sceneCamera == null)
+            {
+                GameObject cameraObject = new GameObject("TrainingCamera");
+                sceneCamera = cameraObject.AddComponent<Camera>();
+                sceneCamera.clearFlags = CameraClearFlags.Skybox;
+                sceneCamera.tag = "MainCamera";
+
+                GameObject listenerObject = new GameObject("AudioListener");
+                listenerObject.transform.SetParent(sceneCamera.transform, false);
+                listenerObject.AddComponent<AudioListener>();
+            }
+
+            if (sceneCamera.GetComponent<SimpleFollowCamera>() == null)
+            {
+                sceneCamera.gameObject.AddComponent<SimpleFollowCamera>();
+            }
+
+            sceneCamera.transform.position = target.position + cameraOffset;
+            sceneCamera.transform.LookAt(target.position + Vector3.up * 1.25f);
+            sceneCamera.GetComponent<SimpleFollowCamera>().Initialize(target, cameraOffset);
         }
 
         private void CreateGround()
@@ -120,31 +273,6 @@ namespace DroneSim.Drone.Bootstrap
             CreateHoverBoxEdge(new Vector3(1.5f, 0.02f, 0f), new Vector3(0.1f, 0.04f, 3f));
             CreateHoverBoxEdge(new Vector3(0f, 0.02f, -1.5f), new Vector3(3f, 0.04f, 0.1f));
             CreateHoverBoxEdge(new Vector3(0f, 0.02f, 1.5f), new Vector3(3f, 0.04f, 0.1f));
-        }
-
-        private void EnsureLight()
-        {
-            GameObject lightObject = new GameObject("Sun");
-            Light light = lightObject.AddComponent<Light>();
-            light.type = LightType.Directional;
-            light.intensity = 1.2f;
-            light.transform.rotation = Quaternion.Euler(50f, -30f, 0f);
-        }
-
-        private void CreateFollowCamera(Transform target)
-        {
-            GameObject cameraObject = new GameObject("TrainingCamera");
-            Camera camera = cameraObject.AddComponent<Camera>();
-            camera.clearFlags = CameraClearFlags.Skybox;
-            camera.transform.position = target.position + cameraOffset;
-            camera.transform.LookAt(target.position + Vector3.up * 1.25f);
-
-            GameObject listenerObject = new GameObject("AudioListener");
-            listenerObject.transform.SetParent(camera.transform, false);
-            listenerObject.AddComponent<AudioListener>();
-
-            camera.tag = "MainCamera";
-            cameraObject.AddComponent<SimpleFollowCamera>().Initialize(target, cameraOffset);
         }
 
         private void CreateMarker(Vector3 position, Color color)
@@ -185,12 +313,6 @@ namespace DroneSim.Drone.Bootstrap
         }
     }
 
-    /// <summary>
-    /// Purpose: Minimal smooth follow camera for the vertical slice.
-    /// Does NOT: handle collisions, advanced camera framing, or cinematic transitions.
-    /// Fits in sim: simple observer camera created by VerticalSliceBootstrap.
-    /// Depends on: target transform provided during Initialize.
-    /// </summary>
     public class SimpleFollowCamera : MonoBehaviour
     {
         private Transform target;

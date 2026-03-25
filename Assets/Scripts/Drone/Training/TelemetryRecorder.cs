@@ -50,6 +50,19 @@ namespace DroneSim.Drone.Training
             controller = flightController;
         }
 
+
+        private void Reset()
+        {
+            physicsBody = GetComponent<DronePhysicsBody>() ?? FindFirstObjectByType<DronePhysicsBody>();
+            controller = GetComponent<DJIStyleFlightController>() ?? FindFirstObjectByType<DJIStyleFlightController>();
+        }
+
+        private void Awake()
+        {
+            physicsBody ??= GetComponent<DronePhysicsBody>() ?? FindFirstObjectByType<DronePhysicsBody>();
+            controller ??= GetComponent<DJIStyleFlightController>() ?? FindFirstObjectByType<DJIStyleFlightController>();
+        }
+
         private void Update()
         {
             if (physicsBody == null || controller == null)
