@@ -34,14 +34,28 @@ namespace DroneSim.Drone.Input
 
         private DroneInputFrame currentInput;
         private Vector4 smoothedAxes;
+        private bool useExternalInput;
+        private DroneInputFrame externalInput;
 
         public DroneInputConfig Config => config;
         public DroneInputFrame CurrentInput => currentInput;
+        public bool UseExternalInput => useExternalInput;
 
         public void Initialize(DroneInputConfig inputConfig)
         {
             config = inputConfig;
             RebuildActions();
+        }
+
+        public void SetExternalInputEnabled(bool enabled)
+        {
+            useExternalInput = enabled;
+            smoothedAxes = Vector4.zero;
+        }
+
+        public void SetExternalInputFrame(DroneInputFrame frame)
+        {
+            externalInput = frame;
         }
 
         private void OnEnable() => RebuildActions();
@@ -50,6 +64,12 @@ namespace DroneSim.Drone.Input
 
         private void Update()
         {
+            if (useExternalInput)
+            {
+                currentInput = externalInput;
+                return;
+            }
+
             if (config == null || rollAction == null)
             {
                 return;
