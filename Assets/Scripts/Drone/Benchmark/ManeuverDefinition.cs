@@ -1,0 +1,83 @@
+using System;
+using System.Collections.Generic;
+using DroneSim.Drone.Input;
+using UnityEngine;
+
+namespace DroneSim.Drone.Benchmark
+{
+    [CreateAssetMenu(menuName = "DroneSim/Benchmark/Maneuver Definition", fileName = "ManeuverDefinition")]
+    public class ManeuverDefinition : ScriptableObject
+    {
+        [Serializable]
+        public struct InputSegment
+        {
+            [Min(0.01f)] public float duration;
+            [Range(-1f, 1f)] public float roll;
+            [Range(-1f, 1f)] public float pitch;
+            [Range(-1f, 1f)] public float throttle;
+            [Range(-1f, 1f)] public float yaw;
+        }
+
+        [Header("Metadata")]
+        public string maneuverName = "New Maneuver";
+        [TextArea] public string description = "";
+        public DroneMode flightMode = DroneMode.Normal;
+
+        [Header("Initial state")]
+        [Tooltip("World-space starting position before maneuver playback.")]
+        public Vector3 initialPosition = new Vector3(0f, 2f, 0f);
+
+        [Tooltip("Initial world yaw in degrees before maneuver playback.")]
+        public float initialYawDegrees;
+
+        [Header("Input sequence")]
+        public List<InputSegment> segments = new List<InputSegment>();
+
+        public float Duration
+        {
+            get
+            {
+                float total = 0f;
+                for (int i = 0; i < segments.Count; i++)
+                {
+                    total += Mathf.Max(0f, segments[i].duration);
+                }
+
+                return total;
+            }
+        }
+
+        public BenchmarkInputFrame Evaluate(float elapsed)
+        {
+            float timeCursor = 0f;
+            InputSegment activeSegment = default;
+            bool hasSegment = false;
+
+            for (int i = 0; i < segments.Count; i++)
+            {
+                InputSegment segment = segments[i];
+                float clampedDuration = Mathf.Max(0f, segment.duration);
+                if (elapsed <= timeCursor + clampedDuration)
+                {
+                    activeSegment = segment;
+                    hasSegment = true;
+                    break;
+                }
+
+                timeCursor += clampedDuration;
+                activeSegment = segment;
+                hasSegment = true;
+            }
+
+            return new BenchmarkInputFrame
+            {
+                Time = Mathf.Max(0f, elapsed),
+                Roll = hasSegment ? activeSegment.roll : 0f,
+                Pitch = hasSegment ? activeSegment.pitch : 0f,
+                Throttle = hasSegment ? activeSegment.throttle : 0f,
+                Yaw = hasSegment ? activeSegment.yaw : 0f,
+                Mode = flightMode
+            };
+        }
+    }
+}

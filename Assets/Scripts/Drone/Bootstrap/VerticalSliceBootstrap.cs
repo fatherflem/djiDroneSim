@@ -1,6 +1,7 @@
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
+using DroneSim.Drone.Benchmark;
 using DroneSim.Drone.Training;
 using DroneSim.Drone.UI;
 using UnityEngine;
@@ -31,6 +32,7 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private SimpleTrainingScenario sceneTrainingScenario;
         [SerializeField] private DroneDebugHUD sceneHud;
         [SerializeField] private RawJoystickDiagnosticsOverlay sceneJoystickDiagnostics;
+        [SerializeField] private BenchmarkRunner sceneBenchmarkRunner;
         [SerializeField] private Camera sceneCamera;
 
         [Header("Resources")]
@@ -68,6 +70,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneTrainingScenario = null;
                 sceneHud = null;
                 sceneJoystickDiagnostics = null;
+                sceneBenchmarkRunner = null;
                 sceneCamera = null;
             }
 
@@ -110,6 +113,7 @@ namespace DroneSim.Drone.Bootstrap
             DroneDebugHUD hud = ResolveOrCreateHud(inputReader, physicsBody, controller, scenario, telemetry);
             _ = hud;
             ResolveOrCreateJoystickDiagnostics();
+            ResolveOrCreateBenchmarkRunner(inputReader, physicsBody, controller);
 
             EnsureGround();
             EnsureMarkers();
@@ -199,6 +203,26 @@ namespace DroneSim.Drone.Bootstrap
             }
 
             return sceneJoystickDiagnostics;
+        }
+
+        private BenchmarkRunner ResolveOrCreateBenchmarkRunner(
+            DroneInputReader inputReader,
+            DronePhysicsBody physicsBody,
+            DJIStyleFlightController controller)
+        {
+            if (sceneBenchmarkRunner == null)
+            {
+                sceneBenchmarkRunner = FindFirstObjectByType<BenchmarkRunner>();
+            }
+
+            if (sceneBenchmarkRunner == null)
+            {
+                GameObject benchmarkObject = new GameObject("BenchmarkRunner");
+                sceneBenchmarkRunner = benchmarkObject.AddComponent<BenchmarkRunner>();
+            }
+
+            sceneBenchmarkRunner.Initialize(inputReader, physicsBody, controller);
+            return sceneBenchmarkRunner;
         }
 
         private static void EnsurePhysicsSettings()
