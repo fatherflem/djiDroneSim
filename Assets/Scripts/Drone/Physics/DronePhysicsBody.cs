@@ -64,7 +64,7 @@ namespace DroneSim.Drone.Physics
 
             body.useGravity = true;
             body.mass = 1.6f;
-            body.linearDamping = 0.4f;
+            body.linearDamping = 0f;
             body.angularDamping = 5f;
             body.interpolation = RigidbodyInterpolation.Interpolate;
             body.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;

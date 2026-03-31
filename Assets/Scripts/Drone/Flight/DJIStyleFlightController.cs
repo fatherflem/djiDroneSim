@@ -39,7 +39,7 @@ namespace DroneSim.Drone.Flight
 
         [FormerlySerializedAs("maxHorizontalAcceleration")]
         [Tooltip("Global horizontal acceleration cap across all modes.")]
-        [SerializeField] private float globalHorizontalAccelLimit = 12f;
+        [SerializeField] private float globalHorizontalAccelLimit = 8f;
 
         [FormerlySerializedAs("maxVerticalAcceleration")]
         [Tooltip("Global vertical acceleration cap across all modes.")]
@@ -144,8 +144,8 @@ namespace DroneSim.Drone.Flight
             }
 
             Vector3 localCommand = Quaternion.Inverse(transform.rotation) * commandedWorldAcceleration;
-            float pitchTilt = Mathf.Clamp(-localCommand.z * 2.2f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
-            float rollTilt = Mathf.Clamp(localCommand.x * 2.2f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
+            float pitchTilt = Mathf.Clamp(-localCommand.z * 4.4f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
+            float rollTilt = Mathf.Clamp(localCommand.x * 4.4f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
             Quaternion targetTilt = Quaternion.Euler(pitchTilt, 0f, rollTilt);
             float blend = 1f - Mathf.Exp(-config.tiltSmoothing * Time.fixedDeltaTime);
             visualTiltRoot.localRotation = Quaternion.Slerp(visualTiltRoot.localRotation, targetTilt, blend);

@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: DroneModeNormal
   m_EditorClassIdentifier: 
   mode: 1
-  maxHorizontalSpeed: 6
-  horizontalAcceleration: 7
-  horizontalBrakeAcceleration: 11
-  maxVerticalSpeed: 3
-  verticalAcceleration: 6
+  maxHorizontalSpeed: 4.74
+  horizontalAcceleration: 3.5
+  horizontalBrakeAcceleration: 5
+  maxVerticalSpeed: 5.81
+  verticalAcceleration: 4
   maxYawRateDegrees: 80
-  yawResponse: 8
-  tiltLimitDegrees: 18
-  tiltSmoothing: 8
+  yawResponse: 20
+  tiltLimitDegrees: 35
+  tiltSmoothing: 12

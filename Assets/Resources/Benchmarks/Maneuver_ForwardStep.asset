@@ -23,9 +23,9 @@ MonoBehaviour:
     pitch: 0
     throttle: 0
     yaw: 0
-  - duration: 1
+  - duration: 2
     roll: 0
-    pitch: 0.45
+    pitch: 1
     throttle: 0
     yaw: 0
   - duration: 5

@@ -23,10 +23,10 @@ MonoBehaviour:
     pitch: 0
     throttle: 0
     yaw: 0
-  - duration: 1
+  - duration: 3
     roll: 0
     pitch: 0
-    throttle: 0.5
+    throttle: 1
     yaw: 0
   - duration: 5
     roll: 0
