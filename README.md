@@ -48,13 +48,20 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
   - `ForceRuntimeBuild`
 - Use it when you want a quick runtime-built test setup, or when authored scene pieces are intentionally absent.
 
-## Expected controller mapping (Mode 2)
+## Input System / Controller Mapping
 
-Likely current axis mapping in `DroneInputConfig`:
-- `throttleAxis = "z"` (`<Joystick>/z`)
-- `yawAxis = "rx"` (`<Joystick>/rx`)
-- `pitchAxis = "y"` (`<Joystick>/y`)
-- `rollAxis = "x"` (`<Joystick>/x`)
+- Flight controls use Unity's **Input System** at runtime.
+- Runtime stick/mode input is read by `Assets/Scripts/Drone/Input/DroneInputReader.cs`.
+- Core flight input is not driven primarily by a generated `.inputactions` asset; `DroneInputReader` creates `InputAction`s in code from `DroneInputConfig`.
+- The primary binding/config source is `DroneInputConfig`, typically loaded from `Assets/Resources/Configs/DroneInputConfig.asset`.
+- The current intended stick layout is:
+  - left stick = throttle / yaw
+  - right stick = roll / pitch
+- For joystick x/y axes, runtime actions now support both binding path styles for compatibility:
+  - `<Joystick>/x` and `<Joystick>/y`
+  - `<Joystick>/stick/x` and `<Joystick>/stick/y`
+- This compatibility is bidirectional: whichever style is configured, the alternate style is also bound at runtime.
+- `Assets/Scripts/Drone/Benchmark/BenchmarkRunner.cs` intentionally uses `LegacyInput` (`UnityEngine.Input`) only for benchmark keyboard hotkeys (for example `F7`/`F8`).
 
 Mode switching defaults:
 - `1` = Cine
@@ -62,6 +69,13 @@ Mode switching defaults:
 - `3` = Sport
 
 Keyboard/gamepad fallback bindings are included for editor testing.
+
+### Troubleshooting: stick moves in Input Debugger but drone does not respond
+
+1. Confirm the stick path shown in Input Debugger (for example `/NATIONS RADIOMASTER SIM/stick/x`).
+2. Verify the corresponding `DroneInputConfig` roll/pitch/yaw/throttle binding points to the expected axis family (`x/y` vs `stick/x`/`stick/y`).
+3. Since `DroneInputReader` now binds both joystick path styles for x/y, mismatch between those two styles should no longer block input.
+4. If movement still fails, check deadzone/invert values in `DroneInputConfig` and ensure `DroneInputReader` is assigned on the drone prefab/scene object.
 
 
 ## Raw joystick diagnostics overlay (temporary input debugging)

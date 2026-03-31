@@ -18,10 +18,17 @@ The vertical slice targets a RadioMaster T8L in **Mode 2** through Unity's Input
 
 Default bindings in `DroneInputConfig`:
 
-- Roll: `<Joystick>/x`
-- Pitch: `<Joystick>/y`
-- Throttle: `<Joystick>/z`
-- Yaw: `<Joystick>/rx`
+- Roll: `<Joystick>/x` (right stick horizontal)
+- Pitch: `<Joystick>/y` (right stick vertical)
+- Throttle: `<Joystick>/z` (left stick vertical)
+- Yaw: `<Joystick>/rx` (left stick horizontal)
+
+`DroneInputReader` builds runtime `InputAction`s directly from `DroneInputConfig` bindings (instead of a generated `.inputactions` asset), and now applies joystick x/y compatibility bindings for both:
+
+- `<Joystick>/x` and `<Joystick>/y`
+- `<Joystick>/stick/x` and `<Joystick>/stick/y`
+
+This addresses controllers (including RadioMaster variants) that surface right-stick axes under `/stick/x` and `/stick/y` in Unity Input Debugger.
 
 Keyboard/gamepad fallbacks are included for editor testing:
 
@@ -29,6 +36,7 @@ Keyboard/gamepad fallbacks are included for editor testing:
 - Throttle: `R/F` or gamepad triggers
 - Yaw: `Q/E` or gamepad shoulder buttons
 - Mode select: `1` = Cine, `2` = Normal, `3` = Sport
+- Benchmark hotkeys (run/cycle maneuvers) remain on legacy `UnityEngine.Input` in `BenchmarkRunner` (`F8`/`F7` by default).
 
 ## Tunable parameters
 
