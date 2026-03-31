@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -152,13 +153,63 @@ namespace DroneSim.Drone.Input
         private InputAction CreateAxisAction(string name, string primaryBinding, string gamepadBinding, string negativeBinding, string positiveBinding)
         {
             InputAction action = new InputAction(name, InputActionType.Value);
-            action.AddBinding(primaryBinding);
-            action.AddBinding(gamepadBinding);
+            AddBindingWithJoystickAxisCompatibility(action, primaryBinding);
+            AddBindingWithJoystickAxisCompatibility(action, gamepadBinding);
             action.AddCompositeBinding("1DAxis")
                 .With("negative", negativeBinding)
                 .With("positive", positiveBinding);
             action.Enable();
             return action;
+        }
+
+        private void AddBindingWithJoystickAxisCompatibility(InputAction action, string binding)
+        {
+            if (string.IsNullOrWhiteSpace(binding))
+            {
+                return;
+            }
+
+            action.AddBinding(binding);
+            if (TryGetAlternateJoystickAxisBinding(binding, out string alternateBinding))
+            {
+                action.AddBinding(alternateBinding);
+            }
+        }
+
+        private bool TryGetAlternateJoystickAxisBinding(string binding, out string alternateBinding)
+        {
+            alternateBinding = null;
+
+            if (binding.IndexOf("Joystick", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                return false;
+            }
+
+            if (binding.EndsWith("/stick/x", StringComparison.OrdinalIgnoreCase))
+            {
+                alternateBinding = binding.Substring(0, binding.Length - "/stick/x".Length) + "/x";
+                return true;
+            }
+
+            if (binding.EndsWith("/stick/y", StringComparison.OrdinalIgnoreCase))
+            {
+                alternateBinding = binding.Substring(0, binding.Length - "/stick/y".Length) + "/y";
+                return true;
+            }
+
+            if (binding.EndsWith("/x", StringComparison.OrdinalIgnoreCase))
+            {
+                alternateBinding = binding.Substring(0, binding.Length - "/x".Length) + "/stick/x";
+                return true;
+            }
+
+            if (binding.EndsWith("/y", StringComparison.OrdinalIgnoreCase))
+            {
+                alternateBinding = binding.Substring(0, binding.Length - "/y".Length) + "/stick/y";
+                return true;
+            }
+
+            return false;
         }
 
         private InputAction CreateThrottleAction()

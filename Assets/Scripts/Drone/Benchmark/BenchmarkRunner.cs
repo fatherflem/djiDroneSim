@@ -4,6 +4,7 @@ using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
 using UnityEngine;
+using LegacyInput = UnityEngine.Input;
 
 namespace DroneSim.Drone.Benchmark
 {
@@ -71,12 +72,12 @@ namespace DroneSim.Drone.Benchmark
 
         private void Update()
         {
-            if (Input.GetKeyDown(cycleManeuverKey))
+            if (LegacyInput.GetKeyDown(cycleManeuverKey))
             {
                 SelectNextManeuver();
             }
 
-            if (Input.GetKeyDown(runManeuverKey))
+            if (LegacyInput.GetKeyDown(runManeuverKey))
             {
                 if (isRunning)
                 {
