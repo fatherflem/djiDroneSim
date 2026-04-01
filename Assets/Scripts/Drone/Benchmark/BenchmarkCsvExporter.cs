@@ -19,9 +19,11 @@ namespace DroneSim.Drone.Benchmark
             }
 
             StringBuilder csv = new StringBuilder(8192);
-            csv.AppendLine("maneuver_name,maneuver_mode,maneuver_duration_s,time_s,pos_x_m,pos_y_m,pos_z_m,vel_x_mps,vel_y_mps,vel_z_mps,horizontal_speed_mps,vertical_speed_mps,yaw_deg,yaw_rate_degps,input_roll,input_pitch,input_throttle,input_yaw");
+            csv.AppendLine("maneuver_name,protocol_category,protocol_order,maneuver_mode,maneuver_duration_s,time_s,pos_x_m,pos_y_m,pos_z_m,vel_x_mps,vel_y_mps,vel_z_mps,horizontal_speed_mps,vertical_speed_mps,yaw_deg,yaw_rate_degps,input_roll,input_pitch,input_throttle,input_yaw");
 
             string maneuverName = maneuver != null ? maneuver.maneuverName : "Unknown";
+            string protocolCategory = maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown";
+            int protocolOrder = maneuver != null ? maneuver.protocolOrder : -1;
             string modeName = maneuver != null ? maneuver.flightMode.ToString() : "Unknown";
             float duration = maneuver != null ? maneuver.Duration : 0f;
 
@@ -29,6 +31,8 @@ namespace DroneSim.Drone.Benchmark
             {
                 BenchmarkTelemetryRecorder.BenchmarkSample sample = samples[i];
                 csv.Append(Escape(maneuverName)).Append(',')
+                    .Append(protocolCategory).Append(',')
+                    .Append(protocolOrder).Append(',')
                     .Append(modeName).Append(',')
                     .Append(F(duration)).Append(',')
                     .Append(F(sample.ElapsedTime)).Append(',')

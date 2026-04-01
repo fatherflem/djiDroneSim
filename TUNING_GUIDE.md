@@ -42,9 +42,16 @@ python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv
 
 It outputs:
 - `Docs/airdata_mar30_analysis.json` (machine-readable)
-- segment-ready metrics for hover/forward/lateral/vertical/yaw windows
+- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` (human summary)
+- confidence-labeled segment metrics for hover/forward/lateral/vertical/yaw windows
+- `evidence_classification` for each key target as:
+  - `directly_measured`
+  - `estimated_from_limited_segments`
+  - `designer_assumption`
+- optional `sim_vs_real_comparison` if `--sim-csv-glob` inputs are supplied
 
 Use those metrics to tune **Normal** mode first, then derive Cine/Sport proportionally.
+Do not treat `estimated_from_limited_segments` as hard ground truth.
 
 ## Mode targets
 

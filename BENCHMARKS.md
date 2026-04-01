@@ -47,6 +47,7 @@ Output folder:
 
 CSV columns:
 - maneuver metadata: name, mode, duration
+- protocol metadata: `protocol_category`, `protocol_order` (for direct Airdata alignment)
 - sample time
 - position (x,y,z)
 - velocity (x,y,z)
@@ -83,4 +84,18 @@ For large real-flight Airdata CSVs in repo root, run:
 
 `python Tools/analyze_airdata.py <airdata.csv>`
 
-This performs RC-channel-based segmentation with neutral dwell detection and writes `Docs/airdata_mar30_analysis.json` for repeatable sim-vs-real tuning.
+This performs confidence-labeled RC-channel segmentation, neutral dwell detection, and measured-vs-inferred classification.  
+It writes:
+- `Docs/airdata_mar30_analysis.json`
+- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
+
+To directly compare simulator telemetry against the real benchmark in one pass:
+
+`python Tools/analyze_airdata.py <airdata.csv> --sim-csv-glob \"<BenchmarkRuns>/*.csv\"`
+
+The JSON output contains a `sim_vs_real_comparison` block with side-by-side metrics and deltas for:
+- forward step
+- lateral step
+- climb / descent
+- yaw step
+- hover hold

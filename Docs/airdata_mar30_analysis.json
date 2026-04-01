@@ -3,776 +3,1540 @@
   "total_rows": 2321,
   "usable_rows": 2196,
   "duration_s": 225.0,
+  "segmentation": {
+    "active_threshold_percent": 16.0,
+    "cross_axis_threshold_percent": 14.0,
+    "min_segment_seconds": 0.7,
+    "neutral_threshold_percent": 8.0,
+    "expected_order": [
+      "hover_hold",
+      "forward_step",
+      "lateral_right",
+      "lateral_left",
+      "climb",
+      "descent",
+      "yaw_right",
+      "yaw_left"
+    ],
+    "confidence_labels": {
+      "high": ">=0.78",
+      "medium": ">=0.56 and <0.78",
+      "low": "<0.56"
+    }
+  },
   "segments": [
     {
       "maneuver": "yaw_left",
-      "start": 28,
-      "end": 46,
       "axis": "yaw",
       "sign": -1,
+      "start": 28,
+      "end": 46,
       "start_s": 8.3,
-      "end_s": 10.1
+      "end_s": 10.1,
+      "duration_s": 1.799999999999999,
+      "confidence_score": 0.84,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "attitude response agrees"
+      ],
+      "cluster_id": 8295,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
-      "start": 48,
-      "end": 64,
       "axis": "forward",
       "sign": 1,
+      "start": 48,
+      "end": 64,
       "start_s": 10.3,
-      "end_s": 11.9
+      "end_s": 11.9,
+      "duration_s": 1.5999999999999996,
+      "confidence_score": 0.84,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 15596,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_right",
-      "start": 283,
-      "end": 294,
       "axis": "yaw",
       "sign": 1,
+      "start": 283,
+      "end": 294,
       "start_s": 33.8,
-      "end_s": 34.9
+      "end_s": 34.9,
+      "duration_s": 1.1000000000000014,
+      "confidence_score": 0.92,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 85154,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
-      "start": 295,
-      "end": 314,
       "axis": "forward",
       "sign": 1,
+      "start": 295,
+      "end": 314,
       "start_s": 35.0,
-      "end_s": 36.9
+      "end_s": 36.9,
+      "duration_s": 1.8999999999999986,
+      "confidence_score": 0.84,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 25705,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_left",
-      "start": 357,
-      "end": 371,
       "axis": "yaw",
       "sign": -1,
+      "start": 357,
+      "end": 371,
       "start_s": 41.2,
-      "end_s": 42.6
+      "end_s": 42.6,
+      "duration_s": 1.3999999999999986,
+      "confidence_score": 0.7,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "motion sign agrees",
+        "attitude response agrees"
+      ],
+      "cluster_id": 96258,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 655,
       "end": 667,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 71.0,
-      "end_s": 72.2
+      "end_s": 72.2,
+      "duration_s": 1.2000000000000028,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 47936,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 686,
       "end": 700,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 74.1,
-      "end_s": 75.5
+      "end_s": 75.5,
+      "duration_s": 1.4000000000000057,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol",
+        "repeated-run cluster support"
+      ],
+      "cluster_id": 12430,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 717,
       "end": 728,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 77.2,
-      "end_s": 78.3
+      "end_s": 78.3,
+      "duration_s": 1.0999999999999943,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 28375,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 743,
       "end": 753,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 79.8,
-      "end_s": 80.8
+      "end_s": 80.8,
+      "duration_s": 1.0,
+      "confidence_score": 0.9700000000000001,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol",
+        "repeated-run cluster support"
+      ],
+      "cluster_id": 87315,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
-      "start": 767,
-      "end": 781,
       "axis": "forward",
       "sign": 1,
+      "start": 767,
+      "end": 781,
       "start_s": 82.2,
-      "end_s": 83.6
+      "end_s": 83.6,
+      "duration_s": 1.3999999999999915,
+      "confidence_score": 0.9700000000000001,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol",
+        "repeated-run cluster support"
+      ],
+      "cluster_id": 12430,
+      "sequence_index": 7
     },
     {
       "maneuver": "lateral_right",
+      "axis": "lateral",
+      "sign": 1,
+      "start": 872,
+      "end": 879,
+      "start_s": 92.7,
+      "end_s": 93.4,
+      "duration_s": 0.7000000000000028,
+      "confidence_score": 0.86,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 19802,
+      "sequence_index": 7
+    },
+    {
+      "maneuver": "lateral_right",
+      "axis": "lateral",
+      "sign": 1,
       "start": 894,
       "end": 909,
-      "axis": "lateral",
-      "sign": 1,
       "start_s": 94.9,
-      "end_s": 96.4
+      "end_s": 96.4,
+      "duration_s": 1.5,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 92102,
+      "sequence_index": 7
     },
     {
       "maneuver": "lateral_right",
+      "axis": "lateral",
+      "sign": 1,
       "start": 932,
       "end": 945,
-      "axis": "lateral",
-      "sign": 1,
       "start_s": 98.7,
-      "end_s": 100.0
+      "end_s": 100.0,
+      "duration_s": 1.2999999999999972,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 31606,
+      "sequence_index": 7
     },
     {
       "maneuver": "lateral_right",
+      "axis": "lateral",
+      "sign": 1,
       "start": 962,
       "end": 975,
-      "axis": "lateral",
-      "sign": 1,
       "start_s": 101.7,
-      "end_s": 103.0
+      "end_s": 103.0,
+      "duration_s": 1.2999999999999972,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol",
+        "repeated-run cluster support"
+      ],
+      "cluster_id": 13690,
+      "sequence_index": 7
     },
     {
       "maneuver": "lateral_right",
-      "start": 1018,
-      "end": 1031,
       "axis": "lateral",
       "sign": 1,
+      "start": 1018,
+      "end": 1031,
       "start_s": 107.3,
-      "end_s": 108.6
+      "end_s": 108.6,
+      "duration_s": 1.2999999999999972,
+      "confidence_score": 1.0,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol",
+        "repeated-run cluster support"
+      ],
+      "cluster_id": 13690,
+      "sequence_index": 7
     },
     {
       "maneuver": "climb",
+      "axis": "vertical",
+      "sign": 1,
+      "start": 1173,
+      "end": 1180,
+      "start_s": 122.8,
+      "end_s": 123.5,
+      "duration_s": 0.7000000000000028,
+      "confidence_score": 0.75,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 58510,
+      "sequence_index": 7
+    },
+    {
+      "maneuver": "climb",
+      "axis": "vertical",
+      "sign": 1,
+      "start": 1198,
+      "end": 1206,
+      "start_s": 125.3,
+      "end_s": 126.1,
+      "duration_s": 0.7999999999999972,
+      "confidence_score": 0.75,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 72627,
+      "sequence_index": 7
+    },
+    {
+      "maneuver": "climb",
+      "axis": "vertical",
+      "sign": 1,
+      "start": 1221,
+      "end": 1230,
+      "start_s": 127.6,
+      "end_s": 128.5,
+      "duration_s": 0.9000000000000057,
+      "confidence_score": 0.75,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 71662,
+      "sequence_index": 7
+    },
+    {
+      "maneuver": "climb",
+      "axis": "vertical",
+      "sign": 1,
       "start": 1247,
       "end": 1257,
-      "axis": "vertical",
-      "sign": 1,
       "start_s": 130.2,
-      "end_s": 131.2
+      "end_s": 131.2,
+      "duration_s": 1.0,
+      "confidence_score": 0.89,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell before+after",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 87144,
+      "sequence_index": 7
     },
     {
       "maneuver": "descent",
+      "axis": "vertical",
+      "sign": -1,
       "start": 1281,
       "end": 1298,
-      "axis": "vertical",
-      "sign": -1,
       "start_s": 133.6,
-      "end_s": 135.3
+      "end_s": 135.3,
+      "duration_s": 1.700000000000017,
+      "confidence_score": 0.81,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 62157,
+      "sequence_index": 7
     },
     {
       "maneuver": "descent",
+      "axis": "vertical",
+      "sign": -1,
       "start": 1316,
       "end": 1335,
-      "axis": "vertical",
-      "sign": -1,
       "start_s": 137.1,
-      "end_s": 139.0
+      "end_s": 139.0,
+      "duration_s": 1.9000000000000057,
+      "confidence_score": 0.73,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 6433,
+      "sequence_index": 7
     },
     {
       "maneuver": "descent",
-      "start": 1421,
-      "end": 1434,
       "axis": "vertical",
       "sign": -1,
+      "start": 1421,
+      "end": 1434,
       "start_s": 147.6,
-      "end_s": 148.9
+      "end_s": 148.9,
+      "duration_s": 1.3000000000000114,
+      "confidence_score": 0.81,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 23788,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_left",
+      "axis": "yaw",
+      "sign": -1,
       "start": 1494,
       "end": 1516,
-      "axis": "yaw",
-      "sign": -1,
       "start_s": 154.9,
-      "end_s": 157.1
+      "end_s": 157.1,
+      "duration_s": 2.1999999999999886,
+      "confidence_score": 0.92,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees"
+      ],
+      "cluster_id": 55830,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_right",
+      "axis": "yaw",
+      "sign": 1,
       "start": 1612,
       "end": 1632,
-      "axis": "yaw",
-      "sign": 1,
       "start_s": 166.7,
-      "end_s": 168.7
+      "end_s": 168.7,
+      "duration_s": 2.0,
+      "confidence_score": 0.92,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 40466,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_right",
+      "axis": "yaw",
+      "sign": 1,
       "start": 1642,
       "end": 1669,
-      "axis": "yaw",
-      "sign": 1,
       "start_s": 169.7,
-      "end_s": 172.4
+      "end_s": 172.4,
+      "duration_s": 2.700000000000017,
+      "confidence_score": 0.84,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 92296,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_right",
+      "axis": "yaw",
+      "sign": 1,
       "start": 1680,
       "end": 1705,
-      "axis": "yaw",
-      "sign": 1,
       "start_s": 173.5,
-      "end_s": 176.0
+      "end_s": 176.0,
+      "duration_s": 2.5,
+      "confidence_score": 0.84,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 78532,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_right",
-      "start": 1714,
-      "end": 1750,
       "axis": "yaw",
       "sign": 1,
+      "start": 1714,
+      "end": 1750,
       "start_s": 176.9,
-      "end_s": 180.5
+      "end_s": 180.5,
+      "duration_s": 3.5999999999999943,
+      "confidence_score": 0.92,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 89378,
+      "sequence_index": 7
     },
     {
       "maneuver": "yaw_left",
-      "start": 1887,
-      "end": 1905,
       "axis": "yaw",
       "sign": -1,
+      "start": 1887,
+      "end": 1905,
       "start_s": 194.2,
-      "end_s": 196.0
+      "end_s": 196.0,
+      "duration_s": 1.8000000000000114,
+      "confidence_score": 0.92,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "attitude response agrees"
+      ],
+      "cluster_id": 26211,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
-      "start": 1927,
-      "end": 1953,
       "axis": "forward",
       "sign": 1,
+      "start": 1927,
+      "end": 1954,
       "start_s": 198.2,
-      "end_s": 200.8
+      "end_s": 200.9,
+      "duration_s": 2.700000000000017,
+      "confidence_score": 0.74,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 76210,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 1959,
       "end": 1972,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 201.4,
-      "end_s": 202.7
+      "end_s": 202.7,
+      "duration_s": 1.299999999999983,
+      "confidence_score": 0.74,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 58138,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 1993,
       "end": 2014,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 204.8,
-      "end_s": 206.9
+      "end_s": 206.9,
+      "duration_s": 2.0999999999999943,
+      "confidence_score": 0.74,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 77327,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
       "start": 2055,
       "end": 2068,
-      "axis": "forward",
-      "sign": 1,
       "start_s": 211.0,
-      "end_s": 212.3
+      "end_s": 212.3,
+      "duration_s": 1.3000000000000114,
+      "confidence_score": 0.74,
+      "confidence_label": "medium",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 6732,
+      "sequence_index": 7
     },
     {
       "maneuver": "forward_step",
-      "start": 2075,
-      "end": 2152,
       "axis": "forward",
       "sign": 1,
-      "start_s": 213.0,
-      "end_s": 220.7
+      "start": 2074,
+      "end": 2084,
+      "start_s": 212.9,
+      "end_s": 213.9,
+      "duration_s": 1.0,
+      "confidence_score": 0.79,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "motion sign agrees",
+        "out-of-order vs expected protocol",
+        "repeated-run cluster support"
+      ],
+      "cluster_id": 87315,
+      "sequence_index": 7
+    },
+    {
+      "maneuver": "forward_step",
+      "axis": "forward",
+      "sign": 1,
+      "start": 2087,
+      "end": 2152,
+      "start_s": 214.2,
+      "end_s": 220.7,
+      "duration_s": 6.5,
+      "confidence_score": 0.82,
+      "confidence_label": "high",
+      "confidence_reasons": [
+        "duration>=1.0s",
+        "low cross-axis input",
+        "neutral dwell on one side",
+        "motion sign agrees",
+        "out-of-order vs expected protocol"
+      ],
+      "cluster_id": 86378,
+      "sequence_index": 7
     }
   ],
   "metrics": {
     "yaw_left": {
       "count": 4,
-      "peak_mean": 70.7499999999996,
-      "peak_max": 83.99999999999977,
-      "delay_mean": 0.275,
-      "accel_mean": 290.00000000000057,
-      "settle_tail_mean": 0.0,
+      "confidence": {
+        "mean_score": 0.845,
+        "high_count": 3,
+        "medium_count": 1,
+        "low_count": 0
+      },
+      "aggregate": {
+        "response_delay_s_mean": 0.25,
+        "peak_rate_mean": 70.75,
+        "max_accel_mean": 177.5,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 6.9,
+        "residual_drift_mean": 63.312
+      },
       "runs": [
         {
           "start_s": 8.3,
           "end_s": 10.1,
           "duration_s": 1.799999999999999,
-          "peak": 82.99999999999955,
           "response_delay_s": 0.4,
+          "peak_rate": 82.99999999999955,
+          "settle_time_s": 0.0,
           "max_accel": 170.00000000000455,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -8.15263157894737,
-          "mean_roll_deg": -0.8157894736842106
+          "overshoot": 1.599999999999227,
+          "residual_drift": 80.75000000000017,
+          "command_mean_abs": 91.94736842105263
         },
         {
           "start_s": 41.2,
           "end_s": 42.6,
           "duration_s": 1.3999999999999986,
-          "peak": 83.99999999999977,
-          "response_delay_s": 0.1,
-          "max_accel": 579.9999999999955,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -6.513333333333334,
-          "mean_roll_deg": -0.03999999999999988
+          "response_delay_s": 0.0,
+          "peak_rate": 83.99999999999977,
+          "settle_time_s": 0.0,
+          "max_accel": 130.00000000000682,
+          "overshoot": 3.800000000000182,
+          "residual_drift": 80.62499999999972,
+          "command_mean_abs": 100.0
         },
         {
           "start_s": 154.9,
           "end_s": 157.1,
           "duration_s": 2.1999999999999886,
-          "peak": 32.999999999999545,
           "response_delay_s": 0.30000000000000004,
+          "peak_rate": 32.999999999999545,
+          "settle_time_s": 0.0,
           "max_accel": 110.00000000000227,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -1.0739130434782609,
-          "mean_roll_deg": 7.108695652173913
+          "overshoot": 20.39999999999941,
+          "residual_drift": 11.624999999999943,
+          "command_mean_abs": 52.52173913043478
         },
         {
           "start_s": 194.2,
           "end_s": 196.0,
           "duration_s": 1.8000000000000114,
-          "peak": 82.99999999999955,
           "response_delay_s": 0.30000000000000004,
+          "peak_rate": 82.99999999999955,
+          "settle_time_s": 0.0,
           "max_accel": 300.0,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -5.494736842105263,
-          "mean_roll_deg": -1.605263157894737
+          "overshoot": 1.7999999999994998,
+          "residual_drift": 80.25000000000006,
+          "command_mean_abs": 98.36842105263158
         }
       ]
     },
     "forward_step": {
       "count": 12,
-      "peak_mean": 2.0583367452266668,
-      "peak_max": 3.30000547008,
-      "delay_mean": 0.23333333333333336,
-      "accel_mean": 2.250003729600001,
-      "settle_tail_mean": 0.0,
+      "confidence": {
+        "mean_score": 0.849,
+        "high_count": 8,
+        "medium_count": 4,
+        "low_count": 0
+      },
+      "aggregate": {
+        "response_delay_s_mean": 0.0,
+        "peak_rate_mean": 1.067,
+        "max_accel_mean": 0.667,
+        "settle_time_s_mean": 0.55,
+        "overshoot_mean": 0.142,
+        "residual_drift_mean": 0.913
+      },
       "runs": [
         {
           "start_s": 10.3,
           "end_s": 11.9,
           "duration_s": 1.5999999999999996,
-          "peak": 1.30000215488,
-          "response_delay_s": 0.6000000000000001,
-          "max_accel": 2.0000033151999994,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -10.647058823529411,
-          "mean_roll_deg": 8.5
+          "response_delay_s": 0.0,
+          "peak_rate": 0.10000016576,
+          "settle_time_s": 1.4000000000000001,
+          "max_accel": 0.0,
+          "overshoot": 0.10000016576,
+          "residual_drift": 0.0,
+          "command_mean_abs": 75.70588235294117
         },
         {
           "start_s": 35.0,
           "end_s": 36.9,
           "duration_s": 1.8999999999999986,
-          "peak": 3.10000513856,
-          "response_delay_s": 0.6000000000000001,
-          "max_accel": 3.000004972800001,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -20.965,
-          "mean_roll_deg": -2.065
-        },
-        {
-          "start_s": 71.0,
-          "end_s": 72.2,
-          "duration_s": 1.2000000000000028,
-          "peak": 1.70000281792,
-          "response_delay_s": 0.4,
-          "max_accel": 2.0000033152000016,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -14.484615384615383,
-          "mean_roll_deg": 5.823076923076924
+          "response_delay_s": 0.0,
+          "peak_rate": 0.20000033152,
+          "settle_time_s": 1.7000000000000002,
+          "max_accel": 0.0,
+          "overshoot": 0.20000033152,
+          "residual_drift": 0.0,
+          "command_mean_abs": 88.0
         },
         {
           "start_s": 74.1,
           "end_s": 75.5,
           "duration_s": 1.4000000000000057,
-          "peak": 1.70000281792,
           "response_delay_s": 0.0,
-          "max_accel": 2.0000033152000016,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -13.7,
-          "mean_roll_deg": 6.733333333333333
+          "peak_rate": 0.20000033152,
+          "settle_time_s": 1.1,
+          "max_accel": 0.0,
+          "overshoot": 0.20000033152,
+          "residual_drift": 0.0,
+          "command_mean_abs": 50.6
         },
         {
           "start_s": 77.2,
           "end_s": 78.3,
           "duration_s": 1.0999999999999943,
-          "peak": 2.0000033152000003,
-          "response_delay_s": 0.6000000000000001,
-          "max_accel": 4.000006630400003,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -19.858333333333334,
-          "mean_roll_deg": 5.125
+          "response_delay_s": 0.0,
+          "peak_rate": 0.20000033152,
+          "settle_time_s": 0.8,
+          "max_accel": 0.0,
+          "overshoot": 0.20000033152,
+          "residual_drift": 0.0,
+          "command_mean_abs": 70.16666666666667
         },
         {
           "start_s": 79.8,
           "end_s": 80.8,
           "duration_s": 1.0,
-          "peak": 1.0000016576000001,
           "response_delay_s": 0.0,
-          "max_accel": 3.000004972800002,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -13.818181818181818,
-          "mean_roll_deg": 6.081818181818182
+          "peak_rate": 0.30000049728,
+          "settle_time_s": 0.5,
+          "max_accel": 1.0000016576,
+          "overshoot": 0.30000049728,
+          "residual_drift": 0.07500012432,
+          "command_mean_abs": 84.9090909090909
         },
         {
           "start_s": 82.2,
           "end_s": 83.6,
           "duration_s": 1.3999999999999915,
-          "peak": 3.10000513856,
-          "response_delay_s": 0.6000000000000001,
-          "max_accel": 5.000008287999997,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -19.446666666666665,
-          "mean_roll_deg": 6.546666666666667
+          "response_delay_s": 0.0,
+          "peak_rate": 0.20000033152,
+          "settle_time_s": 1.1,
+          "max_accel": 0.0,
+          "overshoot": 0.20000033152,
+          "residual_drift": 0.0,
+          "command_mean_abs": 92.13333333333334
         },
         {
           "start_s": 198.2,
-          "end_s": 200.8,
-          "duration_s": 2.6000000000000227,
-          "peak": 2.40000397824,
+          "end_s": 200.9,
+          "duration_s": 2.700000000000017,
           "response_delay_s": 0.0,
+          "peak_rate": 2.40000397824,
+          "settle_time_s": 0.0,
           "max_accel": 1.0000016576000026,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": 0.1962962962962963,
-          "mean_roll_deg": 1.9703703703703705
+          "overshoot": 0.0,
+          "residual_drift": 2.40000397824,
+          "command_mean_abs": 43.75
         },
         {
           "start_s": 201.4,
           "end_s": 202.7,
           "duration_s": 1.299999999999983,
-          "peak": 2.60000430976,
           "response_delay_s": 0.0,
+          "peak_rate": 2.60000430976,
+          "settle_time_s": 0.0,
           "max_accel": 1.0000016576000004,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -0.02857142857142857,
-          "mean_roll_deg": 2.242857142857143
+          "overshoot": 0.0,
+          "residual_drift": 2.57500426832,
+          "command_mean_abs": 43.0
         },
         {
           "start_s": 204.8,
           "end_s": 206.9,
           "duration_s": 2.0999999999999943,
-          "peak": 3.30000547008,
           "response_delay_s": 0.0,
+          "peak_rate": 3.30000547008,
+          "settle_time_s": 0.0,
           "max_accel": 1.0000016576000004,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": 0.9863636363636363,
-          "mean_roll_deg": -2.190909090909091
+          "overshoot": 0.28000046412799984,
+          "residual_drift": 3.0625050764,
+          "command_mean_abs": 37.36363636363637
         },
         {
           "start_s": 211.0,
           "end_s": 212.3,
           "duration_s": 1.3000000000000114,
-          "peak": 0.80000132608,
           "response_delay_s": 0.0,
+          "peak_rate": 0.80000132608,
+          "settle_time_s": 0.0,
           "max_accel": 2.0000033151999985,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": 1.092857142857143,
-          "mean_roll_deg": -3.107142857142857
+          "overshoot": 0.020000033152000052,
+          "residual_drift": 0.63750105672,
+          "command_mean_abs": 34.07142857142857
         },
         {
-          "start_s": 213.0,
-          "end_s": 220.7,
-          "duration_s": 7.699999999999989,
-          "peak": 1.70000281792,
+          "start_s": 212.9,
+          "end_s": 213.9,
+          "duration_s": 1.0,
           "response_delay_s": 0.0,
+          "peak_rate": 0.80000132608,
+          "settle_time_s": 0.0,
+          "max_accel": 1.0000016576000004,
+          "overshoot": 0.10000016576000004,
+          "residual_drift": 0.6625010981599999,
+          "command_mean_abs": 24.90909090909091
+        },
+        {
+          "start_s": 214.2,
+          "end_s": 220.7,
+          "duration_s": 6.5,
+          "response_delay_s": 0.0,
+          "peak_rate": 1.70000281792,
+          "settle_time_s": 0.0,
           "max_accel": 1.0000016576000015,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": 1.25,
-          "mean_roll_deg": -3.9653846153846155
+          "overshoot": 0.10000016576000004,
+          "residual_drift": 1.53750254856,
+          "command_mean_abs": 29.272727272727273
         }
       ]
     },
     "yaw_right": {
       "count": 5,
-      "peak_mean": 84.60000000000014,
-      "peak_max": 87.00000000000045,
-      "delay_mean": 0.26,
-      "accel_mean": 336.00000000000364,
-      "settle_tail_mean": 0.0,
+      "confidence": {
+        "mean_score": 0.888,
+        "high_count": 5,
+        "medium_count": 0,
+        "low_count": 0
+      },
+      "aggregate": {
+        "response_delay_s_mean": 0.24,
+        "peak_rate_mean": 84.6,
+        "max_accel_mean": 312.0,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 4.6,
+        "residual_drift_mean": 79.225
+      },
       "runs": [
         {
           "start_s": 33.8,
           "end_s": 34.9,
           "duration_s": 1.1000000000000014,
-          "peak": 82.00000000000045,
           "response_delay_s": 0.30000000000000004,
+          "peak_rate": 82.00000000000045,
+          "settle_time_s": 0.0,
           "max_accel": 350.0,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -3.9499999999999997,
-          "mean_roll_deg": 5.633333333333333
+          "overshoot": 2.4000000000003183,
+          "residual_drift": 75.8750000000002,
+          "command_mean_abs": 95.16666666666667
         },
         {
           "start_s": 166.7,
           "end_s": 168.7,
           "duration_s": 2.0,
-          "peak": 85.0,
-          "response_delay_s": 0.1,
-          "max_accel": 360.0000000000023,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -3.5904761904761906,
-          "mean_roll_deg": 1.8857142857142857
+          "response_delay_s": 0.0,
+          "peak_rate": 85.0,
+          "settle_time_s": 0.0,
+          "max_accel": 239.99999999999773,
+          "overshoot": 3.599999999999909,
+          "residual_drift": 80.25000000000006,
+          "command_mean_abs": 96.80952380952381
         },
         {
           "start_s": 169.7,
           "end_s": 172.4,
           "duration_s": 2.700000000000017,
-          "peak": 87.00000000000045,
           "response_delay_s": 0.30000000000000004,
+          "peak_rate": 87.00000000000045,
+          "settle_time_s": 0.0,
           "max_accel": 320.00000000000455,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": 3.725,
-          "mean_roll_deg": -2.1392857142857142
+          "overshoot": 7.600000000000364,
+          "residual_drift": 80.62500000000014,
+          "command_mean_abs": 96.64285714285714
         },
         {
           "start_s": 173.5,
           "end_s": 176.0,
           "duration_s": 2.5,
-          "peak": 83.99999999999977,
           "response_delay_s": 0.4,
+          "peak_rate": 83.99999999999977,
+          "settle_time_s": 0.0,
           "max_accel": 300.0,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -4.815384615384615,
-          "mean_roll_deg": 1.2653846153846153
+          "overshoot": 5.199999999999818,
+          "residual_drift": 79.50000000000003,
+          "command_mean_abs": 97.26923076923077
         },
         {
           "start_s": 176.9,
           "end_s": 180.5,
           "duration_s": 3.5999999999999943,
-          "peak": 85.0,
           "response_delay_s": 0.2,
+          "peak_rate": 85.0,
+          "settle_time_s": 0.0,
           "max_accel": 350.00000000001137,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": 0.954054054054054,
-          "mean_roll_deg": 0.7135135135135136
+          "overshoot": 4.199999999999818,
+          "residual_drift": 79.87500000000026,
+          "command_mean_abs": 99.10810810810811
         }
       ]
     },
     "lateral_right": {
-      "count": 4,
-      "peak_mean": 2.30000381248,
-      "peak_max": 2.500004144,
-      "delay_mean": 0.4,
-      "accel_mean": 3.5000058016000013,
-      "settle_tail_mean": 0.0,
+      "count": 3,
+      "confidence": {
+        "mean_score": 1.0,
+        "high_count": 3,
+        "medium_count": 0,
+        "low_count": 0
+      },
+      "aggregate": {
+        "response_delay_s_mean": 0.0,
+        "peak_rate_mean": 0.2,
+        "max_accel_mean": 0.333,
+        "settle_time_s_mean": 1.1,
+        "overshoot_mean": 0.2,
+        "residual_drift_mean": 0.0
+      },
       "runs": [
         {
           "start_s": 94.9,
           "end_s": 96.4,
           "duration_s": 1.5,
-          "peak": 1.80000298368,
-          "response_delay_s": 0.5,
-          "max_accel": 2.0000033152000016,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -4.48125,
-          "mean_roll_deg": 16.7
-        },
-        {
-          "start_s": 98.7,
-          "end_s": 100.0,
-          "duration_s": 1.2999999999999972,
-          "peak": 2.500004144,
-          "response_delay_s": 0.5,
-          "max_accel": 4.000006630400003,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -4.878571428571428,
-          "mean_roll_deg": 21.407142857142855
+          "response_delay_s": 0.0,
+          "peak_rate": 0.10000016576,
+          "settle_time_s": 1.3,
+          "max_accel": 0.0,
+          "overshoot": 0.10000016576,
+          "residual_drift": 0.0,
+          "command_mean_abs": 94.75
         },
         {
           "start_s": 101.7,
           "end_s": 103.0,
           "duration_s": 1.2999999999999972,
-          "peak": 2.40000397824,
-          "response_delay_s": 0.1,
-          "max_accel": 4.000006630399999,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -5.55,
-          "mean_roll_deg": 22.0
+          "response_delay_s": 0.0,
+          "peak_rate": 0.30000049728,
+          "settle_time_s": 1.0,
+          "max_accel": 1.0000016576,
+          "overshoot": 0.30000049728,
+          "residual_drift": 0.0,
+          "command_mean_abs": 95.07142857142857
         },
         {
           "start_s": 107.3,
           "end_s": 108.6,
           "duration_s": 1.2999999999999972,
-          "peak": 2.500004144,
-          "response_delay_s": 0.5,
-          "max_accel": 4.0000066304000015,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -4.0,
-          "mean_roll_deg": 22.164285714285715
+          "response_delay_s": 0.0,
+          "peak_rate": 0.20000033152,
+          "settle_time_s": 1.0,
+          "max_accel": 0.0,
+          "overshoot": 0.20000033152,
+          "residual_drift": 0.0,
+          "command_mean_abs": 96.78571428571429
         }
       ]
     },
     "climb": {
-      "count": 1,
-      "peak_mean": 4.400007293440001,
-      "peak_max": 4.400007293440001,
-      "delay_mean": 0.30000000000000004,
-      "accel_mean": 6.000009945600002,
-      "settle_tail_mean": 0.0,
+      "count": 4,
+      "confidence": {
+        "mean_score": 0.785,
+        "high_count": 1,
+        "medium_count": 3,
+        "low_count": 0
+      },
+      "aggregate": {
+        "response_delay_s_mean": 0.25,
+        "peak_rate_mean": 3.625,
+        "max_accel_mean": 5.75,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 1.04,
+        "residual_drift_mean": 1.847
+      },
       "runs": [
+        {
+          "start_s": 122.8,
+          "end_s": 123.5,
+          "duration_s": 0.7000000000000028,
+          "response_delay_s": 0.2,
+          "peak_rate": 2.8000046412799997,
+          "settle_time_s": 0.0,
+          "max_accel": 5.000008288,
+          "overshoot": 1.0000016575999997,
+          "residual_drift": 1.1625019269599999,
+          "command_mean_abs": 94.75
+        },
+        {
+          "start_s": 125.3,
+          "end_s": 126.1,
+          "duration_s": 0.7999999999999972,
+          "response_delay_s": 0.2,
+          "peak_rate": 3.60000596736,
+          "settle_time_s": 0.0,
+          "max_accel": 6.000009945600002,
+          "overshoot": 1.10000182336,
+          "residual_drift": 1.73750288008,
+          "command_mean_abs": 86.11111111111111
+        },
+        {
+          "start_s": 127.6,
+          "end_s": 128.5,
+          "duration_s": 0.9000000000000057,
+          "response_delay_s": 0.30000000000000004,
+          "peak_rate": 3.70000613312,
+          "settle_time_s": 0.0,
+          "max_accel": 6.000009945600002,
+          "overshoot": 1.0200016907520002,
+          "residual_drift": 1.91250317016,
+          "command_mean_abs": 90.0
+        },
         {
           "start_s": 130.2,
           "end_s": 131.2,
           "duration_s": 1.0,
-          "peak": 4.400007293440001,
           "response_delay_s": 0.30000000000000004,
+          "peak_rate": 4.400007293440001,
+          "settle_time_s": 0.0,
           "max_accel": 6.000009945600002,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -6.045454545454546,
-          "mean_roll_deg": 6.909090909090909
+          "overshoot": 1.040001723904001,
+          "residual_drift": 2.57500426832,
+          "command_mean_abs": 85.27272727272727
         }
       ]
     },
     "descent": {
       "count": 3,
-      "peak_mean": 4.066673407573334,
-      "peak_max": 5.8000096140799995,
-      "delay_mean": 0.16666666666666666,
-      "accel_mean": 4.000006630400002,
-      "settle_tail_mean": 0.0,
+      "confidence": {
+        "mean_score": 0.783,
+        "high_count": 2,
+        "medium_count": 1,
+        "low_count": 0
+      },
+      "aggregate": {
+        "response_delay_s_mean": 0.167,
+        "peak_rate_mean": 4.067,
+        "max_accel_mean": 4.0,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 0.687,
+        "residual_drift_mean": 3.233
+      },
       "runs": [
         {
           "start_s": 133.6,
           "end_s": 135.3,
           "duration_s": 1.700000000000017,
-          "peak": 5.8000096140799995,
           "response_delay_s": 0.30000000000000004,
+          "peak_rate": 5.8000096140799995,
+          "settle_time_s": 0.0,
           "max_accel": 4.000006630400006,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -8.766666666666666,
-          "mean_roll_deg": 6.861111111111111
+          "overshoot": 0.620001027712,
+          "residual_drift": 4.66250772856,
+          "command_mean_abs": 95.66666666666667
         },
         {
           "start_s": 137.1,
           "end_s": 139.0,
           "duration_s": 1.9000000000000057,
-          "peak": 4.300007127680001,
           "response_delay_s": 0.0,
+          "peak_rate": 4.300007127680001,
+          "settle_time_s": 0.0,
           "max_accel": 3.000004972800001,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -3.045,
-          "mean_roll_deg": 4.325
+          "overshoot": 1.400002320640001,
+          "residual_drift": 3.01250499352,
+          "command_mean_abs": 83.7
         },
         {
           "start_s": 147.6,
           "end_s": 148.9,
           "duration_s": 1.3000000000000114,
-          "peak": 2.1000034809600003,
           "response_delay_s": 0.2,
+          "peak_rate": 2.1000034809600003,
+          "settle_time_s": 0.0,
           "max_accel": 5.000008287999999,
-          "settle_tail_s": 0.0,
-          "mean_pitch_deg": -5.721428571428571,
-          "mean_roll_deg": 4.142857142857143
+          "overshoot": 0.040000066304000104,
+          "residual_drift": 2.02500335664,
+          "command_mean_abs": 100.0
         }
       ]
     },
     "hover_hold": {
       "count": 15,
-      "hspd_rms_mean": 0.5389517736678593,
-      "vspd_rms_mean": 0.2941536016971799,
-      "alt_std_mean": 0.1385928687251343,
+      "aggregate": {
+        "horizontal_rms_mps_mean": 0.412,
+        "vertical_rms_mps_mean": 0.312,
+        "alt_std_m_mean": 0.139
+      },
       "runs": [
         {
           "start_s": 13.8,
           "end_s": 31.2,
           "duration_s": 17.4,
-          "hspd_rms": 0.11109859612943386,
-          "vspd_rms": 0.03545626918933112,
+          "horizontal_rms_mps": 0.06141205968276047,
+          "vertical_rms_mps": 0.09913931617818651,
           "alt_std_m": 0.019794867005651442
         },
         {
           "start_s": 31.7,
           "end_s": 33.7,
           "duration_s": 2.0000000000000036,
-          "hspd_rms": 0.1951803381200988,
-          "vspd_rms": 0.03086072114706496,
+          "horizontal_rms_mps": 0.03086072114706496,
+          "vertical_rms_mps": 0.1951803381200988,
           "alt_std_m": 0.05259695890780392
         },
         {
           "start_s": 43.5,
           "end_s": 46.6,
           "duration_s": 3.1000000000000014,
-          "hspd_rms": 0.07288701950288952,
-          "vspd_rms": 0.06123734507643439,
+          "horizontal_rms_mps": 0.09354158972363064,
+          "vertical_rms_mps": 0.0176776988321687,
           "alt_std_m": 0.0
         },
         {
           "start_s": 47.1,
           "end_s": 59.5,
           "duration_s": 12.399999999999999,
-          "hspd_rms": 0.2592300576353457,
-          "vspd_rms": 0.05796560306838213,
+          "horizontal_rms_mps": 0.0657268158492093,
+          "vertical_rms_mps": 0.25737175369303833,
           "alt_std_m": 0.0913682687495076
         },
         {
           "start_s": 60.0,
           "end_s": 70.9,
           "duration_s": 10.900000000000006,
-          "hspd_rms": 0.3226317624992569,
-          "vspd_rms": 0.02860392509115541,
+          "horizontal_rms_mps": 0.031622829019598286,
+          "vertical_rms_mps": 0.3223498648809932,
           "alt_std_m": 0.10673594854872027
         },
         {
           "start_s": 83.7,
           "end_s": 92.6,
           "duration_s": 8.899999999999991,
-          "hspd_rms": 1.1840627719484522,
-          "vspd_rms": 0.6854855554027557,
+          "horizontal_rms_mps": 1.367684816332503,
+          "vertical_rms_mps": 0.03651489769400516,
           "alt_std_m": 0.0
         },
         {
           "start_s": 96.6,
           "end_s": 98.6,
           "duration_s": 2.0,
-          "hspd_rms": 0.5996040371929885,
-          "vspd_rms": 1.0743786767136092,
+          "horizontal_rms_mps": 1.2288226096374322,
+          "vertical_rms_mps": 0.06172144229412992,
           "alt_std_m": 0.0
         },
         {
           "start_s": 103.1,
           "end_s": 107.2,
           "duration_s": 4.1000000000000085,
-          "hspd_rms": 0.7459426359326167,
-          "vspd_rms": 1.256414207917025,
+          "horizontal_rms_mps": 1.4596175024425786,
+          "vertical_rms_mps": 0.0672593824024224,
           "alt_std_m": 0.030491068773013358
         },
         {
           "start_s": 108.7,
           "end_s": 120.5,
           "duration_s": 11.799999999999997,
-          "hspd_rms": 0.4194841712375689,
-          "vspd_rms": 0.7062755716523827,
+          "horizontal_rms_mps": 0.8205361314257653,
+          "vertical_rms_mps": 0.038892287880879395,
           "alt_std_m": 0.0
         },
         {
           "start_s": 131.3,
           "end_s": 133.5,
           "duration_s": 2.1999999999999886,
-          "hspd_rms": 2.672163627961002,
-          "vspd_rms": 0.07518106577553929,
+          "horizontal_rms_mps": 0.13351459116371586,
+          "vertical_rms_mps": 2.6698847355635484,
           "alt_std_m": 1.4592771290306426
         },
         {
           "start_s": 140.3,
           "end_s": 145.8,
           "duration_s": 5.5,
-          "hspd_rms": 0.4294937685820279,
-          "vspd_rms": 0.12174349143781485,
+          "horizontal_rms_mps": 0.14577403900577904,
+          "vertical_rms_mps": 0.4219434849718662,
           "alt_std_m": 0.12183493320882974
         },
         {
           "start_s": 149.0,
           "end_s": 154.8,
           "duration_s": 5.800000000000011,
-          "hspd_rms": 0.44531532891572967,
-          "vspd_rms": 0.0624365118213493,
+          "horizontal_rms_mps": 0.07811347606917762,
+          "vertical_rms_mps": 0.4428344442702397,
           "alt_std_m": 0.14845755349951065
         },
         {
           "start_s": 158.7,
           "end_s": 166.3,
           "duration_s": 7.600000000000023,
-          "hspd_rms": 0.01139607653606895,
-          "vspd_rms": 0.0227921530721379,
+          "horizontal_rms_mps": 0.025482401811440503,
+          "vertical_rms_mps": 0.0,
           "alt_std_m": 0.0
         },
         {
           "start_s": 180.6,
           "end_s": 194.1,
           "duration_s": 13.5,
-          "hspd_rms": 0.052159344844387286,
-          "vspd_rms": 0.02711635217532288,
+          "horizontal_rms_mps": 0.053550504812325886,
+          "vertical_rms_mps": 0.024253602706338504,
           "alt_std_m": 0.0
         },
         {
           "start_s": 220.8,
           "end_s": 225.0,
           "duration_s": 4.199999999999989,
-          "hspd_rms": 0.5636270679800222,
-          "vspd_rms": 0.16635657591739425,
+          "horizontal_rms_mps": 0.5870709542969909,
+          "vertical_rms_mps": 0.026413570972831386,
           "alt_std_m": 0.048336303153335036
         }
       ]
     }
-  }
+  },
+  "evidence_classification": {
+    "forward speed behavior": {
+      "classification": "directly_measured",
+      "source_maneuver": "forward_step",
+      "confidence": {
+        "mean_score": 0.849,
+        "high_count": 8,
+        "medium_count": 4,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "lateral speed behavior": {
+      "classification": "directly_measured",
+      "source_maneuver": "lateral_right",
+      "confidence": {
+        "mean_score": 1.0,
+        "high_count": 3,
+        "medium_count": 0,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "climb behavior": {
+      "classification": "estimated_from_limited_segments",
+      "source_maneuver": "climb",
+      "confidence": {
+        "mean_score": 0.785,
+        "high_count": 1,
+        "medium_count": 3,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "descent behavior": {
+      "classification": "directly_measured",
+      "source_maneuver": "descent",
+      "confidence": {
+        "mean_score": 0.783,
+        "high_count": 2,
+        "medium_count": 1,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "yaw behavior": {
+      "classification": "directly_measured",
+      "source_maneuver": "yaw_right",
+      "confidence": {
+        "mean_score": 0.888,
+        "high_count": 5,
+        "medium_count": 0,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "acceleration": {
+      "classification": "directly_measured",
+      "source_maneuver": "forward_step",
+      "confidence": {
+        "mean_score": 0.849,
+        "high_count": 8,
+        "medium_count": 4,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "braking": {
+      "classification": "directly_measured",
+      "source_maneuver": "forward_step",
+      "confidence": {
+        "mean_score": 0.849,
+        "high_count": 8,
+        "medium_count": 4,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "overshoot": {
+      "classification": "directly_measured",
+      "source_maneuver": "forward_step",
+      "confidence": {
+        "mean_score": 0.849,
+        "high_count": 8,
+        "medium_count": 4,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "settle time": {
+      "classification": "directly_measured",
+      "source_maneuver": "forward_step",
+      "confidence": {
+        "mean_score": 0.849,
+        "high_count": 8,
+        "medium_count": 4,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    }
+  },
+  "sim_vs_real_comparison": {
+    "forward_step": {
+      "status": "real_only",
+      "real": {
+        "response_delay_s_mean": 0.0,
+        "peak_rate_mean": 1.067,
+        "max_accel_mean": 0.667,
+        "settle_time_s_mean": 0.55,
+        "overshoot_mean": 0.142,
+        "residual_drift_mean": 0.913
+      },
+      "note": "no simulator benchmark CSVs supplied to analysis"
+    },
+    "lateral_right": {
+      "status": "real_only",
+      "real": {
+        "response_delay_s_mean": 0.0,
+        "peak_rate_mean": 0.2,
+        "max_accel_mean": 0.333,
+        "settle_time_s_mean": 1.1,
+        "overshoot_mean": 0.2,
+        "residual_drift_mean": 0.0
+      },
+      "note": "no simulator benchmark CSVs supplied to analysis"
+    },
+    "climb": {
+      "status": "real_only",
+      "real": {
+        "response_delay_s_mean": 0.25,
+        "peak_rate_mean": 3.625,
+        "max_accel_mean": 5.75,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 1.04,
+        "residual_drift_mean": 1.847
+      },
+      "note": "no simulator benchmark CSVs supplied to analysis"
+    },
+    "descent": {
+      "status": "real_only",
+      "real": {
+        "response_delay_s_mean": 0.167,
+        "peak_rate_mean": 4.067,
+        "max_accel_mean": 4.0,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 0.687,
+        "residual_drift_mean": 3.233
+      },
+      "note": "no simulator benchmark CSVs supplied to analysis"
+    },
+    "yaw_right": {
+      "status": "real_only",
+      "real": {
+        "response_delay_s_mean": 0.24,
+        "peak_rate_mean": 84.6,
+        "max_accel_mean": 312.0,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 4.6,
+        "residual_drift_mean": 79.225
+      },
+      "note": "no simulator benchmark CSVs supplied to analysis"
+    },
+    "hover_hold": {
+      "status": "real_only",
+      "real": {
+        "horizontal_rms_mps_mean": 0.412,
+        "vertical_rms_mps_mean": 0.312,
+        "alt_std_m_mean": 0.139
+      },
+      "note": "no simulator benchmark CSVs supplied to analysis"
+    }
+  },
+  "sim_csv_inputs": [
+    "Docs/nonexistent/*.csv"
+  ]
 }

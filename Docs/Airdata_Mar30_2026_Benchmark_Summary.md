@@ -1,79 +1,52 @@
 # Airdata Benchmark Summary (Mar 30, 2026 08:31 UTC)
 
-Source file parsed directly from repository root:
-- `/workspace/djiDroneSim/Mar-30th-2026-08-31AM-Flight-Airdata.csv`
+Source CSV (used directly):
+- `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
 
-Generated with:
-- `python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv`
+## Segmentation confidence overview
 
-## Segmentation method (structured benchmark assumption)
+| Maneuver | Count | High | Medium | Low | Peak mean | Delay mean |
+|---|---:|---:|---:|---:|---:|---:|
+| climb | 4 | 1 | 3 | 0 | 3.62 | 0.25 |
+| descent | 3 | 2 | 1 | 0 | 4.07 | 0.17 |
+| forward_step | 12 | 8 | 4 | 0 | 1.07 | 0.00 |
+| lateral_right | 3 | 3 | 0 | 0 | 0.20 | 0.00 |
+| yaw_left | 4 | 3 | 1 | 0 | 70.75 | 0.25 |
+| yaw_right | 5 | 5 | 0 | 0 | 84.60 | 0.24 |
 
-1. Loaded full-resolution CSV (2,321 rows at ~10 Hz) and filtered benchmark window to `flycState == P-GPS` (2,196 rows, ~225 s).
-2. Used RC percent channels (`elevator`, `aileron`, `throttle`, `rudder`) as primary maneuver markers.
-3. Detected one-axis step windows when dominant axis exceeded ±18% with non-dominant axes below ±12%.
-4. Required minimum active window length of 0.8 s and merged near-contiguous windows of same type.
-5. Mapped maneuver classes by dominant axis/sign:
-   - elevator+: `forward_step`
-   - aileron+: `lateral_right`
-   - throttle+: `climb`
-   - throttle-: `descent`
-   - rudder+: `yaw_right`
-   - rudder-: `yaw_left`
-6. Neutral dwell windows (all channels near center) longer than 2 s were tagged as `hover_hold` windows.
+## Hover hold
 
-## Identified maneuver blocks
+- Runs: 15
+- Horizontal RMS mean: 0.412 m/s
+- Vertical RMS mean: 0.312 m/s
 
-Cleanly identified:
-- Hover hold: 15 windows
-- Forward step: 12 windows
-- Lateral right: 4 windows
-- Climb: 1 window
-- Descent: 3 windows
-- Yaw right: 5 windows
-- Yaw left: 4 windows
+## Measured vs inferred classification
 
-Not cleanly identified in this log:
-- Lateral left: not present as a clean one-axis block
+| Target | Classification | Evidence |
+|---|---|---|
+| forward speed behavior | directly_measured | computed from segment aggregates |
+| lateral speed behavior | directly_measured | computed from segment aggregates |
+| climb behavior | estimated_from_limited_segments | computed from segment aggregates |
+| descent behavior | directly_measured | computed from segment aggregates |
+| yaw behavior | directly_measured | computed from segment aggregates |
+| acceleration | directly_measured | computed from segment aggregates |
+| braking | directly_measured | computed from segment aggregates |
+| overshoot | directly_measured | computed from segment aggregates |
+| settle time | directly_measured | computed from segment aggregates |
 
-## Directly extracted aggregate metrics
+## Sim vs real comparison
 
-### Hover hold
-- Horizontal speed RMS mean: **0.539 m/s**
-- Vertical speed RMS mean: **0.294 m/s**
-- Altitude std-dev mean: **0.139 m**
+| Category | Status | Notes |
+|---|---|---|
+| forward_step | real_only | no simulator benchmark CSVs supplied to analysis |
+| lateral_right | real_only | no simulator benchmark CSVs supplied to analysis |
+| climb | real_only | no simulator benchmark CSVs supplied to analysis |
+| descent | real_only | no simulator benchmark CSVs supplied to analysis |
+| yaw_right | real_only | no simulator benchmark CSVs supplied to analysis |
+| hover_hold | real_only | no simulator benchmark CSVs supplied to analysis |
 
-### Forward step
-- Mean peak speed: **2.06 m/s** (max 3.30 m/s)
-- Mean response delay (~10% of peak): **0.23 s**
-- Mean max acceleration: **2.25 m/s²**
+## Confidence policy
 
-### Lateral right
-- Mean peak speed: **2.30 m/s** (max 2.50 m/s)
-- Mean response delay: **0.40 s**
-- Mean max acceleration: **3.50 m/s²**
-
-### Vertical
-- Climb: 1 usable block, peak **~1.61 m/s** (low confidence, single sample)
-- Descent: mean peak **4.07 m/s** (max 5.80 m/s), mean response delay **0.17 s**
-
-### Yaw
-- Yaw left peak rate mean: **70.75 deg/s**
-- Yaw right peak rate mean: **84.60 deg/s**
-- Yaw right appears more aggressive than left in this session.
-
-### Attitude coupling (direct observations)
-- Forward segments carried consistent negative pitch magnitude.
-- Lateral-right segments carried strong positive roll magnitude.
-- This supports tilt-to-translation coupling in sim tuning.
-
-## Inferred/estimated (not directly validated by this single file)
-
-- Exact steady-state top speed limits for full-stick commands in all axes.
-- Symmetric lateral-left behavior (no clean left-step blocks were found).
-- Robust climb dynamics (only one short climb block met clean criteria).
-- Cine/Sport mode validation (log mode is dominated by `P-GPS`; Cine/Sport values were derived from Normal baseline, not directly validated here).
-
-## Output artifacts
-
-- Machine-readable summary: `Docs/airdata_mar30_analysis.json`
-- Analysis helper script: `Tools/analyze_airdata.py`
+- **directly_measured**: at least 2 high-confidence segments for that target maneuver.
+- **estimated_from_limited_segments**: only medium-confidence or single high-confidence support.
+- **designer_assumption**: no reliable segments in this log.
