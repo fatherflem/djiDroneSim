@@ -37,9 +37,11 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Upward gravity cancellation multiplier. 1.0 means full gravity counter-force baseline.")]
         [SerializeField] private float gravityCancelMultiplier = 1f;
 
-        [FormerlySerializedAs("maxHorizontalAcceleration")]
-        [Tooltip("Global horizontal acceleration cap across all modes.")]
-        [SerializeField] private float globalHorizontalAccelLimit = 8f;
+        [Tooltip("Global forward-axis acceleration cap across all modes.")]
+        [SerializeField] private float globalForwardAccelLimit = 8f;
+
+        [Tooltip("Global lateral-axis acceleration cap across all modes.")]
+        [SerializeField] private float globalLateralAccelLimit = 8f;
 
         [FormerlySerializedAs("maxVerticalAcceleration")]
         [Tooltip("Global vertical acceleration cap across all modes.")]
@@ -73,16 +75,8 @@ namespace DroneSim.Drone.Flight
             sportConfig = sport;
         }
 
-
-        private void Reset()
-        {
-            AutoWireReferences();
-        }
-
-        private void Awake()
-        {
-            AutoWireReferences();
-        }
+        private void Reset() => AutoWireReferences();
+        private void Awake() => AutoWireReferences();
 
         private void OnValidate()
         {
@@ -91,6 +85,7 @@ namespace DroneSim.Drone.Flight
                 AutoWireReferences();
             }
         }
+
         private void FixedUpdate()
         {
             if (inputReader == null || physicsBody == null || ActiveConfig == null)
@@ -104,25 +99,29 @@ namespace DroneSim.Drone.Flight
 
             Vector3 currentHorizontalVelocity = physicsBody.HorizontalVelocity;
             Vector3 currentLocalHorizontal = Quaternion.Inverse(transform.rotation) * currentHorizontalVelocity;
-            Vector2 desiredLocalVelocity = new Vector2(input.Roll, input.Pitch) * config.maxHorizontalSpeed;
-            Vector2 currentLocalVelocity = new Vector2(currentLocalHorizontal.x, currentLocalHorizontal.z);
-            Vector2 velocityError = desiredLocalVelocity - currentLocalVelocity;
 
-            float horizontalAuthority = desiredLocalVelocity.sqrMagnitude < brakingInputDeadband * brakingInputDeadband
-                ? config.horizontalStopStrength
-                : config.horizontalAcceleration;
+            float targetLateralSpeed = input.Roll * config.maxLateralSpeed;
+            float targetForwardSpeed = input.Pitch * config.maxForwardSpeed;
 
-            Vector2 localAcceleration = Vector2.ClampMagnitude(
-                velocityError * horizontalAuthority,
-                Mathf.Min(horizontalAuthority, globalHorizontalAccelLimit));
-            Vector3 worldAcceleration = transform.TransformDirection(new Vector3(localAcceleration.x, 0f, localAcceleration.y));
+            float lateralVelocityError = targetLateralSpeed - currentLocalHorizontal.x;
+            float forwardVelocityError = targetForwardSpeed - currentLocalHorizontal.z;
 
-            float targetVerticalSpeed = input.Throttle * config.maxVerticalSpeed;
+            float lateralAuthority = Mathf.Abs(input.Roll) < brakingInputDeadband
+                ? config.lateralStopStrength
+                : config.lateralAcceleration;
+            float forwardAuthority = Mathf.Abs(input.Pitch) < brakingInputDeadband
+                ? config.forwardStopStrength
+                : config.forwardAcceleration;
+
+            float localAccelX = Mathf.Clamp(lateralVelocityError * lateralAuthority, -globalLateralAccelLimit, globalLateralAccelLimit);
+            float localAccelZ = Mathf.Clamp(forwardVelocityError * forwardAuthority, -globalForwardAccelLimit, globalForwardAccelLimit);
+            Vector3 worldAcceleration = transform.TransformDirection(new Vector3(localAccelX, 0f, localAccelZ));
+
+            float targetVerticalSpeed = input.Throttle >= 0f
+                ? input.Throttle * config.maxClimbSpeed
+                : input.Throttle * config.maxDescentSpeed;
             float verticalError = targetVerticalSpeed - physicsBody.VerticalSpeed;
-            float verticalAcceleration = Mathf.Clamp(
-                verticalError * config.verticalAcceleration,
-                -globalVerticalAccelLimit,
-                globalVerticalAccelLimit);
+            float verticalAcceleration = Mathf.Clamp(verticalError * config.verticalAcceleration, -globalVerticalAccelLimit, globalVerticalAccelLimit);
 
             float targetYawRate = input.Yaw * config.maxYawRateDegrees;
             float yawBlend = 1f - Mathf.Exp(-config.yawCatchUpSpeed * Time.fixedDeltaTime);
@@ -144,13 +143,12 @@ namespace DroneSim.Drone.Flight
             }
 
             Vector3 localCommand = Quaternion.Inverse(transform.rotation) * commandedWorldAcceleration;
-            float pitchTilt = Mathf.Clamp(-localCommand.z * 4.4f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
-            float rollTilt = Mathf.Clamp(localCommand.x * 4.4f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
+            float pitchTilt = Mathf.Clamp(-localCommand.z * 4.2f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
+            float rollTilt = Mathf.Clamp(localCommand.x * 4.8f, -config.tiltLimitDegrees, config.tiltLimitDegrees);
             Quaternion targetTilt = Quaternion.Euler(pitchTilt, 0f, rollTilt);
             float blend = 1f - Mathf.Exp(-config.tiltSmoothing * Time.fixedDeltaTime);
             visualTiltRoot.localRotation = Quaternion.Slerp(visualTiltRoot.localRotation, targetTilt, blend);
         }
-
 
         private void AutoWireReferences()
         {

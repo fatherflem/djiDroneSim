@@ -17,21 +17,39 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Which mode this config asset represents (Cine, Normal, or Sport).")]
         public DroneMode mode = DroneMode.Normal;
 
-        [Header("Translation")]
-        [Tooltip("Maximum forward/sideways speed in meters per second for this mode.")]
-        [Min(0.1f)] public float maxHorizontalSpeed = 6f;
+        [Header("Horizontal translation")]
+        [Tooltip("Maximum forward speed in meters per second for this mode.")]
+        [FormerlySerializedAs("maxHorizontalSpeed")]
+        [Min(0.1f)] public float maxForwardSpeed = 6f;
 
-        [Tooltip("How quickly horizontal speed builds when stick input is held.")]
-        [Min(0.1f)] public float horizontalAcceleration = 7f;
+        [Tooltip("Maximum lateral (side) speed in meters per second for this mode.")]
+        [Min(0.1f)] public float maxLateralSpeed = 5f;
 
+        [Tooltip("How quickly forward speed builds when pitch input is held.")]
+        [FormerlySerializedAs("horizontalAcceleration")]
+        [Min(0.1f)] public float forwardAcceleration = 7f;
+
+        [Tooltip("How quickly lateral speed builds when roll input is held.")]
+        [Min(0.1f)] public float lateralAcceleration = 6f;
+
+        [Tooltip("How strongly the drone brakes in forward/back axis when sticks return near center.")]
         [FormerlySerializedAs("horizontalBrakeAcceleration")]
-        [Tooltip("How strongly the drone brakes horizontally when sticks return near center.")]
-        [Min(0.1f)] public float horizontalStopStrength = 11f;
+        [FormerlySerializedAs("horizontalStopStrength")]
+        [Min(0.1f)] public float forwardStopStrength = 11f;
 
-        [Tooltip("Maximum climb/descent speed in meters per second.")]
-        [Min(0.1f)] public float maxVerticalSpeed = 3f;
+        [Tooltip("How strongly the drone brakes in lateral axis when sticks return near center.")]
+        [Min(0.1f)] public float lateralStopStrength = 10f;
+
+        [Header("Vertical translation")]
+        [Tooltip("Maximum climb speed in meters per second.")]
+        [FormerlySerializedAs("maxVerticalSpeed")]
+        [Min(0.1f)] public float maxClimbSpeed = 3f;
+
+        [Tooltip("Maximum descent speed in meters per second.")]
+        [Min(0.1f)] public float maxDescentSpeed = 3f;
 
         [Tooltip("How quickly vertical speed changes toward throttle target.")]
+        [FormerlySerializedAs("verticalAcceleration")]
         [Min(0.1f)] public float verticalAcceleration = 6f;
 
         [Header("Yaw")]
