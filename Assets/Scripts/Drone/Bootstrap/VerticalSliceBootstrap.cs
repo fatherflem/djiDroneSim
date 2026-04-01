@@ -265,7 +265,7 @@ namespace DroneSim.Drone.Bootstrap
                 ? sceneCamera.GetComponent<SimpleFollowCamera>()
                 : FindFirstObjectByType<SimpleFollowCamera>();
 
-            sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed);
+            sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed, inputConfig);
 
             // 4. Wire camera references into the debug HUD for mode/gimbal display.
             if (hud != null)

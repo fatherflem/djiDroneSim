@@ -68,9 +68,12 @@ All four scripts live under `Assets/Scripts/Drone/Camera/`.
 
 ### Gimbal pitch controls
 
-- **`[` / `]`** keys: tilt gimbal down / up
-- **Mouse scroll wheel**: tilt gimbal
-- **`\`** key: reset gimbal to 0 degrees (forward)
+Camera mode + gimbal controls now use **Unity Input System actions** (configured in `DroneInputConfig`):
+
+- `cameraToggleBinding` (default **`V`**) toggles Chase/FPV
+- `gimbalTiltDownBinding` / `gimbalTiltUpBinding` (default **`[` / `]`**) tilt the gimbal
+- `gimbalResetBinding` (default **`\`**) resets pitch to 0°
+
 - Pitch range: -90 to +10 degrees (configurable on `DroneGimbalCameraRig`)
 - Pitch speed and smoothing are configurable in the Inspector
 
@@ -92,6 +95,12 @@ The `DroneVideoFeed` component always maintains a live `RenderTexture` of the on
 4. For UI-based screens, add a `RawImage` component and the surface will bind to that instead.
 
 Alternatively, access `DroneVideoFeed.FeedTexture` directly and assign it to any material: `material.mainTexture = feed.FeedTexture;`
+
+### Chase vs FPV behavior
+
+- **Chase mode**: main camera runs `SimpleFollowCamera`; onboard camera still renders continuously to `DroneVideoFeed.FeedTexture`.
+- **FPV mode**: `SimpleFollowCamera` is disabled, and main camera is positioned/rotated to match onboard camera each frame.
+- In both modes, the onboard camera remains bound to the same persistent `RenderTexture`, so feed consumers (mesh screen, RawImage, future VR controller display) keep working.
 
 ## Input System / Controller Mapping
 
@@ -125,7 +134,7 @@ Keyboard/gamepad fallback bindings are included for editor testing.
 
 ### Input System backend configuration
 
-The project uses **both** the new Input System (for flight controls) and legacy `UnityEngine.Input` (for benchmark hotkeys and camera gimbal keyboard controls). The `ProjectSettings/ProjectSettings.asset` file sets `activeInputHandler: 2` (Both) so that Unity enables both backends on startup.
+The project uses **Input System** for flight/camera/gimbal controls. Legacy `UnityEngine.Input` is intentionally retained only for benchmark-only hotkeys in `BenchmarkRunner`. `ProjectSettings/ProjectSettings.asset` sets `activeInputHandler: 2` (Both) so startup warnings remain resolved while benchmark hotkeys continue working.
 
 **If the "new input system package but native platform backends are not enabled" popup reappears:**
 1. Check that `ProjectSettings/ProjectSettings.asset` exists and contains `activeInputHandler: 2`.
@@ -141,6 +150,34 @@ The `DroneSim.Drone.Camera` namespace conflicts with `UnityEngine.Camera` when b
 
 **If a camera namespace collision reappears in a new script:**
 Add `using UnityCamera = UnityEngine.Camera;` at the top and use `UnityCamera` instead of bare `Camera`.
+
+## Camera/FPV troubleshooting
+
+- **Black feed texture (mesh/UI screen is black)**
+  1. Confirm `DroneVideoFeed` exists and references the same `DroneGimbalCameraRig`.
+  2. Confirm `DroneGimbalCameraRig.OnboardCamera` exists and is enabled.
+  3. Confirm a valid `RenderTexture` is present in `DroneVideoFeed.FeedTexture`.
+  4. Confirm the display material/property or `RawImage` is bound by `DroneFeedDisplaySurface`.
+
+- **FPV works, but controller/world display surface does not**
+  1. Ensure the display object has `DroneFeedDisplaySurface`.
+  2. Ensure it points to the active `DroneVideoFeed` (or let it auto-find).
+  3. For mesh displays, confirm the shader property name (default `_MainTex`) matches your shader.
+  4. For UI displays, confirm `RawImage` exists and is assigned.
+
+- **Right stick lights up in Input Debugger, but roll/pitch do not respond**
+  1. Check `DroneInputConfig` roll/pitch bindings.
+  2. `DroneInputReader` binds both `<Joystick>/x|y` and `<Joystick>/stick/x|y`, so either naming style should work.
+  3. Check deadzone/expo/invert settings and that the active scene drone uses the expected `DroneInputConfig`.
+
+- **Input System popup returns on startup**
+  1. Open `ProjectSettings/ProjectSettings.asset`.
+  2. Verify `activeInputHandler: 2`.
+  3. If Unity reset it, set **Player > Active Input Handling** back to **Both**.
+
+- **Camera namespace collision reappears**
+  1. Add alias: `using UnityCamera = UnityEngine.Camera;`
+  2. Use `UnityCamera` for all camera references in that script.
 
 ## Raw joystick diagnostics overlay (temporary input debugging)
 

@@ -76,6 +76,19 @@ namespace DroneSim.Drone.Input
         [Tooltip("Button/key that requests Sport mode while flying.")]
         public string sportModeBinding = "<Keyboard>/3";
 
+        [Header("Camera and gimbal bindings")]
+        [Tooltip("Toggle between chase and FPV presentation modes.")]
+        public string cameraToggleBinding = "<Keyboard>/v";
+
+        [Tooltip("Hold to tilt gimbal downward.")]
+        public string gimbalTiltDownBinding = "<Keyboard>/leftBracket";
+
+        [Tooltip("Hold to tilt gimbal upward.")]
+        public string gimbalTiltUpBinding = "<Keyboard>/rightBracket";
+
+        [Tooltip("Recenter gimbal pitch to forward.")]
+        public string gimbalResetBinding = "<Keyboard>/backslash";
+
         [Header("Input filtering and feel")]
         [FormerlySerializedAs("deadzone")]
         [Tooltip("Ignore tiny stick noise around center. Increase if your radio jitters at center.")]
