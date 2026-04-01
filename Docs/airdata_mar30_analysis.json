@@ -42,7 +42,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 8295,
+      "cluster_id": 28079,
       "sequence_index": 7
     },
     {
@@ -63,7 +63,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 15596,
+      "cluster_id": 58632,
       "sequence_index": 7
     },
     {
@@ -85,7 +85,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 85154,
+      "cluster_id": 23928,
       "sequence_index": 7
     },
     {
@@ -106,7 +106,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 25705,
+      "cluster_id": 56212,
       "sequence_index": 7
     },
     {
@@ -125,7 +125,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 96258,
+      "cluster_id": 14734,
       "sequence_index": 7
     },
     {
@@ -147,7 +147,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 47936,
+      "cluster_id": 90972,
       "sequence_index": 7
     },
     {
@@ -170,7 +170,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 12430,
+      "cluster_id": 25397,
       "sequence_index": 7
     },
     {
@@ -192,7 +192,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 28375,
+      "cluster_id": 71411,
       "sequence_index": 7
     },
     {
@@ -215,7 +215,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 87315,
+      "cluster_id": 89705,
       "sequence_index": 7
     },
     {
@@ -238,7 +238,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 12430,
+      "cluster_id": 25397,
       "sequence_index": 7
     },
     {
@@ -259,7 +259,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 19802,
+      "cluster_id": 16021,
       "sequence_index": 7
     },
     {
@@ -281,7 +281,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 92102,
+      "cluster_id": 48754,
       "sequence_index": 7
     },
     {
@@ -303,7 +303,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 31606,
+      "cluster_id": 29528,
       "sequence_index": 7
     },
     {
@@ -326,7 +326,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 13690,
+      "cluster_id": 11612,
       "sequence_index": 7
     },
     {
@@ -349,7 +349,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 13690,
+      "cluster_id": 11612,
       "sequence_index": 7
     },
     {
@@ -369,7 +369,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 58510,
+      "cluster_id": 447,
       "sequence_index": 7
     },
     {
@@ -389,7 +389,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 72627,
+      "cluster_id": 4201,
       "sequence_index": 7
     },
     {
@@ -409,7 +409,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 71662,
+      "cluster_id": 3126,
       "sequence_index": 7
     },
     {
@@ -430,7 +430,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 87144,
+      "cluster_id": 77973,
       "sequence_index": 7
     },
     {
@@ -451,7 +451,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 62157,
+      "cluster_id": 46238,
       "sequence_index": 7
     },
     {
@@ -471,7 +471,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 6433,
+      "cluster_id": 57141,
       "sequence_index": 7
     },
     {
@@ -492,7 +492,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 23788,
+      "cluster_id": 85167,
       "sequence_index": 7
     },
     {
@@ -513,7 +513,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 55830,
+      "cluster_id": 1663,
       "sequence_index": 7
     },
     {
@@ -535,7 +535,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 40466,
+      "cluster_id": 33564,
       "sequence_index": 7
     },
     {
@@ -556,7 +556,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 92296,
+      "cluster_id": 58981,
       "sequence_index": 7
     },
     {
@@ -577,7 +577,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 78532,
+      "cluster_id": 13345,
       "sequence_index": 7
     },
     {
@@ -599,7 +599,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 89378,
+      "cluster_id": 96280,
       "sequence_index": 7
     },
     {
@@ -620,7 +620,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 26211,
+      "cluster_id": 48796,
       "sequence_index": 7
     },
     {
@@ -640,7 +640,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 76210,
+      "cluster_id": 67557,
       "sequence_index": 7
     },
     {
@@ -660,7 +660,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 58138,
+      "cluster_id": 55651,
       "sequence_index": 7
     },
     {
@@ -680,7 +680,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 77327,
+      "cluster_id": 43065,
       "sequence_index": 7
     },
     {
@@ -700,7 +700,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 6732,
+      "cluster_id": 87920,
       "sequence_index": 7
     },
     {
@@ -721,7 +721,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 87315,
+      "cluster_id": 89705,
       "sequence_index": 7
     },
     {
@@ -742,7 +742,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 86378,
+      "cluster_id": 8274,
       "sequence_index": 7
     }
   ],
@@ -1376,7 +1376,7 @@
       },
       "notes": "computed from segment aggregates"
     },
-    "lateral speed behavior": {
+    "lateral right behavior": {
       "classification": "directly_measured",
       "source_maneuver": "lateral_right",
       "confidence": {
@@ -1386,6 +1386,10 @@
         "low_count": 0
       },
       "notes": "computed from segment aggregates"
+    },
+    "lateral left behavior": {
+      "classification": "designer_assumption",
+      "reason": "no clean lateral_left segments"
     },
     "climb behavior": {
       "classification": "estimated_from_limited_segments",
@@ -1409,13 +1413,24 @@
       },
       "notes": "computed from segment aggregates"
     },
-    "yaw behavior": {
+    "yaw right behavior": {
       "classification": "directly_measured",
       "source_maneuver": "yaw_right",
       "confidence": {
         "mean_score": 0.888,
         "high_count": 5,
         "medium_count": 0,
+        "low_count": 0
+      },
+      "notes": "computed from segment aggregates"
+    },
+    "yaw left behavior": {
+      "classification": "directly_measured",
+      "source_maneuver": "yaw_left",
+      "confidence": {
+        "mean_score": 0.845,
+        "high_count": 3,
+        "medium_count": 1,
         "low_count": 0
       },
       "notes": "computed from segment aggregates"
@@ -1466,6 +1481,16 @@
     }
   },
   "sim_vs_real_comparison": {
+    "hover_hold": {
+      "status": "real_only",
+      "real": {
+        "horizontal_rms_mps_mean": 0.412,
+        "vertical_rms_mps_mean": 0.312,
+        "alt_std_m_mean": 0.139
+      },
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
+    },
     "forward_step": {
       "status": "real_only",
       "real": {
@@ -1476,7 +1501,8 @@
         "overshoot_mean": 0.142,
         "residual_drift_mean": 0.913
       },
-      "note": "no simulator benchmark CSVs supplied to analysis"
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
     },
     "lateral_right": {
       "status": "real_only",
@@ -1488,7 +1514,13 @@
         "overshoot_mean": 0.2,
         "residual_drift_mean": 0.0
       },
-      "note": "no simulator benchmark CSVs supplied to analysis"
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
+    },
+    "lateral_left": {
+      "status": "no_real_data",
+      "sim_runs": 0,
+      "real_evidence": "designer_assumption"
     },
     "climb": {
       "status": "real_only",
@@ -1500,7 +1532,8 @@
         "overshoot_mean": 1.04,
         "residual_drift_mean": 1.847
       },
-      "note": "no simulator benchmark CSVs supplied to analysis"
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
     },
     "descent": {
       "status": "real_only",
@@ -1512,7 +1545,8 @@
         "overshoot_mean": 0.687,
         "residual_drift_mean": 3.233
       },
-      "note": "no simulator benchmark CSVs supplied to analysis"
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
     },
     "yaw_right": {
       "status": "real_only",
@@ -1524,19 +1558,25 @@
         "overshoot_mean": 4.6,
         "residual_drift_mean": 79.225
       },
-      "note": "no simulator benchmark CSVs supplied to analysis"
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
     },
-    "hover_hold": {
+    "yaw_left": {
       "status": "real_only",
       "real": {
-        "horizontal_rms_mps_mean": 0.412,
-        "vertical_rms_mps_mean": 0.312,
-        "alt_std_m_mean": 0.139
+        "response_delay_s_mean": 0.25,
+        "peak_rate_mean": 70.75,
+        "max_accel_mean": 177.5,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 6.9,
+        "residual_drift_mean": 63.312
       },
-      "note": "no simulator benchmark CSVs supplied to analysis"
+      "real_evidence": "directly_measured_from_airdata",
+      "note": "no simulator benchmark CSVs supplied for this category"
     }
   },
   "sim_csv_inputs": [
-    "Docs/nonexistent/*.csv"
-  ]
+    "BenchmarkRuns/**/*.csv"
+  ],
+  "sim_runs_index": []
 }

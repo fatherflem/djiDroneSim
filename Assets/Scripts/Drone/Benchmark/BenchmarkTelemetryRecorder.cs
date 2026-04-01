@@ -13,12 +13,15 @@ namespace DroneSim.Drone.Benchmark
     {
         public struct BenchmarkSample
         {
+            public int SampleIndex;
             public float ElapsedTime;
             public Vector3 Position;
             public Vector3 Velocity;
             public float HorizontalSpeed;
             public float VerticalSpeed;
             public float YawDegrees;
+            public float PitchDegrees;
+            public float RollDegrees;
             public float YawRateDegPerSec;
             public float RollInput;
             public float PitchInput;
@@ -42,7 +45,10 @@ namespace DroneSim.Drone.Benchmark
         public void Record(float elapsedTime, DronePhysicsBody body, BenchmarkInputFrame inputFrame)
         {
             Vector3 velocity = body.Velocity;
-            float yaw = body.YawDegrees;
+            Vector3 euler = body.transform.rotation.eulerAngles;
+            float pitch = NormalizeSignedAngle(euler.x);
+            float yaw = NormalizeSignedAngle(euler.y);
+            float roll = NormalizeSignedAngle(euler.z);
             float yawRate = 0f;
 
             if (hasPreviousYaw)
@@ -56,12 +62,15 @@ namespace DroneSim.Drone.Benchmark
 
             samples.Add(new BenchmarkSample
             {
+                SampleIndex = samples.Count,
                 ElapsedTime = elapsedTime,
                 Position = body.transform.position,
                 Velocity = velocity,
                 HorizontalSpeed = body.HorizontalVelocity.magnitude,
                 VerticalSpeed = body.VerticalSpeed,
                 YawDegrees = yaw,
+                PitchDegrees = pitch,
+                RollDegrees = roll,
                 YawRateDegPerSec = yawRate,
                 RollInput = inputFrame.Roll,
                 PitchInput = inputFrame.Pitch,
@@ -71,12 +80,16 @@ namespace DroneSim.Drone.Benchmark
             });
         }
 
-        public void ExportCsv(string directoryPath, string runFileLabel, ManeuverDefinition maneuver)
+        public void ExportCsv(string directoryPath, BenchmarkCsvExporter.RunContext context, ManeuverDefinition maneuver)
         {
             string safeManeuver = MakeSafeFilename(maneuver != null ? maneuver.maneuverName : "UnknownManeuver");
-            string safeLabel = MakeSafeFilename(runFileLabel);
-            string filePath = System.IO.Path.Combine(directoryPath, $"benchmark_{safeManeuver}_{safeLabel}.csv");
-            BenchmarkCsvExporter.Write(filePath, maneuver, samples);
+            string safeCategory = MakeSafeFilename(maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown");
+            string safeMode = MakeSafeFilename(maneuver != null ? maneuver.flightMode.ToString() : "UnknownMode");
+            string safeLabel = MakeSafeFilename(context.RunLabel);
+            string filePath = System.IO.Path.Combine(
+                directoryPath,
+                $"run_{context.RunNumber:000}_{safeCategory}_{safeManeuver}_{safeMode}_{safeLabel}.csv");
+            BenchmarkCsvExporter.Write(filePath, maneuver, context, samples);
         }
 
         private static string MakeSafeFilename(string raw)
@@ -93,6 +106,11 @@ namespace DroneSim.Drone.Benchmark
             }
 
             return cleaned.Replace(' ', '_');
+        }
+
+        private static float NormalizeSignedAngle(float value)
+        {
+            return Mathf.DeltaAngle(0f, value);
         }
     }
 }
