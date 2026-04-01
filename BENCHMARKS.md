@@ -36,6 +36,21 @@ Use these protocol categories to align with Airdata analysis:
 - `yaw_right`
 - `yaw_left`
 
+
+## Benchmark-safe environment isolation
+`BenchmarkRunner` now coordinates a `BenchmarkEnvironmentController` so benchmark maneuvers run in a sterile area:
+
+- On benchmark start, the controller disables colliders and rigidbody collision participation on presentation-only objects, including:
+  - `VRUserPlaceholder`
+  - `DroneControllerPlaceholder` + stick visuals
+  - `DroneFeedDisplaySurface` roots / fallback `VRControllerScreenPlaceholder_Fallback`
+  - demo props such as `Marker` and `HoverBoxEdge`
+- During the run, drone reset uses a dedicated benchmark offset (`benchmarkSpawnOffset`, default `(0, 0, 40)`) so maneuvers execute away from demo/operator rigs.
+- On benchmark stop (or runner disable), original collider/rigidbody settings are restored for normal play/demo mode.
+
+To change the clean benchmark spawn/reset area, edit `benchmarkSpawnOffset` on `BenchmarkEnvironmentController`.
+Disable dedicated offset behavior via `useDedicatedBenchmarkArea` if you need authored positions exactly.
+
 ## Unity run steps
 1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 2. Enter Play Mode.

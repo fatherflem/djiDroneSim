@@ -19,6 +19,7 @@ namespace DroneSim.Drone.Benchmark
         [SerializeField] private DroneInputReader inputReader;
         [SerializeField] private DronePhysicsBody physicsBody;
         [SerializeField] private DJIStyleFlightController controller;
+        [SerializeField] private BenchmarkEnvironmentController environmentController;
 
         [Header("Maneuver library")]
         [SerializeField] private List<ManeuverDefinition> maneuvers = new List<ManeuverDefinition>();
@@ -51,11 +52,12 @@ namespace DroneSim.Drone.Benchmark
         public string CurrentManeuverName => GetSelectedManeuver() != null ? GetSelectedManeuver().maneuverName : "None";
         public int SelectedManeuverIndex => selectedManeuverIndex;
 
-        public void Initialize(DroneInputReader reader, DronePhysicsBody body, DJIStyleFlightController flightController)
+        public void Initialize(DroneInputReader reader, DronePhysicsBody body, DJIStyleFlightController flightController, BenchmarkEnvironmentController benchmarkEnvironmentController = null)
         {
             inputReader = reader;
             physicsBody = body;
             controller = flightController;
+            environmentController = benchmarkEnvironmentController ?? environmentController;
         }
 
         private void Awake()
@@ -66,6 +68,8 @@ namespace DroneSim.Drone.Benchmark
                 physicsBody ??= FindFirstObjectByType<DronePhysicsBody>();
                 controller ??= FindFirstObjectByType<DJIStyleFlightController>();
             }
+
+            environmentController ??= FindFirstObjectByType<BenchmarkEnvironmentController>();
 
             if (autoLoadFromResources && maneuvers.Count == 0)
             {
@@ -173,6 +177,7 @@ namespace DroneSim.Drone.Benchmark
             runElapsedTime = 0f;
             isRunning = true;
 
+            environmentController?.SetBenchmarkIsolationActive(true);
             ResetDroneState(activeManeuver);
             recorder.BeginRun();
             inputReader.SetExternalInputEnabled(true);
@@ -190,6 +195,7 @@ namespace DroneSim.Drone.Benchmark
 
             isRunning = false;
             inputReader.SetExternalInputEnabled(false);
+            environmentController?.SetBenchmarkIsolationActive(false);
 
             EnsureSessionInitialized();
 
@@ -286,10 +292,21 @@ namespace DroneSim.Drone.Benchmark
             maneuvers.Sort((a, b) => string.Compare(a.maneuverName, b.maneuverName, StringComparison.Ordinal));
         }
 
+        private void OnDisable()
+        {
+            if (environmentController != null)
+            {
+                environmentController.SetBenchmarkIsolationActive(false);
+            }
+        }
+
         private void ResetDroneState(ManeuverDefinition maneuver)
         {
             Rigidbody body = physicsBody.Body;
-            body.position = maneuver.initialPosition;
+            Vector3 benchmarkStartPosition = environmentController != null
+                ? environmentController.GetBenchmarkSpawnPosition(maneuver.initialPosition)
+                : maneuver.initialPosition;
+            body.position = benchmarkStartPosition;
             body.rotation = Quaternion.Euler(0f, maneuver.initialYawDegrees, 0f);
             body.linearVelocity = Vector3.zero;
             body.angularVelocity = Vector3.zero;
