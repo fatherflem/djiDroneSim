@@ -51,6 +51,48 @@ FPV architecture note:
 - A default world display (`VRControllerScreenPlaceholder`) is auto-created by bootstrap when missing, using `DroneFeedDisplaySurface` bound to that same feed.
 - `DroneCameraFeedDebugOverlay` is available for quick verification of mode, gimbal, feed resolution, and feed binding status.
 
+
+## HUD polish pass (desktop-style debug windows)
+
+The debug overlays are now IMGUI windows with runtime drag/collapse behavior:
+
+- `DroneDebugHUD`
+- `DroneCameraFeedDebugOverlay`
+- `RawJoystickDiagnosticsOverlay`
+- `BenchmarkRunner` status window
+
+Each window supports:
+- drag by header
+- collapse/restore using header +/- button
+- per-play-session rect retention with screen clamping
+
+Defaults were adjusted to reduce center-screen obstruction:
+- Main HUD: top-left
+- Camera/feed status: top-right
+- Benchmark: lower-left
+- Raw joystick diagnostics: hidden + collapsed by default
+
+`VerticalSliceBootstrap` helper hotkeys:
+- `F2` toggle HUD + joystick windows visibility
+- `F3` reset HUD/joystick/camera debug windows to default layout
+
+## Operator / VR anchor placeholder
+
+`VerticalSliceBootstrap` now creates/uses `VRUserPlaceholder` as an in-world operator stand-in.
+
+Anchor hierarchy for future VR integration:
+- `BodyRoot`
+  - `ChestAnchor`
+    - `HeadAnchor`
+      - `VRCameraAnchor`
+    - `ControllerAnchor_Left`
+    - `ControllerAnchor_Right`
+    - `ControllerScreenAnchor`
+
+The placeholder includes primitive torso/head/headset/controller visuals only (prototype quality).
+
+The auto-created `VRControllerScreenPlaceholder` is now parented under `ControllerScreenAnchor` when available so the live feed is spatially tied to the operator concept.
+
 ## Tunable parameters
 
 The most important tuning values are exposed on ScriptableObjects and controller components:
