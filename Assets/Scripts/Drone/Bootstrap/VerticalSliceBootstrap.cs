@@ -36,6 +36,7 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private DroneDebugHUD sceneHud;
         [SerializeField] private RawJoystickDiagnosticsOverlay sceneJoystickDiagnostics;
         [SerializeField] private BenchmarkRunner sceneBenchmarkRunner;
+        [SerializeField] private BenchmarkEnvironmentController sceneBenchmarkEnvironmentController;
         [SerializeField] private UnityCamera sceneCamera;
         [SerializeField] private DroneCameraModeController sceneCameraModeController;
         [SerializeField] private DroneFeedDisplaySurface sceneFeedDisplaySurface;
@@ -88,6 +89,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneHud = null;
                 sceneJoystickDiagnostics = null;
                 sceneBenchmarkRunner = null;
+                sceneBenchmarkEnvironmentController = null;
                 sceneCamera = null;
                 sceneCameraModeController = null;
                 sceneFeedDisplaySurface = null;
@@ -134,7 +136,8 @@ namespace DroneSim.Drone.Bootstrap
             DroneDebugHUD hud = ResolveOrCreateHud(inputReader, physicsBody, controller, scenario, telemetry);
             _ = hud;
             ResolveOrCreateJoystickDiagnostics();
-            ResolveOrCreateBenchmarkRunner(inputReader, physicsBody, controller);
+            BenchmarkEnvironmentController benchmarkEnvironmentController = ResolveOrCreateBenchmarkEnvironmentController();
+            ResolveOrCreateBenchmarkRunner(inputReader, physicsBody, controller, benchmarkEnvironmentController);
 
             EnsureGround();
             EnsureMarkers();
@@ -278,10 +281,29 @@ namespace DroneSim.Drone.Bootstrap
             return sceneJoystickDiagnostics;
         }
 
+
+        private BenchmarkEnvironmentController ResolveOrCreateBenchmarkEnvironmentController()
+        {
+            if (sceneBenchmarkEnvironmentController == null)
+            {
+                sceneBenchmarkEnvironmentController = FindFirstObjectByType<BenchmarkEnvironmentController>();
+            }
+
+            if (sceneBenchmarkEnvironmentController == null)
+            {
+                GameObject environmentObject = new GameObject("BenchmarkEnvironmentController");
+                sceneBenchmarkEnvironmentController = environmentObject.AddComponent<BenchmarkEnvironmentController>();
+            }
+
+            sceneBenchmarkEnvironmentController.RebuildRootCache();
+            return sceneBenchmarkEnvironmentController;
+        }
+
         private BenchmarkRunner ResolveOrCreateBenchmarkRunner(
             DroneInputReader inputReader,
             DronePhysicsBody physicsBody,
-            DJIStyleFlightController controller)
+            DJIStyleFlightController controller,
+            BenchmarkEnvironmentController benchmarkEnvironmentController)
         {
             if (sceneBenchmarkRunner == null)
             {
@@ -294,7 +316,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneBenchmarkRunner = benchmarkObject.AddComponent<BenchmarkRunner>();
             }
 
-            sceneBenchmarkRunner.Initialize(inputReader, physicsBody, controller);
+            sceneBenchmarkRunner.Initialize(inputReader, physicsBody, controller, benchmarkEnvironmentController);
             return sceneBenchmarkRunner;
         }
 
@@ -393,6 +415,12 @@ namespace DroneSim.Drone.Bootstrap
             screenObject.transform.position = droneTransform.position + new Vector3(2.2f, 1.4f, 0f);
             screenObject.transform.rotation = Quaternion.LookRotation((droneTransform.position + Vector3.up * 1.1f) - screenObject.transform.position);
             screenObject.transform.localScale = new Vector3(1.1f, 0.65f, 1f);
+
+            Collider screenCollider = screenObject.GetComponent<Collider>();
+            if (screenCollider != null)
+            {
+                Destroy(screenCollider);
+            }
 
             Renderer screenRenderer = screenObject.GetComponent<Renderer>();
             if (screenRenderer != null)
