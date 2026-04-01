@@ -78,20 +78,28 @@ Defaults were adjusted to reduce center-screen obstruction:
 
 ## Operator / VR anchor placeholder
 
-`VerticalSliceBootstrap` now creates/uses `VRUserPlaceholder` as an in-world operator stand-in.
+`VerticalSliceBootstrap` creates/uses `VRUserPlaceholder` as an in-world operator stand-in and now mounts a dedicated `DroneControllerPlaceholder` under that rig.
 
 Anchor hierarchy for future VR integration:
 - `BodyRoot`
   - `ChestAnchor`
     - `HeadAnchor`
       - `VRCameraAnchor`
-    - `ControllerAnchor_Left`
-    - `ControllerAnchor_Right`
-    - `ControllerScreenAnchor`
+    - `ControllerPropAnchor`
+      - `DroneControllerPlaceholder`
+        - `Body` / `LeftGrip` / `RightGrip` / `ScreenBezel` / `ScreenSurface`
+      - `ControllerAnchor_Left`
+      - `ControllerAnchor_Right`
+      - `ControllerScreenAnchor`
 
-The placeholder includes primitive torso/head/headset/controller visuals only (prototype quality).
+The handheld controller is still primitive/prototype quality, but intentionally reads as a radio/controller body with a mounted screen.
 
-The auto-created `VRControllerScreenPlaceholder` is now parented under `ControllerScreenAnchor` when available so the live feed is spatially tied to the operator concept.
+`DroneFeedDisplaySurface` is attached to `DroneControllerPlaceholder/ScreenSurface` so the same always-live `DroneVideoFeed.FeedTexture` appears on the controller in both Chase and FPV modes. No duplicate camera feed path is created.
+
+For future VR work:
+- Replace only `DroneControllerPlaceholder` visuals with an authored asset.
+- Keep `ControllerPropAnchor`, `ControllerAnchor_Left/Right`, and `ControllerScreenAnchor` to preserve head/controller mapping.
+- Add VR hand/controller prefabs by parenting them to the existing controller anchors.
 
 ## Tunable parameters
 
