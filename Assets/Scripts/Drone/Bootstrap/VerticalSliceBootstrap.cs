@@ -37,6 +37,8 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private BenchmarkRunner sceneBenchmarkRunner;
         [SerializeField] private UnityCamera sceneCamera;
         [SerializeField] private DroneCameraModeController sceneCameraModeController;
+        [SerializeField] private DroneFeedDisplaySurface sceneFeedDisplaySurface;
+        [SerializeField] private DroneCameraFeedDebugOverlay sceneCameraFeedOverlay;
 
         [Header("Resources")]
         [Tooltip("Resources path for drone prefab. If missing, a basic runtime drone object is created.")]
@@ -76,6 +78,8 @@ namespace DroneSim.Drone.Bootstrap
                 sceneBenchmarkRunner = null;
                 sceneCamera = null;
                 sceneCameraModeController = null;
+                sceneFeedDisplaySurface = null;
+                sceneCameraFeedOverlay = null;
             }
 
             DroneInputConfig inputConfig = Resources.Load<DroneInputConfig>(inputConfigResourcePath);
@@ -123,7 +127,7 @@ namespace DroneSim.Drone.Bootstrap
             EnsureMarkers();
             EnsureLight();
             EnsureFollowCamera(drone.transform);
-            EnsureDroneCameraSystem(drone, hud);
+            EnsureDroneCameraSystem(drone, hud, inputConfig);
         }
 
         private GameObject ResolveOrCreateDrone()
@@ -230,7 +234,7 @@ namespace DroneSim.Drone.Bootstrap
             return sceneBenchmarkRunner;
         }
 
-        private void EnsureDroneCameraSystem(GameObject drone, DroneDebugHUD hud)
+        private void EnsureDroneCameraSystem(GameObject drone, DroneDebugHUD hud, DroneInputConfig inputConfig)
         {
             // 1. Gimbal camera rig — the physical onboard camera with gimbal pitch control.
             DroneGimbalCameraRig gimbalRig = drone.GetComponentInChildren<DroneGimbalCameraRig>();
@@ -267,11 +271,80 @@ namespace DroneSim.Drone.Bootstrap
 
             sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed, inputConfig);
 
-            // 4. Wire camera references into the debug HUD for mode/gimbal display.
+            // 4. Demo world display surface — default "controller screen placeholder".
+            sceneFeedDisplaySurface = ResolveOrCreateFeedDisplaySurface(drone.transform, videoFeed);
+
+            // 5. Camera/feed diagnostics overlay for quick validation.
+            sceneCameraFeedOverlay = ResolveOrCreateCameraFeedOverlay(
+                sceneCameraModeController,
+                videoFeed,
+                gimbalRig,
+                sceneFeedDisplaySurface);
+
+            // 6. Wire camera references into the debug HUD for mode/gimbal display.
             if (hud != null)
             {
                 hud.InitializeCamera(sceneCameraModeController, gimbalRig);
             }
+        }
+
+        private DroneFeedDisplaySurface ResolveOrCreateFeedDisplaySurface(Transform droneTransform, DroneVideoFeed videoFeed)
+        {
+            if (sceneFeedDisplaySurface == null)
+            {
+                sceneFeedDisplaySurface = FindFirstObjectByType<DroneFeedDisplaySurface>();
+            }
+
+            if (sceneFeedDisplaySurface != null)
+            {
+                sceneFeedDisplaySurface.SetVideoFeed(videoFeed);
+                return sceneFeedDisplaySurface;
+            }
+
+            GameObject displayRoot = GameObject.Find("DemoDisplays");
+            if (displayRoot == null)
+            {
+                displayRoot = new GameObject("DemoDisplays");
+            }
+
+            // This object intentionally mirrors a future "VR controller screen" hookup.
+            GameObject screenObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            screenObject.name = "VRControllerScreenPlaceholder";
+            screenObject.transform.SetParent(displayRoot.transform, false);
+            screenObject.transform.position = droneTransform.position + new Vector3(2.2f, 1.4f, 0f);
+            screenObject.transform.rotation = Quaternion.LookRotation((droneTransform.position + Vector3.up * 1.1f) - screenObject.transform.position);
+            screenObject.transform.localScale = new Vector3(1.1f, 0.65f, 1f);
+
+            Renderer screenRenderer = screenObject.GetComponent<Renderer>();
+            if (screenRenderer != null)
+            {
+                screenRenderer.sharedMaterial = CreateCompatibleMaterial(screenRenderer, new Color(0.08f, 0.08f, 0.08f));
+            }
+
+            sceneFeedDisplaySurface = screenObject.AddComponent<DroneFeedDisplaySurface>();
+            sceneFeedDisplaySurface.SetVideoFeed(videoFeed);
+            return sceneFeedDisplaySurface;
+        }
+
+        private DroneCameraFeedDebugOverlay ResolveOrCreateCameraFeedOverlay(
+            DroneCameraModeController modeController,
+            DroneVideoFeed videoFeed,
+            DroneGimbalCameraRig gimbalRig,
+            DroneFeedDisplaySurface displaySurface)
+        {
+            if (sceneCameraFeedOverlay == null)
+            {
+                sceneCameraFeedOverlay = FindFirstObjectByType<DroneCameraFeedDebugOverlay>();
+            }
+
+            if (sceneCameraFeedOverlay == null)
+            {
+                GameObject overlayObject = new GameObject("CameraFeedDebugOverlay");
+                sceneCameraFeedOverlay = overlayObject.AddComponent<DroneCameraFeedDebugOverlay>();
+            }
+
+            sceneCameraFeedOverlay.Initialize(modeController, videoFeed, gimbalRig, displaySurface);
+            return sceneCameraFeedOverlay;
         }
 
         private static void EnsurePhysicsSettings()
