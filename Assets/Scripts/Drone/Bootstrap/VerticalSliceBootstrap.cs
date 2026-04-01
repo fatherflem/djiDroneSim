@@ -335,7 +335,7 @@ namespace DroneSim.Drone.Bootstrap
 
             sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed, inputConfig);
 
-            // 4. Demo world display surface — default "controller screen placeholder".
+            // 4. Controller-mounted live display surface (future VR handheld controller proxy).
             sceneFeedDisplaySurface = ResolveOrCreateFeedDisplaySurface(drone.transform, videoFeed, vrUserPlaceholder);
 
             // 5. Camera/feed diagnostics overlay for quick validation.
@@ -354,6 +354,21 @@ namespace DroneSim.Drone.Bootstrap
 
         private DroneFeedDisplaySurface ResolveOrCreateFeedDisplaySurface(Transform droneTransform, DroneVideoFeed videoFeed, VRUserPlaceholder vrUserPlaceholder)
         {
+            if (vrUserPlaceholder != null)
+            {
+                vrUserPlaceholder.EnsurePlaceholderHierarchy();
+                DroneControllerPlaceholder controllerPlaceholder = vrUserPlaceholder.ControllerPlaceholder;
+                if (controllerPlaceholder != null)
+                {
+                    controllerPlaceholder.SetVideoFeed(videoFeed);
+                    sceneFeedDisplaySurface = controllerPlaceholder.FeedDisplaySurface;
+                    if (sceneFeedDisplaySurface != null)
+                    {
+                        return sceneFeedDisplaySurface;
+                    }
+                }
+            }
+
             if (sceneFeedDisplaySurface == null)
             {
                 sceneFeedDisplaySurface = FindFirstObjectByType<DroneFeedDisplaySurface>();
@@ -371,23 +386,13 @@ namespace DroneSim.Drone.Bootstrap
                 displayRoot = new GameObject("DemoDisplays");
             }
 
-            // This object intentionally mirrors a future "VR controller screen" hookup.
+            // Fallback only when operator/controller placeholder is unavailable.
             GameObject screenObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            screenObject.name = "VRControllerScreenPlaceholder";
+            screenObject.name = "VRControllerScreenPlaceholder_Fallback";
             screenObject.transform.SetParent(displayRoot.transform, false);
-            if (vrUserPlaceholder != null && vrUserPlaceholder.ControllerScreenAnchor != null)
-            {
-                screenObject.transform.SetParent(vrUserPlaceholder.ControllerScreenAnchor, false);
-                screenObject.transform.localPosition = new Vector3(0f, 0.05f, 0.055f);
-                screenObject.transform.localRotation = Quaternion.Euler(22f, 180f, 0f);
-                screenObject.transform.localScale = new Vector3(0.28f, 0.18f, 1f);
-            }
-            else
-            {
-                screenObject.transform.position = droneTransform.position + new Vector3(2.2f, 1.4f, 0f);
-                screenObject.transform.rotation = Quaternion.LookRotation((droneTransform.position + Vector3.up * 1.1f) - screenObject.transform.position);
-                screenObject.transform.localScale = new Vector3(1.1f, 0.65f, 1f);
-            }
+            screenObject.transform.position = droneTransform.position + new Vector3(2.2f, 1.4f, 0f);
+            screenObject.transform.rotation = Quaternion.LookRotation((droneTransform.position + Vector3.up * 1.1f) - screenObject.transform.position);
+            screenObject.transform.localScale = new Vector3(1.1f, 0.65f, 1f);
 
             Renderer screenRenderer = screenObject.GetComponent<Renderer>();
             if (screenRenderer != null)
