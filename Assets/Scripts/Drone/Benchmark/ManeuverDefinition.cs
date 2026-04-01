@@ -22,6 +22,10 @@ namespace DroneSim.Drone.Benchmark
         public string maneuverName = "New Maneuver";
         [TextArea] public string description = "";
         public DroneMode flightMode = DroneMode.Normal;
+        [Tooltip("Protocol category used for sim-vs-real alignment (hover_hold, forward_step, lateral_right, lateral_left, climb, descent, yaw_right, yaw_left).")]
+        public string protocolCategory = "";
+        [Tooltip("Optional protocol order index for human-readable benchmark sequencing.")]
+        public int protocolOrder = -1;
 
         [Header("Initial state")]
         [Tooltip("World-space starting position before maneuver playback.")]
@@ -32,6 +36,25 @@ namespace DroneSim.Drone.Benchmark
 
         [Header("Input sequence")]
         public List<InputSegment> segments = new List<InputSegment>();
+
+        public string EffectiveProtocolCategory
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(protocolCategory))
+                {
+                    return protocolCategory.Trim().ToLowerInvariant();
+                }
+
+                string normalized = maneuverName.Trim().ToLowerInvariant().Replace(" ", "_");
+                if (normalized.Contains("hover")) return "hover_hold";
+                if (normalized.Contains("forward")) return "forward_step";
+                if (normalized.Contains("lateral")) return "lateral_right";
+                if (normalized.Contains("vertical")) return "climb";
+                if (normalized.Contains("yaw")) return "yaw_right";
+                return normalized;
+            }
+        }
 
         public float Duration
         {
