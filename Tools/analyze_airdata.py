@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Airdata + sim benchmark analysis helper.
+"""Airdata + simulator benchmark comparison helper.
 
-Focuses on:
+Focus:
 1) confidence-labeled maneuver segmentation from Airdata RC + motion traces
 2) explicit measured vs inferred evidence tagging
-3) optional sim-vs-real side-by-side metric comparison when benchmark CSVs are supplied
+3) simulator benchmark ingestion and side-by-side deltas vs real data
 """
 
 import argparse
@@ -16,6 +16,7 @@ import os
 import statistics
 from collections import defaultdict
 from dataclasses import asdict, dataclass
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 MPS_PER_MPH = 0.44704
@@ -36,6 +37,16 @@ MANEUVER_MAP = {
     ("yaw", -1): "yaw_left",
 }
 EXPECTED_ORDER = [
+    "hover_hold",
+    "forward_step",
+    "lateral_right",
+    "lateral_left",
+    "climb",
+    "descent",
+    "yaw_right",
+    "yaw_left",
+]
+COMPARISON_CATEGORIES = [
     "hover_hold",
     "forward_step",
     "lateral_right",
@@ -200,7 +211,6 @@ def segment_maneuvers(rows: List[dict], active_th: float = 16.0, cross_th: float
             score += 0.08
             reasons.append("neutral dwell on one side")
 
-        # Motion + attitude sign consistency checks.
         motion_ok = False
         attitude_ok = False
         window = usable[start : end + 1]
@@ -255,7 +265,6 @@ def segment_maneuvers(rows: List[dict], active_th: float = 16.0, cross_th: float
         )
         i = max(j, i + 1)
 
-    # Sequence hints based on expected benchmark ordering (informational only).
     expected_idx = 0
     for seg in segments:
         if seg.maneuver in EXPECTED_ORDER:
@@ -266,7 +275,6 @@ def segment_maneuvers(rows: List[dict], active_th: float = 16.0, cross_th: float
                 seg.confidence_reasons.append("out-of-order vs expected protocol")
         seg.sequence_index = expected_idx
 
-    # Repeated-run cluster support (confidence boost if repeated and similar).
     counts = defaultdict(int)
     for seg in segments:
         counts[(seg.maneuver, seg.cluster_id)] += 1
@@ -341,6 +349,7 @@ def metrics_for_segments(usable: List[dict], segments: List[Segment]) -> Dict[st
             continue
 
         confidences = [s.confidence_score for s in used_segments]
+        delays = [m.response_delay_s for m in run_metrics if m.response_delay_s is not None]
         out[maneuver] = {
             "count": len(run_metrics),
             "confidence": {
@@ -350,7 +359,7 @@ def metrics_for_segments(usable: List[dict], segments: List[Segment]) -> Dict[st
                 "low_count": sum(1 for s in used_segments if s.confidence_label == "low"),
             },
             "aggregate": {
-                "response_delay_s_mean": round(statistics.fmean([m.response_delay_s for m in run_metrics if m.response_delay_s is not None]), 3),
+                "response_delay_s_mean": round(statistics.fmean(delays), 3) if delays else None,
                 "peak_rate_mean": round(statistics.fmean([m.peak_rate for m in run_metrics]), 3),
                 "max_accel_mean": round(statistics.fmean([m.max_accel for m in run_metrics]), 3),
                 "settle_time_s_mean": round(statistics.fmean([m.settle_time_s for m in run_metrics]), 3),
@@ -400,10 +409,12 @@ def evidence_table(metrics: Dict[str, dict]) -> Dict[str, dict]:
     table = {}
     mappings = {
         "forward speed behavior": "forward_step",
-        "lateral speed behavior": "lateral_right",
+        "lateral right behavior": "lateral_right",
+        "lateral left behavior": "lateral_left",
         "climb behavior": "climb",
         "descent behavior": "descent",
-        "yaw behavior": "yaw_right",
+        "yaw right behavior": "yaw_right",
+        "yaw left behavior": "yaw_left",
         "acceleration": "forward_step",
         "braking": "forward_step",
         "overshoot": "forward_step",
@@ -430,107 +441,227 @@ def evidence_table(metrics: Dict[str, dict]) -> Dict[str, dict]:
     return table
 
 
-def read_sim_runs(patterns: List[str]) -> Dict[str, List[dict]]:
-    by_maneuver = defaultdict(list)
+def normalize_protocol_category(raw: str) -> str:
+    n = (raw or "").strip().lower().replace(" ", "_")
+    aliases = {
+        "forward": "forward_step",
+        "lateral": "lateral_right",
+        "vertical": "climb",
+        "yaw": "yaw_right",
+        "hover": "hover_hold",
+    }
+    return aliases.get(n, n)
+
+
+def infer_category_from_row(row: dict) -> str:
+    from_protocol = normalize_protocol_category(row.get("protocol_category", ""))
+    if from_protocol:
+        return from_protocol
+
+    mname = normalize_protocol_category(row.get("maneuver_name", ""))
+    if "lateral" in mname and "left" in mname:
+        return "lateral_left"
+    if "lateral" in mname:
+        return "lateral_right"
+    if "yaw" in mname and "left" in mname:
+        return "yaw_left"
+    if "yaw" in mname:
+        return "yaw_right"
+    if "descent" in mname:
+        return "descent"
+    if "climb" in mname or "vertical" in mname:
+        return "climb"
+    if "forward" in mname:
+        return "forward_step"
+    if "hover" in mname:
+        return "hover_hold"
+
+    pitch = _safe_float(row, "input_pitch")
+    roll = _safe_float(row, "input_roll")
+    throttle = _safe_float(row, "input_throttle")
+    yaw = _safe_float(row, "input_yaw")
+    axis_values = {
+        "forward_step": abs(pitch),
+        "lateral_right": abs(roll),
+        "climb": abs(throttle),
+        "yaw_right": abs(yaw),
+    }
+    category = max(axis_values, key=axis_values.get)
+    if axis_values[category] < 1e-4:
+        return "hover_hold"
+
+    if category == "lateral_right" and roll < 0:
+        return "lateral_left"
+    if category == "yaw_right" and yaw < 0:
+        return "yaw_left"
+    if category == "climb" and throttle < 0:
+        return "descent"
+    return category
+
+
+def read_sim_runs(patterns: List[str]) -> List[dict]:
+    runs = []
+    seen = set()
     for pattern in patterns:
-        for path in glob.glob(pattern):
+        for path in sorted(glob.glob(pattern, recursive=True)):
+            if not path.endswith(".csv"):
+                continue
+            full = str(Path(path).resolve())
+            if full in seen:
+                continue
+            seen.add(full)
             with open(path, newline="", encoding="utf-8") as fp:
                 reader = csv.DictReader(fp)
                 rows = list(reader)
             if not rows:
                 continue
-            name = rows[0].get("maneuver_name", os.path.basename(path)).strip().lower().replace(" ", "_")
-            by_maneuver[name].append({"path": path, "rows": rows})
-    return by_maneuver
+            category = infer_category_from_row(rows[0])
+            runs.append({"path": path, "rows": rows, "category": category})
+    return runs
 
 
-def maneuver_aliases() -> Dict[str, List[str]]:
-    return {
-        "forward_step": ["forward_step_response", "forward_step", "maneuver_forwardstep"],
-        "lateral_right": ["lateral_step_response", "lateral_step", "maneuver_lateralstep"],
-        "climb": ["vertical_step_response", "vertical_step", "maneuver_verticalstep"],
-        "descent": ["vertical_step_response", "vertical_step", "maneuver_verticalstep"],
-        "yaw_right": ["yaw_step_response", "yaw_step", "maneuver_yawstep"],
-        "hover_hold": ["hover_hold", "maneuver_hoverhold"],
-    }
+def _get_times(rows: List[dict]) -> List[float]:
+    if rows and "time_s" in rows[0]:
+        return [_safe_float(r, "time_s") for r in rows]
+    return list(range(len(rows)))
 
 
 def summarize_sim_run(run: dict, category: str) -> dict:
     rows = run["rows"]
-    times = [float(r.get("time_s", 0) or 0) for r in rows]
-    if category in ("forward_step", "lateral_right"):
-        signal = [float(r.get("horizontal_speed_mps", 0) or 0) for r in rows]
+    times = _get_times(rows)
+    mode = rows[0].get("maneuver_mode", "Unknown") if rows else "Unknown"
+
+    if category in ("forward_step", "lateral_right", "lateral_left"):
+        signal = [_safe_float(r, "horizontal_speed_mps") for r in rows]
     elif category in ("climb", "descent"):
-        signal = [abs(float(r.get("vertical_speed_mps", 0) or 0)) for r in rows]
-    elif category == "yaw_right":
-        signal = [abs(float(r.get("yaw_rate_degps", 0) or 0)) for r in rows]
+        signal = [abs(_safe_float(r, "vertical_speed_mps")) for r in rows]
+    elif category in ("yaw_right", "yaw_left"):
+        signal = [abs(_safe_float(r, "yaw_rate_degps")) for r in rows]
     else:
-        signal = [float(r.get("horizontal_speed_mps", 0) or 0) for r in rows]
+        hs = [_safe_float(r, "horizontal_speed_mps") for r in rows]
+        vs = [_safe_float(r, "vertical_speed_mps") for r in rows]
+        if not hs:
+            return {}
+        return {
+            "path": run["path"],
+            "mode": mode,
+            "response_delay_s": None,
+            "peak_rate": max(hs),
+            "settle_time_s": 0.0,
+            "max_accel": 0.0,
+            "overshoot": 0.0,
+            "residual_drift": statistics.fmean(abs(v) for v in hs + vs),
+            "measured_from": "sim_csv_direct",
+        }
 
     if not signal:
         return {}
+
     peak = max(signal)
-    idx10 = next((i for i, v in enumerate(signal) if v >= 0.1 * peak), None)
+    idx10 = next((i for i, v in enumerate(signal) if peak > 0 and v >= 0.1 * peak), None)
     settle_idx = next((i for i in range(len(signal) - 1, -1, -1) if signal[i] > 0.12 * peak), 0)
     dt = (times[1] - times[0]) if len(times) > 1 else 0.02
-    accel = max(((signal[i + 1] - signal[i]) / dt) for i in range(len(signal) - 1)) if len(signal) > 1 and dt > 0 else 0.0
+    if dt <= 0:
+        dt = 0.02
+
+    accel = max(((signal[i + 1] - signal[i]) / dt) for i in range(len(signal) - 1)) if len(signal) > 1 else 0.0
     steady = statistics.fmean(signal[-min(5, len(signal)) :])
     return {
         "path": run["path"],
+        "mode": mode,
         "response_delay_s": (idx10 * dt) if idx10 is not None else None,
         "peak_rate": peak,
         "settle_time_s": max(0.0, (len(signal) - 1 - settle_idx) * dt),
         "max_accel": accel,
         "overshoot": max(0.0, peak - steady),
         "residual_drift": statistics.fmean(signal[-min(8, len(signal)) :]),
+        "measured_from": "sim_csv_direct",
     }
 
 
-def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: Dict[str, List[dict]]) -> Dict[str, dict]:
-    aliases = maneuver_aliases()
+def _agg_metric(samples: List[dict], key: str) -> Optional[float]:
+    values = [s[key] for s in samples if s.get(key) is not None]
+    return statistics.fmean(values) if values else None
+
+
+def comparison_note(delta: Optional[float], magnitude_threshold: float = 0.15) -> str:
+    if delta is None:
+        return "insufficient_data"
+    if abs(delta) <= magnitude_threshold:
+        return "matches_well"
+    return "too_aggressive" if delta > 0 else "too_sluggish"
+
+
+def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> Dict[str, dict]:
+    by_cat = defaultdict(list)
+    for run in sim_runs:
+        by_cat[run["category"]].append(run)
+
     out = {}
-    for category in ["forward_step", "lateral_right", "climb", "descent", "yaw_right", "hover_hold"]:
+    for category in COMPARISON_CATEGORIES:
         real = real_metrics.get(category)
-        matching = []
-        for alias in aliases.get(category, []):
-            matching.extend(sim_runs.get(alias, []))
+        matching = by_cat.get(category, [])
         sim_summaries = [summarize_sim_run(run, category) for run in matching]
         sim_summaries = [s for s in sim_summaries if s]
 
         if not real:
-            out[category] = {"status": "no_real_data", "sim_runs": len(sim_summaries)}
+            out[category] = {
+                "status": "no_real_data",
+                "sim_runs": len(sim_summaries),
+                "real_evidence": "designer_assumption",
+            }
             continue
+
         if not sim_summaries:
             out[category] = {
                 "status": "real_only",
                 "real": real.get("aggregate", {}),
-                "note": "no simulator benchmark CSVs supplied to analysis",
+                "real_evidence": "directly_measured_from_airdata",
+                "note": "no simulator benchmark CSVs supplied for this category",
             }
             continue
 
         sim_agg = {
-            "response_delay_s_mean": statistics.fmean([s["response_delay_s"] for s in sim_summaries if s["response_delay_s"] is not None]),
-            "peak_rate_mean": statistics.fmean([s["peak_rate"] for s in sim_summaries]),
-            "max_accel_mean": statistics.fmean([s["max_accel"] for s in sim_summaries]),
-            "settle_time_s_mean": statistics.fmean([s["settle_time_s"] for s in sim_summaries]),
-            "overshoot_mean": statistics.fmean([s["overshoot"] for s in sim_summaries]),
-            "residual_drift_mean": statistics.fmean([s["residual_drift"] for s in sim_summaries]),
+            "response_delay_s_mean": _agg_metric(sim_summaries, "response_delay_s"),
+            "peak_rate_mean": _agg_metric(sim_summaries, "peak_rate"),
+            "max_accel_mean": _agg_metric(sim_summaries, "max_accel"),
+            "settle_time_s_mean": _agg_metric(sim_summaries, "settle_time_s"),
+            "overshoot_mean": _agg_metric(sim_summaries, "overshoot"),
+            "residual_drift_mean": _agg_metric(sim_summaries, "residual_drift"),
         }
 
         deltas = {}
+        assessment = {}
         for k, real_value in real.get("aggregate", {}).items():
-            sim_key = k
-            if sim_key in sim_agg:
-                deltas[k] = round(sim_agg[sim_key] - real_value, 3)
+            sim_value = sim_agg.get(k)
+            if real_value is None or sim_value is None:
+                deltas[k] = None
+                assessment[k] = "insufficient_data"
+                continue
+            delta = sim_value - real_value
+            deltas[k] = round(delta, 3)
+            threshold = 0.03 if "delay" in k else 0.1 if "overshoot" in k else 0.15
+            assessment[k] = comparison_note(delta, threshold)
 
         out[category] = {
             "status": "compared",
             "real": real.get("aggregate", {}),
-            "sim": {k: round(v, 3) for k, v in sim_agg.items()},
+            "sim": {k: (round(v, 3) if v is not None else None) for k, v in sim_agg.items()},
             "delta_sim_minus_real": deltas,
+            "delta_assessment": assessment,
+            "real_evidence": "directly_measured_from_airdata",
+            "sim_evidence": "directly_measured_from_sim_csv",
             "sim_sources": [s["path"] for s in sim_summaries],
+            "sim_modes": sorted({s["mode"] for s in sim_summaries}),
         }
     return out
+
+
+def discover_sim_inputs(explicit_globs: List[str], sim_root: Optional[str]) -> List[str]:
+    patterns = list(explicit_globs)
+    if sim_root:
+        patterns.append(os.path.join(sim_root, "**", "*.csv"))
+    return patterns
 
 
 def write_markdown(path: str, payload: dict):
@@ -539,12 +670,13 @@ def write_markdown(path: str, payload: dict):
     comp = payload["sim_vs_real_comparison"]
 
     lines = [
-        "# Airdata Benchmark Summary (Mar 30, 2026 08:31 UTC)",
+        "# Airdata + Simulator Benchmark Comparison",
         "",
         "Source CSV (used directly):",
         f"- `{payload['source_csv']}`",
+        f"- Sim CSV patterns: `{', '.join(payload['sim_csv_inputs']) if payload['sim_csv_inputs'] else '(none)'}`",
         "",
-        "## Segmentation confidence overview",
+        "## Segmentation confidence overview (real flight)",
         "",
         "| Maneuver | Count | High | Medium | Low | Peak mean | Delay mean |",
         "|---|---:|---:|---:|---:|---:|---:|",
@@ -554,24 +686,43 @@ def write_markdown(path: str, payload: dict):
         info = metrics[name]
         conf = info["confidence"]
         agg = info["aggregate"]
+        delay = agg["response_delay_s_mean"] if agg["response_delay_s_mean"] is not None else 0.0
         lines.append(
-            f"| {name} | {info['count']} | {conf['high_count']} | {conf['medium_count']} | {conf['low_count']} | {agg['peak_rate_mean']:.2f} | {agg['response_delay_s_mean']:.2f} |"
+            f"| {name} | {info['count']} | {conf['high_count']} | {conf['medium_count']} | {conf['low_count']} | {agg['peak_rate_mean']:.2f} | {delay:.2f} |"
         )
 
     hover = metrics.get("hover_hold")
     if hover:
-        lines += ["", "## Hover hold", "", f"- Runs: {hover['count']}", f"- Horizontal RMS mean: {hover['aggregate']['horizontal_rms_mps_mean']:.3f} m/s", f"- Vertical RMS mean: {hover['aggregate']['vertical_rms_mps_mean']:.3f} m/s"]
+        lines += [
+            "",
+            "## Hover hold",
+            "",
+            f"- Runs: {hover['count']}",
+            f"- Horizontal RMS mean: {hover['aggregate']['horizontal_rms_mps_mean']:.3f} m/s",
+            f"- Vertical RMS mean: {hover['aggregate']['vertical_rms_mps_mean']:.3f} m/s",
+        ]
 
-    lines += ["", "## Measured vs inferred classification", "", "| Target | Classification | Evidence |", "|---|---|---|"]
+    lines += ["", "## Measured vs inferred classification (real baseline)", "", "| Target | Classification | Evidence |", "|---|---|---|"]
     for target, row in evidence.items():
         lines.append(f"| {target} | {row['classification']} | {row.get('reason', row.get('notes', ''))} |")
 
-    lines += ["", "## Sim vs real comparison", "", "| Category | Status | Notes |", "|---|---|---|"]
-    for cat, row in comp.items():
-        note = row.get("note", "")
-        if row.get("status") == "compared":
-            note = "has side-by-side metric deltas"
-        lines.append(f"| {cat} | {row.get('status')} | {note} |")
+    lines += [
+        "",
+        "## Sim vs real deltas",
+        "",
+        "| Category | Status | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |",
+        "|---|---|---:|---:|---:|---:|---:|---|",
+    ]
+    for cat in COMPARISON_CATEGORIES:
+        row = comp.get(cat, {})
+        if row.get("status") != "compared":
+            lines.append(f"| {cat} | {row.get('status', 'missing')} | - | - | - | - | - | {row.get('note', 'insufficient data')} |")
+            continue
+        d = row["delta_sim_minus_real"]
+        verdict = row["delta_assessment"].get("peak_rate_mean", "insufficient_data")
+        lines.append(
+            f"| {cat} | compared | {d.get('response_delay_s_mean', 0)} | {d.get('peak_rate_mean', 0)} | {d.get('max_accel_mean', 0)} | {d.get('settle_time_s_mean', 0)} | {d.get('overshoot_mean', 0)} | {verdict} |"
+        )
 
     lines += [
         "",
@@ -592,7 +743,10 @@ def main():
     ap.add_argument("--json-out", default="Docs/airdata_mar30_analysis.json")
     ap.add_argument("--summary-out", default="Docs/Airdata_Mar30_2026_Benchmark_Summary.md")
     ap.add_argument("--sim-csv-glob", action="append", default=[])
+    ap.add_argument("--sim-root", default="BenchmarkRuns")
     args = ap.parse_args()
+
+    sim_patterns = discover_sim_inputs(args.sim_csv_glob, args.sim_root)
 
     rows = load_airdata(args.csv)
     usable, segments, neutral_windows = segment_maneuvers(rows)
@@ -602,7 +756,7 @@ def main():
         metrics["hover_hold"] = hover
 
     evidence = evidence_table(metrics)
-    sim_runs = read_sim_runs(args.sim_csv_glob)
+    sim_runs = read_sim_runs(sim_patterns)
     comparison = compare_real_vs_sim(metrics, sim_runs)
 
     payload = {
@@ -626,7 +780,8 @@ def main():
         "metrics": metrics,
         "evidence_classification": evidence,
         "sim_vs_real_comparison": comparison,
-        "sim_csv_inputs": args.sim_csv_glob,
+        "sim_csv_inputs": sim_patterns,
+        "sim_runs_index": [{"path": r["path"], "category": r["category"], "rows": len(r["rows"])} for r in sim_runs],
     }
 
     with open(args.json_out, "w", encoding="utf-8") as fp:
@@ -640,7 +795,8 @@ def main():
                 "maneuvers": sorted({s.maneuver for s in segments}),
                 "json_out": args.json_out,
                 "summary_out": args.summary_out,
-                "sim_inputs": args.sim_csv_glob,
+                "sim_patterns": sim_patterns,
+                "sim_run_count": len(sim_runs),
             },
             indent=2,
         )

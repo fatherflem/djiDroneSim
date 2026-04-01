@@ -48,7 +48,7 @@ It outputs:
   - `directly_measured`
   - `estimated_from_limited_segments`
   - `designer_assumption`
-- optional `sim_vs_real_comparison` if `--sim-csv-glob` inputs are supplied
+- optional `sim_vs_real_comparison` if `--sim-root` or `--sim-csv-glob` inputs are supplied
 
 Use those metrics to tune **Normal** mode first, then derive Cine/Sport proportionally.
 Do not treat `estimated_from_limited_segments` as hard ground truth.
@@ -70,3 +70,17 @@ Use `DroneModeCine`, `DroneModeNormal`, and `DroneModeSport` assets.
 - Increase speed and acceleration from Normal
 - Keep stop strengths high enough to remain teachable
 - Treat as extrapolated unless separately benchmarked
+
+
+## Validation loop (recommended)
+
+1. Run benchmark maneuvers in Unity (F7/F8).
+2. Copy the generated `session_*` folder from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/`.
+3. Run:
+
+```bash
+python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root BenchmarkRuns
+```
+
+4. Review `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` and `Docs/airdata_mar30_analysis.json`.
+5. Tune only mismatched axes/metrics that are clearly measured (not inferred).

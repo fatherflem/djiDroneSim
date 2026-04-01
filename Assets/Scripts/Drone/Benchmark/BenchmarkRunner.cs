@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
@@ -42,6 +44,8 @@ namespace DroneSim.Drone.Benchmark
         private int runCounter;
         private Rect windowRect;
         private bool isCollapsed;
+        private string sessionId;
+        private string sessionDirectoryPath;
 
         public bool IsRunning => isRunning;
         public string CurrentManeuverName => GetSelectedManeuver() != null ? GetSelectedManeuver().maneuverName : "None";
@@ -74,6 +78,8 @@ namespace DroneSim.Drone.Benchmark
 
         private void Start()
         {
+            EnsureSessionInitialized();
+
             if (autoStartOnPlay)
             {
                 StartSelectedManeuver();
@@ -185,15 +191,70 @@ namespace DroneSim.Drone.Benchmark
             isRunning = false;
             inputReader.SetExternalInputEnabled(false);
 
+            EnsureSessionInitialized();
+
             string timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
-            string runLabel = $"{timestamp}_run{runCounter:000}";
+            int runNumber = runCounter + 1;
+            string runLabel = $"{timestamp}_run{runNumber:000}";
             runCounter++;
 
-            string outputDir = System.IO.Path.Combine(Application.persistentDataPath, exportDirectoryName);
-            recorder.ExportCsv(outputDir, runLabel, activeManeuver);
+            BenchmarkCsvExporter.RunContext context = new BenchmarkCsvExporter.RunContext(sessionId, sessionDirectoryPath, runLabel, runNumber);
+            recorder.ExportCsv(sessionDirectoryPath, context, activeManeuver);
+            WriteRunManifestEntry(context, activeManeuver);
 
-            Debug.Log($"BenchmarkRunner finished '{activeManeuver.maneuverName}'. CSV saved to {outputDir}");
+            Debug.Log($"BenchmarkRunner finished '{activeManeuver.maneuverName}'. CSV saved to {sessionDirectoryPath}");
             activeManeuver = null;
+        }
+
+
+        private void EnsureSessionInitialized()
+        {
+            if (!string.IsNullOrEmpty(sessionDirectoryPath))
+            {
+                return;
+            }
+
+            string sessionTimestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+            sessionId = $"session_{sessionTimestamp}";
+            string root = Path.Combine(Application.persistentDataPath, exportDirectoryName);
+            sessionDirectoryPath = Path.Combine(root, sessionId);
+            Directory.CreateDirectory(sessionDirectoryPath);
+            WriteSessionManifestHeader();
+        }
+
+        private void WriteSessionManifestHeader()
+        {
+            string manifestPath = Path.Combine(sessionDirectoryPath, "session_manifest.jsonl");
+            if (File.Exists(manifestPath))
+            {
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder(256);
+            sb.Append('{')
+                .Append("\"type\":\"session_metadata\",")
+                .Append("\"session_id\":\"").Append(sessionId).Append("\",")
+                .Append("\"created_utc\":\"").Append(DateTime.UtcNow.ToString("O")).Append("\",")
+                .Append("\"export_directory\":\"").Append(sessionDirectoryPath.Replace("\\", "\\\\")).Append("\"")
+                .Append('}');
+            File.WriteAllText(manifestPath, sb.ToString() + "\n");
+        }
+
+        private void WriteRunManifestEntry(BenchmarkCsvExporter.RunContext context, ManeuverDefinition maneuver)
+        {
+            string manifestPath = Path.Combine(sessionDirectoryPath, "session_manifest.jsonl");
+            StringBuilder sb = new StringBuilder(384);
+            sb.Append('{')
+                .Append("\"type\":\"run\",")
+                .Append("\"session_id\":\"").Append(context.SessionId).Append("\",")
+                .Append("\"run_number\":").Append(context.RunNumber).Append(',')
+                .Append("\"run_label\":\"").Append(context.RunLabel).Append("\",")
+                .Append("\"maneuver_name\":\"").Append(maneuver != null ? maneuver.maneuverName : "Unknown").Append("\",")
+                .Append("\"protocol_category\":\"").Append(maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown").Append("\",")
+                .Append("\"mode\":\"").Append(maneuver != null ? maneuver.flightMode.ToString() : "Unknown").Append("\",")
+                .Append("\"duration_s\":").Append(maneuver != null ? maneuver.Duration.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) : "0")
+                .Append('}');
+            File.AppendAllText(manifestPath, sb.ToString() + "\n");
         }
 
         public void SelectNextManeuver()
