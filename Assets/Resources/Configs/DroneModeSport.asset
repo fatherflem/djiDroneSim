@@ -13,12 +13,16 @@ MonoBehaviour:
   m_Name: DroneModeSport
   m_EditorClassIdentifier: 
   mode: 2
-  maxHorizontalSpeed: 10
-  horizontalAcceleration: 9
-  horizontalBrakeAcceleration: 8
-  maxVerticalSpeed: 5
-  verticalAcceleration: 7
+  maxForwardSpeed: 9.5
+  maxLateralSpeed: 7.8
+  forwardAcceleration: 8.2
+  lateralAcceleration: 7.2
+  forwardStopStrength: 8.6
+  lateralStopStrength: 7.8
+  maxClimbSpeed: 4.2
+  maxDescentSpeed: 4.9
+  verticalAcceleration: 7.2
   maxYawRateDegrees: 120
-  yawResponse: 9
+  yawCatchUpSpeed: 10
   tiltLimitDegrees: 24
   tiltSmoothing: 9

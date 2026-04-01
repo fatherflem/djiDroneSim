@@ -4,8 +4,8 @@ using UnityEngine;
 namespace DroneSim.Drone.Bootstrap
 {
     /// <summary>
-    /// Prototype handheld controller prop mounted to VRUserPlaceholder anchors.
-    /// Represents where a future DJI-style controller asset and VR hand/controller rig will attach.
+    /// Procedural handheld controller prop mounted to VRUserPlaceholder anchors.
+    /// Represents a DJI RC 2-like integrated-screen layout (without logos/trademark details).
     /// The controller screen surface hosts DroneFeedDisplaySurface to show the always-live onboard feed.
     /// </summary>
     public class DroneControllerPlaceholder : MonoBehaviour
@@ -20,13 +20,14 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private Transform screenAnchor;
 
         [Header("Controller shape")]
-        [SerializeField] private Vector3 bodySize = new Vector3(0.36f, 0.06f, 0.14f);
-        [SerializeField] private Vector3 gripSize = new Vector3(0.09f, 0.12f, 0.12f);
-        [SerializeField] private Vector3 screenBezelSize = new Vector3(0.24f, 0.11f, 0.02f);
-        [SerializeField] private Vector3 screenSurfaceSize = new Vector3(0.2f, 0.085f, 1f);
+        [SerializeField] private Vector3 bodySize = new Vector3(0.35f, 0.055f, 0.145f);
+        [SerializeField] private Vector3 shoulderSize = new Vector3(0.29f, 0.05f, 0.085f);
+        [SerializeField] private Vector3 gripSize = new Vector3(0.1f, 0.13f, 0.12f);
+        [SerializeField] private Vector3 screenBezelSize = new Vector3(0.245f, 0.108f, 0.024f);
+        [SerializeField] private Vector3 screenSurfaceSize = new Vector3(0.205f, 0.085f, 1f);
 
         [Header("Placement")]
-        [SerializeField] private Vector3 localPosition = new Vector3(0f, 0f, 0f);
+        [SerializeField] private Vector3 localPosition = Vector3.zero;
         [SerializeField] private Vector3 localEuler = new Vector3(18f, 180f, 0f);
 
         [Header("References (runtime-built)")]
@@ -71,19 +72,25 @@ namespace DroneSim.Drone.Bootstrap
             transform.localPosition = localPosition;
             transform.localRotation = Quaternion.Euler(localEuler);
 
-            body = EnsureVisual(transform, "Body", PrimitiveType.Cube, Vector3.zero, bodySize, new Color(0.1f, 0.1f, 0.11f));
-            leftGrip = EnsureVisual(transform, "LeftGrip", PrimitiveType.Cube, new Vector3(-0.15f, -0.03f, 0f), gripSize, new Color(0.08f, 0.08f, 0.09f));
-            rightGrip = EnsureVisual(transform, "RightGrip", PrimitiveType.Cube, new Vector3(0.15f, -0.03f, 0f), gripSize, new Color(0.08f, 0.08f, 0.09f));
+            body = EnsureVisual(transform, "Body", PrimitiveType.Cube, new Vector3(0f, -0.003f, -0.004f), bodySize, new Color(0.11f, 0.11f, 0.12f));
+            _ = EnsureVisual(transform, "UpperShoulder", PrimitiveType.Cube, new Vector3(0f, 0.02f, -0.018f), shoulderSize, new Color(0.12f, 0.12f, 0.13f));
+            leftGrip = EnsureVisual(transform, "LeftGrip", PrimitiveType.Cube, new Vector3(-0.152f, -0.043f, -0.002f), gripSize, new Color(0.09f, 0.09f, 0.1f));
+            rightGrip = EnsureVisual(transform, "RightGrip", PrimitiveType.Cube, new Vector3(0.152f, -0.043f, -0.002f), gripSize, new Color(0.09f, 0.09f, 0.1f));
 
-            _ = EnsureVisual(transform, "LeftStickZone", PrimitiveType.Cylinder, new Vector3(-0.1f, 0.034f, -0.005f), new Vector3(0.03f, 0.008f, 0.03f), new Color(0.16f, 0.16f, 0.16f));
-            _ = EnsureVisual(transform, "RightStickZone", PrimitiveType.Cylinder, new Vector3(0.1f, 0.034f, -0.005f), new Vector3(0.03f, 0.008f, 0.03f), new Color(0.16f, 0.16f, 0.16f));
-            _ = EnsureVisual(transform, "LeftStickVisual", PrimitiveType.Sphere, new Vector3(-0.1f, 0.046f, -0.005f), new Vector3(0.025f, 0.015f, 0.025f), new Color(0.19f, 0.19f, 0.19f));
-            _ = EnsureVisual(transform, "RightStickVisual", PrimitiveType.Sphere, new Vector3(0.1f, 0.046f, -0.005f), new Vector3(0.025f, 0.015f, 0.025f), new Color(0.19f, 0.19f, 0.19f));
-            _ = EnsureVisual(transform, "TopAntennaLeft", PrimitiveType.Cube, new Vector3(-0.1f, 0.058f, 0.06f), new Vector3(0.02f, 0.04f, 0.02f), new Color(0.2f, 0.2f, 0.2f));
-            _ = EnsureVisual(transform, "TopAntennaRight", PrimitiveType.Cube, new Vector3(0.1f, 0.058f, 0.06f), new Vector3(0.02f, 0.04f, 0.02f), new Color(0.2f, 0.2f, 0.2f));
+            _ = EnsureVisual(transform, "LeftStickBase", PrimitiveType.Cylinder, new Vector3(-0.104f, 0.028f, -0.027f), new Vector3(0.036f, 0.007f, 0.036f), new Color(0.17f, 0.17f, 0.17f));
+            _ = EnsureVisual(transform, "RightStickBase", PrimitiveType.Cylinder, new Vector3(0.104f, 0.028f, -0.027f), new Vector3(0.036f, 0.007f, 0.036f), new Color(0.17f, 0.17f, 0.17f));
+            _ = EnsureVisual(transform, "LeftStickVisual", PrimitiveType.Sphere, new Vector3(-0.104f, 0.04f, -0.027f), new Vector3(0.022f, 0.016f, 0.022f), new Color(0.2f, 0.2f, 0.2f));
+            _ = EnsureVisual(transform, "RightStickVisual", PrimitiveType.Sphere, new Vector3(0.104f, 0.04f, -0.027f), new Vector3(0.022f, 0.016f, 0.022f), new Color(0.2f, 0.2f, 0.2f));
 
-            screenBezel = EnsureVisual(transform, "ScreenBezel", PrimitiveType.Cube, new Vector3(0f, 0.078f, 0.012f), screenBezelSize, new Color(0.05f, 0.05f, 0.05f));
-            screenSurface = EnsureVisual(screenBezel, "ScreenSurface", PrimitiveType.Quad, new Vector3(0f, 0f, -0.011f), screenSurfaceSize, Color.black);
+            _ = EnsureVisual(transform, "TopEdgeBar", PrimitiveType.Cube, new Vector3(0f, 0.054f, 0.052f), new Vector3(0.26f, 0.014f, 0.018f), new Color(0.15f, 0.15f, 0.16f));
+            _ = EnsureVisual(transform, "TopDialLeft", PrimitiveType.Cylinder, new Vector3(-0.118f, 0.059f, 0.052f), new Vector3(0.014f, 0.006f, 0.014f), new Color(0.19f, 0.19f, 0.2f));
+            _ = EnsureVisual(transform, "TopDialRight", PrimitiveType.Cylinder, new Vector3(0.118f, 0.059f, 0.052f), new Vector3(0.014f, 0.006f, 0.014f), new Color(0.19f, 0.19f, 0.2f));
+            _ = EnsureVisual(transform, "TopToggleLeft", PrimitiveType.Cube, new Vector3(-0.048f, 0.058f, 0.053f), new Vector3(0.022f, 0.01f, 0.012f), new Color(0.18f, 0.18f, 0.18f));
+            _ = EnsureVisual(transform, "TopToggleRight", PrimitiveType.Cube, new Vector3(0.048f, 0.058f, 0.053f), new Vector3(0.022f, 0.01f, 0.012f), new Color(0.18f, 0.18f, 0.18f));
+
+            screenBezel = EnsureVisual(transform, "ScreenBezel", PrimitiveType.Cube, new Vector3(0f, 0.07f, 0.006f), screenBezelSize, new Color(0.04f, 0.04f, 0.05f));
+            _ = EnsureVisual(screenBezel, "ScreenFrameInset", PrimitiveType.Cube, new Vector3(0f, 0f, -0.002f), new Vector3(0.222f, 0.092f, 0.02f), new Color(0.025f, 0.025f, 0.03f));
+            screenSurface = EnsureVisual(screenBezel, "ScreenSurface", PrimitiveType.Quad, new Vector3(0f, 0f, -0.013f), screenSurfaceSize, Color.black);
             screenSurface.localRotation = Quaternion.Euler(0f, 180f, 0f);
 
             feedDisplaySurface = screenSurface.GetComponent<DroneFeedDisplaySurface>();
@@ -95,20 +102,20 @@ namespace DroneSim.Drone.Bootstrap
             if (screenAnchor != null)
             {
                 screenAnchor.SetParent(screenBezel, false);
-                screenAnchor.localPosition = new Vector3(0f, 0f, -0.011f);
+                screenAnchor.localPosition = new Vector3(0f, 0f, -0.013f);
                 screenAnchor.localRotation = Quaternion.identity;
             }
 
             if (leftHandAnchor != null)
             {
                 leftHandAnchor.SetParent(leftGrip, false);
-                leftHandAnchor.localPosition = new Vector3(0f, 0f, 0f);
+                leftHandAnchor.localPosition = Vector3.zero;
             }
 
             if (rightHandAnchor != null)
             {
                 rightHandAnchor.SetParent(rightGrip, false);
-                rightHandAnchor.localPosition = new Vector3(0f, 0f, 0f);
+                rightHandAnchor.localPosition = Vector3.zero;
             }
 
             SetVisualEnabled(showControllerVisual);

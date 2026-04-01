@@ -77,3 +77,10 @@ For consistency with current validation recommendations:
 - Invert throttle: `false`
 
 These settings ensure manual flying remains aligned with the benchmark baseline when you switch between subjective and objective tuning passes.
+
+## Airdata ingestion helper
+For large real-flight Airdata CSVs in repo root, run:
+
+`python Tools/analyze_airdata.py <airdata.csv>`
+
+This performs RC-channel-based segmentation with neutral dwell detection and writes `Docs/airdata_mar30_analysis.json` for repeatable sim-vs-real tuning.
