@@ -48,6 +48,8 @@ FPV architecture note:
 
 - The onboard camera continuously renders into `DroneVideoFeed.FeedTexture` in both Chase and FPV.
 - FPV is presented by syncing the player camera to onboard view; feed generation remains independent and always live.
+- A default world display (`VRControllerScreenPlaceholder`) is auto-created by bootstrap when missing, using `DroneFeedDisplaySurface` bound to that same feed.
+- `DroneCameraFeedDebugOverlay` is available for quick verification of mode, gimbal, feed resolution, and feed binding status.
 
 ## Tunable parameters
 

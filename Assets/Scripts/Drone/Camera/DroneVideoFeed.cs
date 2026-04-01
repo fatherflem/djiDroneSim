@@ -28,6 +28,14 @@ namespace DroneSim.Drone.Camera
         public RenderTexture FeedTexture => feedTexture;
         public DroneGimbalCameraRig GimbalRig => gimbalRig;
         public bool IsActive => feedTexture != null && gimbalRig != null && gimbalRig.OnboardCamera != null;
+        public int FeedWidth => feedTexture != null ? feedTexture.width : feedWidth;
+        public int FeedHeight => feedTexture != null ? feedTexture.height : feedHeight;
+        public bool IsCameraBoundToFeed =>
+            gimbalRig != null
+            && gimbalRig.OnboardCamera != null
+            && feedTexture != null
+            && gimbalRig.OnboardCamera.targetTexture == feedTexture;
+        public bool IsFeedTextureCreated => feedTexture != null && feedTexture.IsCreated();
 
         public void Initialize(DroneGimbalCameraRig rig)
         {

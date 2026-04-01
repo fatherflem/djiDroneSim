@@ -62,6 +62,8 @@ It is intentionally **not** a per-propeller flight model and **not** an FPV acro
     - Only controls player presentation camera state; does not unbind/disable feed generation.
 11. **DroneFeedDisplaySurface (MonoBehaviour)**
     - Binds the feed texture to a mesh Renderer or UI RawImage for display.
+12. **DroneCameraFeedDebugOverlay (MonoBehaviour)**
+    - Small OnGUI diagnostics panel for camera mode, gimbal pitch, feed resolution/liveness, and binding state.
 
 ### Camera scripts
 
@@ -73,6 +75,8 @@ It is intentionally **not** a per-propeller flight model and **not** an FPV acro
   - Chase/FPV presentation switching and FPV presentation-camera syncing from onboard camera.
 - `Assets/Scripts/Drone/Camera/DroneFeedDisplaySurface.cs`
   - Display surface binding for mesh or UI targets.
+- `Assets/Scripts/Drone/Camera/DroneCameraFeedDebugOverlay.cs`
+  - Lightweight camera/feed diagnostics overlay; can be toggled via inspector.
 
 ## Where to tune what
 

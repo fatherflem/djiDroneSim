@@ -40,6 +40,7 @@ namespace DroneSim.Drone.Camera
         private MaterialPropertyBlock propertyBlock;
         private int texturePropertyId;
         private bool isBound;
+        private RenderTexture lastBoundTexture;
 
         private void Awake()
         {
@@ -55,10 +56,12 @@ namespace DroneSim.Drone.Camera
             if (videoFeed == null || videoFeed.FeedTexture == null)
             {
                 isBound = false;
+                lastBoundTexture = null;
                 return;
             }
 
             RenderTexture feed = videoFeed.FeedTexture;
+            lastBoundTexture = feed;
 
             // Bind to mesh renderer using property block (avoids material instance creation).
             if (targetRenderer != null)
@@ -79,6 +82,8 @@ namespace DroneSim.Drone.Camera
 
         /// <summary>Whether the feed is currently bound to a display target.</summary>
         public bool IsBound => isBound;
+        public bool HasDisplayTarget => targetRenderer != null || targetRawImage != null;
+        public RenderTexture LastBoundTexture => lastBoundTexture;
 
         /// <summary>
         /// Manually set the video feed source at runtime.

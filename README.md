@@ -96,6 +96,30 @@ The `DroneVideoFeed` component always maintains a live `RenderTexture` of the on
 
 Alternatively, access `DroneVideoFeed.FeedTexture` directly and assign it to any material: `material.mainTexture = feed.FeedTexture;`
 
+### Default live world display demo (now included)
+
+The vertical-slice bootstrap now creates a default in-world screen named **`VRControllerScreenPlaceholder`** (under **`DemoDisplays`**) when no display surface is already authored in the scene.
+
+- The object uses `DroneFeedDisplaySurface`.
+- It binds to the same `DroneVideoFeed.FeedTexture` used by the onboard camera pipeline.
+- It remains live in both Chase and FPV modes.
+- This is the intended placeholder path for a future handheld VR controller screen: replace/move this object onto a controller model and keep the same component hookup.
+
+### Camera/feed debug status overlay
+
+A lightweight `DroneCameraFeedDebugOverlay` is now created by bootstrap (if missing) for camera/feed validation.
+
+It displays:
+- Camera mode (Chase/FPV)
+- Gimbal pitch
+- Onboard FOV
+- Feed resolution
+- Feed live/valid status
+- Whether onboard camera is bound to the RenderTexture
+- Whether the world display surface is currently bound
+
+You can disable it by unchecking `Show Overlay` on the `DroneCameraFeedDebugOverlay` component.
+
 ### Chase vs FPV behavior
 
 - **Chase mode**: main camera runs `SimpleFollowCamera`; onboard camera still renders continuously to `DroneVideoFeed.FeedTexture`.
@@ -164,6 +188,17 @@ Add `using UnityCamera = UnityEngine.Camera;` at the top and use `UnityCamera` i
   2. Ensure it points to the active `DroneVideoFeed` (or let it auto-find).
   3. For mesh displays, confirm the shader property name (default `_MainTex`) matches your shader.
   4. For UI displays, confirm `RawImage` exists and is assigned.
+
+- **Feed resolution is wrong**
+  1. Check `DroneVideoFeed` `feedWidth` / `feedHeight`.
+  2. Confirm the debug overlay shows the expected resolution at runtime.
+  3. If updated at runtime, call `DroneVideoFeed.SetResolution(width, height)` so the RenderTexture is recreated.
+
+- **Camera mode switches, but gimbal pitch seems stuck**
+  1. Check camera/gimbal bindings in `DroneInputConfig` (`gimbalTiltDownBinding`, `gimbalTiltUpBinding`, `gimbalResetBinding`).
+  2. Verify `DroneCameraModeController` has `gimbalPitchRate > 0`.
+  3. Verify `DroneGimbalCameraRig` pitch limits include your expected range and `pitchSpeed`/`pitchSmoothing` are not overly restrictive.
+  4. Watch `Gimbal Pitch` in `DroneCameraFeedDebugOverlay` while pressing tilt inputs.
 
 - **Right stick lights up in Input Debugger, but roll/pitch do not respond**
   1. Check `DroneInputConfig` roll/pitch bindings.
