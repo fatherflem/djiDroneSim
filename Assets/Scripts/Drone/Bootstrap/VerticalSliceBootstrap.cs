@@ -6,6 +6,7 @@ using DroneSim.Drone.Benchmark;
 using DroneSim.Drone.Training;
 using DroneSim.Drone.UI;
 using UnityEngine;
+using UnityCamera = UnityEngine.Camera;
 
 namespace DroneSim.Drone.Bootstrap
 {
@@ -34,7 +35,7 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private DroneDebugHUD sceneHud;
         [SerializeField] private RawJoystickDiagnosticsOverlay sceneJoystickDiagnostics;
         [SerializeField] private BenchmarkRunner sceneBenchmarkRunner;
-        [SerializeField] private Camera sceneCamera;
+        [SerializeField] private UnityCamera sceneCamera;
         [SerializeField] private DroneCameraModeController sceneCameraModeController;
 
         [Header("Resources")]
@@ -316,13 +317,13 @@ namespace DroneSim.Drone.Bootstrap
         {
             if (sceneCamera == null)
             {
-                sceneCamera = Camera.main;
+                sceneCamera = UnityCamera.main;
             }
 
             if (sceneCamera == null)
             {
                 GameObject cameraObject = new GameObject("TrainingCamera");
-                sceneCamera = cameraObject.AddComponent<Camera>();
+                sceneCamera = cameraObject.AddComponent<UnityCamera>();
                 sceneCamera.clearFlags = CameraClearFlags.Skybox;
                 sceneCamera.tag = "MainCamera";
 

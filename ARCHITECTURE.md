@@ -46,6 +46,33 @@ It is intentionally **not** a per-propeller flight model and **not** an FPV acro
 - `Assets/Scripts/Drone/Bootstrap/VerticalSliceBootstrap.cs`
   - Runtime setup for environment + drone + camera + HUD.
 
+## Camera system
+
+`DroneCameraModeController -> DroneGimbalCameraRig -> DroneVideoFeed -> DroneFeedDisplaySurface`
+
+8. **DroneGimbalCameraRig (MonoBehaviour)**
+   - Drone-mounted onboard camera with gimbal pitch pivot and horizon stabilization.
+   - Exposes `SetTargetPitch()` / `AdjustTargetPitch()` for external gimbal control.
+9. **DroneVideoFeed (MonoBehaviour)**
+   - Manages a RenderTexture that captures the onboard camera output.
+   - Feed is always live regardless of active camera mode (for VR controller screen use).
+10. **DroneCameraModeController (MonoBehaviour)**
+    - Switches between Chase and FPV modes.
+    - Handles keyboard gimbal input as a temporary fallback.
+11. **DroneFeedDisplaySurface (MonoBehaviour)**
+    - Binds the feed texture to a mesh Renderer or UI RawImage for display.
+
+### Camera scripts
+
+- `Assets/Scripts/Drone/Camera/DroneGimbalCameraRig.cs`
+  - Onboard camera, gimbal pitch, stabilization.
+- `Assets/Scripts/Drone/Camera/DroneVideoFeed.cs`
+  - RenderTexture management for the onboard camera feed.
+- `Assets/Scripts/Drone/Camera/DroneCameraModeController.cs`
+  - Chase/FPV mode switching, gimbal keyboard input.
+- `Assets/Scripts/Drone/Camera/DroneFeedDisplaySurface.cs`
+  - Display surface binding for mesh or UI targets.
+
 ## Where to tune what
 
 ### 1) Stick feel / input noise
@@ -80,6 +107,20 @@ Tune in **SimpleTrainingScenario**:
 - target altitude / tolerance
 - required hover time
 - speed threshold to count as stable hover
+
+### 5) Camera and gimbal
+Tune in **DroneGimbalCameraRig**:
+- `minPitchDegrees` / `maxPitchDegrees`
+- `pitchSpeed` / `pitchSmoothing`
+- `rollStabilization` / `pitchStabilization`
+- `fieldOfView`
+- `cameraLocalOffset`
+
+Tune in **DroneCameraModeController**:
+- `startupMode` (Chase or FPV)
+- `toggleKey` (default V)
+- `gimbalDownKey` / `gimbalUpKey` (default `[` / `]`)
+- `gimbalKeyboardRate` / `gimbalScrollRate`
 
 ---
 
