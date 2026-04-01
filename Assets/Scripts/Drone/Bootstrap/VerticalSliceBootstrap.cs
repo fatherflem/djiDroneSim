@@ -1,3 +1,4 @@
+using DroneSim.Drone.Camera;
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
@@ -34,6 +35,7 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private RawJoystickDiagnosticsOverlay sceneJoystickDiagnostics;
         [SerializeField] private BenchmarkRunner sceneBenchmarkRunner;
         [SerializeField] private Camera sceneCamera;
+        [SerializeField] private DroneCameraModeController sceneCameraModeController;
 
         [Header("Resources")]
         [Tooltip("Resources path for drone prefab. If missing, a basic runtime drone object is created.")]
@@ -72,6 +74,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneJoystickDiagnostics = null;
                 sceneBenchmarkRunner = null;
                 sceneCamera = null;
+                sceneCameraModeController = null;
             }
 
             DroneInputConfig inputConfig = Resources.Load<DroneInputConfig>(inputConfigResourcePath);
@@ -119,6 +122,7 @@ namespace DroneSim.Drone.Bootstrap
             EnsureMarkers();
             EnsureLight();
             EnsureFollowCamera(drone.transform);
+            EnsureDroneCameraSystem(drone, hud);
         }
 
         private GameObject ResolveOrCreateDrone()
@@ -223,6 +227,50 @@ namespace DroneSim.Drone.Bootstrap
 
             sceneBenchmarkRunner.Initialize(inputReader, physicsBody, controller);
             return sceneBenchmarkRunner;
+        }
+
+        private void EnsureDroneCameraSystem(GameObject drone, DroneDebugHUD hud)
+        {
+            // 1. Gimbal camera rig — the physical onboard camera with gimbal pitch control.
+            DroneGimbalCameraRig gimbalRig = drone.GetComponentInChildren<DroneGimbalCameraRig>();
+            if (gimbalRig == null)
+            {
+                GameObject rigObject = new GameObject("GimbalCameraRig");
+                gimbalRig = rigObject.AddComponent<DroneGimbalCameraRig>();
+                gimbalRig.Initialize(drone.transform);
+            }
+
+            // 2. Video feed — manages the RenderTexture that captures the onboard camera output.
+            DroneVideoFeed videoFeed = FindFirstObjectByType<DroneVideoFeed>();
+            if (videoFeed == null)
+            {
+                GameObject feedObject = new GameObject("DroneVideoFeed");
+                videoFeed = feedObject.AddComponent<DroneVideoFeed>();
+            }
+            videoFeed.Initialize(gimbalRig);
+
+            // 3. Camera mode controller — switches between Chase and FPV views.
+            if (sceneCameraModeController == null)
+            {
+                sceneCameraModeController = FindFirstObjectByType<DroneCameraModeController>();
+            }
+            if (sceneCameraModeController == null)
+            {
+                GameObject modeObject = new GameObject("CameraModeController");
+                sceneCameraModeController = modeObject.AddComponent<DroneCameraModeController>();
+            }
+
+            SimpleFollowCamera followCam = sceneCamera != null
+                ? sceneCamera.GetComponent<SimpleFollowCamera>()
+                : FindFirstObjectByType<SimpleFollowCamera>();
+
+            sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed);
+
+            // 4. Wire camera references into the debug HUD for mode/gimbal display.
+            if (hud != null)
+            {
+                hud.InitializeCamera(sceneCameraModeController, gimbalRig);
+            }
         }
 
         private static void EnsurePhysicsSettings()

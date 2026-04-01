@@ -1,3 +1,4 @@
+using DroneSim.Drone.Camera;
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
@@ -30,6 +31,13 @@ namespace DroneSim.Drone.UI
         [Tooltip("Optional telemetry source for sample count display.")]
         [SerializeField] private TelemetryRecorder telemetryRecorder;
 
+        [Header("Camera (optional)")]
+        [Tooltip("Camera mode controller for displaying current view mode.")]
+        [SerializeField] private DroneCameraModeController cameraModeController;
+
+        [Tooltip("Gimbal camera rig for displaying current gimbal pitch.")]
+        [SerializeField] private DroneGimbalCameraRig gimbalRig;
+
         private GUIStyle panelStyle;
         private GUIStyle labelStyle;
         private Texture2D panelBackground;
@@ -48,6 +56,12 @@ namespace DroneSim.Drone.UI
             telemetryRecorder = recorder;
         }
 
+
+        public void InitializeCamera(DroneCameraModeController modeController, DroneGimbalCameraRig gimbal)
+        {
+            cameraModeController = modeController;
+            gimbalRig = gimbal;
+        }
 
         private void Reset()
         {
@@ -75,7 +89,7 @@ namespace DroneSim.Drone.UI
 
             EnsureStyles();
             DroneInputFrame input = inputReader.CurrentInput;
-            Rect panelRect = new Rect(16f, 16f, 380f, 340f);
+            Rect panelRect = new Rect(16f, 16f, 380f, 400f);
             GUILayout.BeginArea(panelRect, GUIContent.none, panelStyle);
             GUILayout.Label("DJI-Style Drone Debug HUD", labelStyle);
             GUILayout.Space(6f);
@@ -89,6 +103,19 @@ namespace DroneSim.Drone.UI
             GUILayout.Label($"Yaw: {physicsBody.YawDegrees,6:F1} deg", labelStyle);
             GUILayout.Space(6f);
             GUILayout.Label($"Cmd Accel: {flightController.LastCommandedAcceleration.magnitude,6:F2} m/s²", labelStyle);
+
+            if (cameraModeController != null || gimbalRig != null)
+            {
+                GUILayout.Space(6f);
+                if (cameraModeController != null)
+                {
+                    GUILayout.Label($"Camera: {cameraModeController.CurrentModeLabel}  [V toggle]", labelStyle);
+                }
+                if (gimbalRig != null)
+                {
+                    GUILayout.Label($"Gimbal Pitch: {gimbalRig.CurrentPitchDegrees,6:F1} deg  [\\[\\] keys]", labelStyle);
+                }
+            }
 
             if (trainingScenario != null)
             {
