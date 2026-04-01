@@ -38,6 +38,17 @@ Keyboard/gamepad fallbacks are included for editor testing:
 - Mode select: `1` = Cine, `2` = Normal, `3` = Sport
 - Benchmark hotkeys (run/cycle maneuvers) remain on legacy `UnityEngine.Input` in `BenchmarkRunner` (`F8`/`F7` by default).
 
+Camera/gimbal bindings (also from `DroneInputConfig`) use Input System actions:
+
+- `cameraToggleBinding` (default `<Keyboard>/v`)
+- `gimbalTiltDownBinding` / `gimbalTiltUpBinding` (default `<Keyboard>/leftBracket` / `<Keyboard>/rightBracket`)
+- `gimbalResetBinding` (default `<Keyboard>/backslash`)
+
+FPV architecture note:
+
+- The onboard camera continuously renders into `DroneVideoFeed.FeedTexture` in both Chase and FPV.
+- FPV is presented by syncing the player camera to onboard view; feed generation remains independent and always live.
+
 ## Tunable parameters
 
 The most important tuning values are exposed on ScriptableObjects and controller components:

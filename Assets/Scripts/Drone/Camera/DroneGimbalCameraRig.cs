@@ -144,7 +144,7 @@ namespace DroneSim.Drone.Camera
                 onboardCamera.nearClipPlane = 0.1f;
                 onboardCamera.farClipPlane = 1500f;
                 onboardCamera.fieldOfView = fieldOfView;
-                // Start disabled; the mode controller decides when this camera renders.
+                // Feed system enables this camera and keeps it rendering continuously.
                 onboardCamera.enabled = false;
             }
         }

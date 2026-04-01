@@ -58,7 +58,8 @@ It is intentionally **not** a per-propeller flight model and **not** an FPV acro
    - Feed is always live regardless of active camera mode (for VR controller screen use).
 10. **DroneCameraModeController (MonoBehaviour)**
     - Switches between Chase and FPV modes.
-    - Handles keyboard gimbal input as a temporary fallback.
+    - Uses Unity Input System actions (from `DroneInputConfig` camera/gimbal bindings) for mode toggle and gimbal pitch controls.
+    - Only controls player presentation camera state; does not unbind/disable feed generation.
 11. **DroneFeedDisplaySurface (MonoBehaviour)**
     - Binds the feed texture to a mesh Renderer or UI RawImage for display.
 
@@ -69,7 +70,7 @@ It is intentionally **not** a per-propeller flight model and **not** an FPV acro
 - `Assets/Scripts/Drone/Camera/DroneVideoFeed.cs`
   - RenderTexture management for the onboard camera feed.
 - `Assets/Scripts/Drone/Camera/DroneCameraModeController.cs`
-  - Chase/FPV mode switching, gimbal keyboard input.
+  - Chase/FPV presentation switching and FPV presentation-camera syncing from onboard camera.
 - `Assets/Scripts/Drone/Camera/DroneFeedDisplaySurface.cs`
   - Display surface binding for mesh or UI targets.
 
@@ -118,9 +119,13 @@ Tune in **DroneGimbalCameraRig**:
 
 Tune in **DroneCameraModeController**:
 - `startupMode` (Chase or FPV)
-- `toggleKey` (default V)
-- `gimbalDownKey` / `gimbalUpKey` (default `[` / `]`)
-- `gimbalKeyboardRate` / `gimbalScrollRate`
+- `gimbalPitchRate`
+- fallback camera/gimbal Input System binding strings (used if `DroneInputConfig` is not assigned)
+
+Tune in **DroneInputConfig** (camera/gimbal actions):
+- `cameraToggleBinding` (default `V`)
+- `gimbalTiltDownBinding` / `gimbalTiltUpBinding` (default `[` / `]`)
+- `gimbalResetBinding` (default `\`)
 
 ---
 
