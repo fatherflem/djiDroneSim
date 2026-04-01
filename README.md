@@ -48,6 +48,51 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
   - `ForceRuntimeBuild`
 - Use it when you want a quick runtime-built test setup, or when authored scene pieces are intentionally absent.
 
+## Camera Modes / FPV Gimbal System
+
+The sim supports two camera modes, toggled with **V**:
+
+- **Chase** (default): third-person follow camera behind/above the drone.
+- **FPV**: drone-mounted onboard camera with gimbal pitch control.
+
+### Architecture
+
+| Script | Responsibility |
+|--------|---------------|
+| `DroneGimbalCameraRig` | Drone-mounted camera with 2-axis gimbal stabilization and configurable pitch |
+| `DroneVideoFeed` | Manages a `RenderTexture` that captures the onboard camera output |
+| `DroneCameraModeController` | Switches between Chase and FPV, manages active camera |
+| `DroneFeedDisplaySurface` | Binds the feed texture to a mesh `Renderer` or UI `RawImage` |
+
+All four scripts live under `Assets/Scripts/Drone/Camera/`.
+
+### Gimbal pitch controls
+
+- **`[` / `]`** keys: tilt gimbal down / up
+- **Mouse scroll wheel**: tilt gimbal
+- **`\`** key: reset gimbal to 0 degrees (forward)
+- Pitch range: -90 to +10 degrees (configurable on `DroneGimbalCameraRig`)
+- Pitch speed and smoothing are configurable in the Inspector
+
+The gimbal system accepts both absolute (`SetTargetPitch`) and incremental (`AdjustTargetPitch`) input, so it can later be driven by a controller wheel/dial or VR input.
+
+### Horizon stabilization
+
+The onboard camera partially decouples from the drone body's roll and pitch:
+- `rollStabilization` (default 0.85): 85% of body roll is removed, keeping the horizon readable
+- `pitchStabilization` (default 0.9): 90% of body pitch is removed from the camera view (gimbal pitch input is added on top)
+
+### VR controller screen hookup (future)
+
+The `DroneVideoFeed` component always maintains a live `RenderTexture` of the onboard camera, even in Chase mode. To display this on a VR controller screen:
+
+1. Add a `DroneFeedDisplaySurface` component to the controller screen mesh (Quad/plane).
+2. Assign or let it auto-find the `DroneVideoFeed`.
+3. The feed texture is automatically applied to the mesh material each frame.
+4. For UI-based screens, add a `RawImage` component and the surface will bind to that instead.
+
+Alternatively, access `DroneVideoFeed.FeedTexture` directly and assign it to any material: `material.mainTexture = feed.FeedTexture;`
+
 ## Input System / Controller Mapping
 
 - Flight controls use Unity's **Input System** at runtime.
@@ -77,6 +122,25 @@ Keyboard/gamepad fallback bindings are included for editor testing.
 3. Since `DroneInputReader` now binds both joystick path styles for x/y, mismatch between those two styles should no longer block input.
 4. If movement still fails, check deadzone/invert values in `DroneInputConfig` and ensure `DroneInputReader` is assigned on the drone prefab/scene object.
 
+
+### Input System backend configuration
+
+The project uses **both** the new Input System (for flight controls) and legacy `UnityEngine.Input` (for benchmark hotkeys and camera gimbal keyboard controls). The `ProjectSettings/ProjectSettings.asset` file sets `activeInputHandler: 2` (Both) so that Unity enables both backends on startup.
+
+**If the "new input system package but native platform backends are not enabled" popup reappears:**
+1. Check that `ProjectSettings/ProjectSettings.asset` exists and contains `activeInputHandler: 2`.
+2. If the file was deleted or overwritten by Unity, re-add the setting or use **Edit > Project Settings > Player > Other Settings > Active Input Handling** and select "Both".
+
+### Namespace collision notes
+
+The `DroneSim.Drone.Camera` namespace conflicts with `UnityEngine.Camera` when both are imported. Scripts that need both use type aliases:
+
+- `VerticalSliceBootstrap.cs`: `using UnityCamera = UnityEngine.Camera;` — all bare `Camera` references use `UnityCamera`
+- `BenchmarkRunner.cs`: `using LegacyInput = UnityEngine.Input;` — avoids collision with `DroneSim.Drone.Input` namespace
+- Camera scripts in `DroneSim.Drone.Camera` namespace use `UnityEngine.Camera` explicitly where needed
+
+**If a camera namespace collision reappears in a new script:**
+Add `using UnityCamera = UnityEngine.Camera;` at the top and use `UnityCamera` instead of bare `Camera`.
 
 ## Raw joystick diagnostics overlay (temporary input debugging)
 
