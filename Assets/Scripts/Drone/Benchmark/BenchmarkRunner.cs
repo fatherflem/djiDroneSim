@@ -30,11 +30,18 @@ namespace DroneSim.Drone.Benchmark
         [SerializeField] private KeyCode cycleManeuverKey = KeyCode.F7;
         [SerializeField] private string exportDirectoryName = "BenchmarkRuns";
 
+        [Header("Debug window")]
+        [SerializeField] private bool showDebugWindow = true;
+        [SerializeField] private bool startCollapsed;
+        [SerializeField] private Rect defaultWindowRect = new Rect(16f, 312f, 430f, 110f);
+
         private readonly BenchmarkTelemetryRecorder recorder = new BenchmarkTelemetryRecorder();
         private ManeuverDefinition activeManeuver;
         private float runElapsedTime;
         private bool isRunning;
         private int runCounter;
+        private Rect windowRect;
+        private bool isCollapsed;
 
         public bool IsRunning => isRunning;
         public string CurrentManeuverName => GetSelectedManeuver() != null ? GetSelectedManeuver().maneuverName : "None";
@@ -60,6 +67,9 @@ namespace DroneSim.Drone.Benchmark
             {
                 LoadManeuversFromResources();
             }
+
+            windowRect = defaultWindowRect;
+            isCollapsed = startCollapsed;
         }
 
         private void Start()
@@ -110,13 +120,38 @@ namespace DroneSim.Drone.Benchmark
 
         private void OnGUI()
         {
-            Rect panel = new Rect(16f, 370f, 540f, 90f);
-            GUI.Box(panel, GUIContent.none);
-            GUILayout.BeginArea(panel);
-            GUILayout.Label($"Benchmark: {CurrentManeuverName} (#{selectedManeuverIndex + 1}/{Mathf.Max(1, maneuvers.Count)})");
-            GUILayout.Label($"Run Key: {runManeuverKey} | Cycle Key: {cycleManeuverKey}");
-            GUILayout.Label(isRunning ? $"Status: Running ({runElapsedTime:F2}s/{activeManeuver.Duration:F2}s)" : "Status: Idle (manual input active)");
-            GUILayout.EndArea();
+            if (!showDebugWindow)
+            {
+                return;
+            }
+
+            windowRect = DroneSim.Drone.UI.DebugWindowLayoutUtility.ClampToScreen(windowRect);
+            float targetHeight = isCollapsed ? DroneSim.Drone.UI.DebugWindowLayoutUtility.HeaderHeight + 6f : defaultWindowRect.height;
+            windowRect.height = Mathf.Max(DroneSim.Drone.UI.DebugWindowLayoutUtility.HeaderHeight + 6f, targetHeight);
+            windowRect = GUI.Window(1304, windowRect, DrawDebugWindow, "");
+            windowRect = DroneSim.Drone.UI.DebugWindowLayoutUtility.ClampToScreen(windowRect);
+        }
+
+        private void DrawDebugWindow(int _)
+        {
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Benchmark Runner", GUILayout.Height(DroneSim.Drone.UI.DebugWindowLayoutUtility.HeaderHeight));
+            if (GUILayout.Button(isCollapsed ? "+" : "-", GUILayout.Width(26f), GUILayout.Height(20f)))
+            {
+                isCollapsed = !isCollapsed;
+            }
+            GUILayout.EndHorizontal();
+
+            if (!isCollapsed)
+            {
+                GUILayout.Label($"Benchmark: {CurrentManeuverName} (#{selectedManeuverIndex + 1}/{Mathf.Max(1, maneuvers.Count)})");
+                GUILayout.Label($"Run Key: {runManeuverKey} | Cycle Key: {cycleManeuverKey}");
+                GUILayout.Label(isRunning ? $"Status: Running ({runElapsedTime:F2}s/{activeManeuver.Duration:F2}s)" : "Status: Idle (manual input active)");
+            }
+
+            GUILayout.EndVertical();
+            GUI.DragWindow(new Rect(0f, 0f, windowRect.width - 34f, DroneSim.Drone.UI.DebugWindowLayoutUtility.HeaderHeight));
         }
 
         public void StartSelectedManeuver()

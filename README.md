@@ -175,6 +175,31 @@ The `DroneSim.Drone.Camera` namespace conflicts with `UnityEngine.Camera` when b
 **If a camera namespace collision reappears in a new script:**
 Add `using UnityCamera = UnityEngine.Camera;` at the top and use `UnityCamera` instead of bare `Camera`.
 
+
+## VR user/operator placeholder (scene foundation)
+
+`VerticalSliceBootstrap` now ensures a prototype operator object named `VRUserPlaceholder` exists for scene readability and future VR hookups.
+
+`VRUserPlaceholder` provides named anchors:
+- `BodyRoot`
+- `ChestAnchor`
+- `HeadAnchor`
+- `VRCameraAnchor` (future headset camera origin)
+- `ControllerAnchor_Left`
+- `ControllerAnchor_Right`
+- `ControllerScreenAnchor` (future controller screen mount)
+
+The placeholder auto-builds primitive visuals (torso/head/headset/controller grips) to make intent obvious.
+
+Controller feed relationship update:
+- When bootstrap auto-creates `VRControllerScreenPlaceholder`, it now attaches under `ControllerScreenAnchor` when available, so the live feed appears mounted to the operator's notional controller area.
+
+Where to reposition/replace:
+- Edit operator placement fields on `VerticalSliceBootstrap`:
+  - `operatorSpawnPosition`
+  - `operatorFacingEuler`
+- Replace visuals/anchors in `VRUserPlaceholder` if migrating to an authored avatar/VR rig.
+
 ## Camera/FPV troubleshooting
 
 - **Black feed texture (mesh/UI screen is black)**
@@ -236,6 +261,32 @@ Inspector options on `RawJoystickDiagnosticsOverlay`:
 Tip for mapping Mode 2 sticks:
 - Move only one stick direction at a time and note which control path changes strongly (typically near ±1.0).
 - Record the four paths for: left horizontal, left vertical, right horizontal, right vertical.
+
+
+## Debug HUD windows (draggable/collapsible polish)
+
+The runtime debug overlays now use **movable IMGUI windows** instead of fixed-screen panels:
+
+- `DroneDebugHUD` (main flight + training data)
+- `DroneCameraFeedDebugOverlay` (camera/feed status)
+- `RawJoystickDiagnosticsOverlay` (raw joystick paths/values)
+- `BenchmarkRunner` debug window
+
+Behavior:
+- Drag windows by their header/title bar (`GUI.DragWindow`).
+- Use the `-` / `+` button in each header to collapse/restore.
+- Window rects persist while playing and clamp to the visible screen bounds.
+- `RawJoystickDiagnosticsOverlay` now defaults to hidden + collapsed so it no longer dominates first-launch view.
+
+Bootstrap shortcuts (`VerticalSliceBootstrap`):
+- **F2** toggles HUD + joystick debug windows visibility.
+- **F3** resets debug window layout to each script's default rect/collapse state.
+
+Default layout goals:
+- Main HUD starts top-left.
+- Camera/feed status starts top-right.
+- Benchmark starts lower-left.
+- Raw joystick diagnostics starts hidden and out of the center flight view.
 
 ## Input deadzone note
 

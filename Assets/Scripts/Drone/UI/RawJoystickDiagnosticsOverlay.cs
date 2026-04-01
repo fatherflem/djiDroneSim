@@ -16,13 +16,19 @@ namespace DroneSim.Drone.UI
     {
         [Header("Visibility")]
         [Tooltip("Overlay starts visible on play. Toggle at runtime using the keys below.")]
-        [SerializeField] private bool startVisible = true;
+        [SerializeField] private bool startVisible;
+
+        [Tooltip("Start with the window collapsed to title bar only.")]
+        [SerializeField] private bool startCollapsed = true;
 
         [Tooltip("Keyboard key to toggle the diagnostics overlay.")]
         [SerializeField] private Key toggleKeyPrimary = Key.Backquote;
 
         [Tooltip("Secondary keyboard key to toggle the diagnostics overlay.")]
         [SerializeField] private Key toggleKeySecondary = Key.F1;
+
+        [Tooltip("Default window rect used at startup and by layout reset.")]
+        [SerializeField] private Rect defaultWindowRect = new Rect(18f, 430f, 600f, 280f);
 
         [Header("Filtering")]
         [Tooltip("Minimum absolute value required to highlight a control as active.")]
@@ -39,6 +45,8 @@ namespace DroneSim.Drone.UI
         [Tooltip("Seconds between repeated logs for the same control.")]
         [SerializeField] private float axisLogCooldown = 0.25f;
 
+        private const int WindowId = 1302;
+
         private readonly Dictionary<string, float> nextLogTimeByPath = new Dictionary<string, float>();
         private readonly List<AxisControl> axisBuffer = new List<AxisControl>();
         private readonly List<ButtonControl> buttonBuffer = new List<ButtonControl>();
@@ -48,10 +56,27 @@ namespace DroneSim.Drone.UI
         private GUIStyle labelStyle;
         private Texture2D panelBackground;
         private bool isVisible;
+        private bool isCollapsed;
+        private Rect windowRect;
+        private Vector2 axisScroll;
+        private Vector2 buttonScroll;
+
+        public void SetWindowVisibility(bool visible)
+        {
+            isVisible = visible;
+        }
+
+        public void ResetWindowLayout()
+        {
+            windowRect = defaultWindowRect;
+            isCollapsed = startCollapsed;
+        }
 
         private void Awake()
         {
             isVisible = startVisible;
+            isCollapsed = startCollapsed;
+            windowRect = defaultWindowRect;
         }
 
         private void Update()
@@ -119,44 +144,69 @@ namespace DroneSim.Drone.UI
             }
 
             EnsureStyles();
-            Rect panelRect = new Rect(410f, 16f, 620f, Screen.height - 32f);
-            GUILayout.BeginArea(panelRect, GUIContent.none, panelStyle);
-            GUILayout.Label("Raw Joystick Diagnostics", labelStyle);
-            GUILayout.Label($"Toggle: {toggleKeyPrimary} / {toggleKeySecondary}", labelStyle);
+            windowRect = DebugWindowLayoutUtility.ClampToScreen(windowRect);
+            float targetHeight = isCollapsed ? DebugWindowLayoutUtility.HeaderHeight + 6f : defaultWindowRect.height;
+            windowRect.height = Mathf.Max(DebugWindowLayoutUtility.HeaderHeight + 6f, targetHeight);
+            windowRect = GUI.Window(WindowId, windowRect, DrawWindowContents, GUIContent.none, panelStyle);
+            windowRect = DebugWindowLayoutUtility.ClampToScreen(windowRect);
+        }
 
-            if (Joystick.all.Count == 0)
+        private void DrawWindowContents(int _)
+        {
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Raw Joystick Diagnostics", labelStyle, GUILayout.Height(DebugWindowLayoutUtility.HeaderHeight));
+            string buttonLabel = isCollapsed ? "+" : "-";
+            if (GUILayout.Button(buttonLabel, GUILayout.Width(26f), GUILayout.Height(20f)))
             {
+                isCollapsed = !isCollapsed;
+            }
+            GUILayout.EndHorizontal();
+
+            if (!isCollapsed)
+            {
+                GUILayout.Label($"Toggle: {toggleKeyPrimary} / {toggleKeySecondary}", labelStyle);
+
+                if (Joystick.all.Count == 0)
+                {
+                    GUILayout.Space(6f);
+                    GUILayout.Label("No joystick detected by Unity Input System.", labelStyle);
+                    GUILayout.EndVertical();
+                    GUI.DragWindow(new Rect(0f, 0f, windowRect.width - 34f, DebugWindowLayoutUtility.HeaderHeight));
+                    return;
+                }
+
+                if (activeJoystick == null)
+                {
+                    activeJoystick = Joystick.current ?? Joystick.all[0];
+                }
+
                 GUILayout.Space(6f);
-                GUILayout.Label("No joystick detected by Unity Input System.", labelStyle);
-                GUILayout.EndArea();
-                return;
+                GUILayout.Label($"Active Joystick: {activeJoystick.displayName}", labelStyle);
+                GUILayout.Label($"Product: {activeJoystick.description.product}", labelStyle);
+                GUILayout.Label($"Interface: {activeJoystick.description.interfaceName}", labelStyle);
+                GUILayout.Label($"Show only changing: {showOnlyChangingControls}", labelStyle);
+                GUILayout.Label($"Activity threshold: {activityThreshold:F2}", labelStyle);
+
+                axisBuffer.Clear();
+                axisBuffer.AddRange(activeJoystick.allControls.OfType<AxisControl>());
+                GUILayout.Space(8f);
+                GUILayout.Label($"Axes ({axisBuffer.Count})", labelStyle);
+                axisScroll = GUILayout.BeginScrollView(axisScroll, GUILayout.Height(96f));
+                DrawAxisList();
+                GUILayout.EndScrollView();
+
+                buttonBuffer.Clear();
+                buttonBuffer.AddRange(activeJoystick.allControls.OfType<ButtonControl>());
+                GUILayout.Space(8f);
+                GUILayout.Label($"Buttons ({buttonBuffer.Count})", labelStyle);
+                buttonScroll = GUILayout.BeginScrollView(buttonScroll, GUILayout.Height(80f));
+                DrawButtonList();
+                GUILayout.EndScrollView();
             }
 
-            if (activeJoystick == null)
-            {
-                activeJoystick = Joystick.current ?? Joystick.all[0];
-            }
-
-            GUILayout.Space(6f);
-            GUILayout.Label($"Active Joystick: {activeJoystick.displayName}", labelStyle);
-            GUILayout.Label($"Product: {activeJoystick.description.product}", labelStyle);
-            GUILayout.Label($"Interface: {activeJoystick.description.interfaceName}", labelStyle);
-            GUILayout.Label($"Show only changing: {showOnlyChangingControls}", labelStyle);
-            GUILayout.Label($"Activity threshold: {activityThreshold:F2}", labelStyle);
-
-            axisBuffer.Clear();
-            axisBuffer.AddRange(activeJoystick.allControls.OfType<AxisControl>());
-            GUILayout.Space(8f);
-            GUILayout.Label($"Axes ({axisBuffer.Count})", labelStyle);
-            DrawAxisList();
-
-            buttonBuffer.Clear();
-            buttonBuffer.AddRange(activeJoystick.allControls.OfType<ButtonControl>());
-            GUILayout.Space(8f);
-            GUILayout.Label($"Buttons ({buttonBuffer.Count})", labelStyle);
-            DrawButtonList();
-
-            GUILayout.EndArea();
+            GUILayout.EndVertical();
+            GUI.DragWindow(new Rect(0f, 0f, windowRect.width - 34f, DebugWindowLayoutUtility.HeaderHeight));
         }
 
         private void DrawAxisList()
@@ -227,7 +277,10 @@ namespace DroneSim.Drone.UI
                 return;
             }
 
-            panelStyle = new GUIStyle(GUI.skin.box);
+            panelStyle = new GUIStyle(GUI.skin.window)
+            {
+                padding = new RectOffset(10, 10, 6, 10)
+            };
             panelBackground = new Texture2D(1, 1, TextureFormat.RGBA32, false);
             panelBackground.SetPixel(0, 0, new Color(0.04f, 0.06f, 0.08f, 0.93f));
             panelBackground.Apply();

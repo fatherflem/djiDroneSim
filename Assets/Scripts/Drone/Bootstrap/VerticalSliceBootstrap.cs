@@ -7,6 +7,7 @@ using DroneSim.Drone.Training;
 using DroneSim.Drone.UI;
 using UnityEngine;
 using UnityCamera = UnityEngine.Camera;
+using LegacyInput = UnityEngine.Input;
 
 namespace DroneSim.Drone.Bootstrap
 {
@@ -39,6 +40,11 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private DroneCameraModeController sceneCameraModeController;
         [SerializeField] private DroneFeedDisplaySurface sceneFeedDisplaySurface;
         [SerializeField] private DroneCameraFeedDebugOverlay sceneCameraFeedOverlay;
+        [SerializeField] private VRUserPlaceholder sceneVrUserPlaceholder;
+
+        [Header("Debug windows")]
+        [SerializeField] private KeyCode toggleAllDebugWindowsKey = KeyCode.F2;
+        [SerializeField] private KeyCode resetDebugWindowLayoutKey = KeyCode.F3;
 
         [Header("Resources")]
         [Tooltip("Resources path for drone prefab. If missing, a basic runtime drone object is created.")]
@@ -60,6 +66,12 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private Vector3 droneSpawnPosition = new Vector3(0f, 1.25f, -4f);
         [SerializeField] private Vector3 cameraOffset = new Vector3(0f, 4f, -8f);
 
+        [Header("VR user placeholder")]
+        [SerializeField] private Vector3 operatorSpawnPosition = new Vector3(-2.8f, 0f, 1.2f);
+        [SerializeField] private Vector3 operatorFacingEuler = new Vector3(0f, 42f, 0f);
+
+        private bool areDebugWindowsVisible = true;
+
         private void Start()
         {
             if (bootstrapMode == BootstrapMode.Disabled)
@@ -80,6 +92,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneCameraModeController = null;
                 sceneFeedDisplaySurface = null;
                 sceneCameraFeedOverlay = null;
+                sceneVrUserPlaceholder = null;
             }
 
             DroneInputConfig inputConfig = Resources.Load<DroneInputConfig>(inputConfigResourcePath);
@@ -127,7 +140,58 @@ namespace DroneSim.Drone.Bootstrap
             EnsureMarkers();
             EnsureLight();
             EnsureFollowCamera(drone.transform);
-            EnsureDroneCameraSystem(drone, hud, inputConfig);
+            VRUserPlaceholder vrUserPlaceholder = EnsureOperatorPlaceholder(drone.transform);
+            EnsureDroneCameraSystem(drone, hud, inputConfig, vrUserPlaceholder);
+        }
+
+
+        private void Update()
+        {
+            if (LegacyInput.GetKeyDown(toggleAllDebugWindowsKey))
+            {
+                areDebugWindowsVisible = !areDebugWindowsVisible;
+                if (sceneHud != null)
+                {
+                    sceneHud.SetWindowVisibility(areDebugWindowsVisible);
+                }
+
+                if (sceneJoystickDiagnostics != null)
+                {
+                    sceneJoystickDiagnostics.SetWindowVisibility(areDebugWindowsVisible);
+                }
+            }
+
+            if (LegacyInput.GetKeyDown(resetDebugWindowLayoutKey))
+            {
+                sceneHud?.ResetWindowLayout();
+                sceneJoystickDiagnostics?.ResetWindowLayout();
+                sceneCameraFeedOverlay?.ResetWindowLayout();
+            }
+        }
+
+        private VRUserPlaceholder EnsureOperatorPlaceholder(Transform droneTransform)
+        {
+            if (sceneVrUserPlaceholder == null)
+            {
+                sceneVrUserPlaceholder = FindFirstObjectByType<VRUserPlaceholder>();
+            }
+
+            if (sceneVrUserPlaceholder == null)
+            {
+                GameObject operatorObject = new GameObject("VRUserPlaceholder");
+                sceneVrUserPlaceholder = operatorObject.AddComponent<VRUserPlaceholder>();
+            }
+
+            sceneVrUserPlaceholder.transform.position = operatorSpawnPosition;
+            sceneVrUserPlaceholder.transform.rotation = Quaternion.Euler(operatorFacingEuler);
+            sceneVrUserPlaceholder.EnsurePlaceholderHierarchy();
+
+            if (sceneVrUserPlaceholder.ControllerScreenAnchor != null && droneTransform != null)
+            {
+                sceneVrUserPlaceholder.ControllerScreenAnchor.LookAt(droneTransform.position + Vector3.up * 1.0f);
+            }
+
+            return sceneVrUserPlaceholder;
         }
 
         private GameObject ResolveOrCreateDrone()
@@ -234,7 +298,7 @@ namespace DroneSim.Drone.Bootstrap
             return sceneBenchmarkRunner;
         }
 
-        private void EnsureDroneCameraSystem(GameObject drone, DroneDebugHUD hud, DroneInputConfig inputConfig)
+        private void EnsureDroneCameraSystem(GameObject drone, DroneDebugHUD hud, DroneInputConfig inputConfig, VRUserPlaceholder vrUserPlaceholder)
         {
             // 1. Gimbal camera rig — the physical onboard camera with gimbal pitch control.
             DroneGimbalCameraRig gimbalRig = drone.GetComponentInChildren<DroneGimbalCameraRig>();
@@ -272,7 +336,7 @@ namespace DroneSim.Drone.Bootstrap
             sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed, inputConfig);
 
             // 4. Demo world display surface — default "controller screen placeholder".
-            sceneFeedDisplaySurface = ResolveOrCreateFeedDisplaySurface(drone.transform, videoFeed);
+            sceneFeedDisplaySurface = ResolveOrCreateFeedDisplaySurface(drone.transform, videoFeed, vrUserPlaceholder);
 
             // 5. Camera/feed diagnostics overlay for quick validation.
             sceneCameraFeedOverlay = ResolveOrCreateCameraFeedOverlay(
@@ -288,7 +352,7 @@ namespace DroneSim.Drone.Bootstrap
             }
         }
 
-        private DroneFeedDisplaySurface ResolveOrCreateFeedDisplaySurface(Transform droneTransform, DroneVideoFeed videoFeed)
+        private DroneFeedDisplaySurface ResolveOrCreateFeedDisplaySurface(Transform droneTransform, DroneVideoFeed videoFeed, VRUserPlaceholder vrUserPlaceholder)
         {
             if (sceneFeedDisplaySurface == null)
             {
@@ -311,9 +375,19 @@ namespace DroneSim.Drone.Bootstrap
             GameObject screenObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
             screenObject.name = "VRControllerScreenPlaceholder";
             screenObject.transform.SetParent(displayRoot.transform, false);
-            screenObject.transform.position = droneTransform.position + new Vector3(2.2f, 1.4f, 0f);
-            screenObject.transform.rotation = Quaternion.LookRotation((droneTransform.position + Vector3.up * 1.1f) - screenObject.transform.position);
-            screenObject.transform.localScale = new Vector3(1.1f, 0.65f, 1f);
+            if (vrUserPlaceholder != null && vrUserPlaceholder.ControllerScreenAnchor != null)
+            {
+                screenObject.transform.SetParent(vrUserPlaceholder.ControllerScreenAnchor, false);
+                screenObject.transform.localPosition = new Vector3(0f, 0.05f, 0.055f);
+                screenObject.transform.localRotation = Quaternion.Euler(22f, 180f, 0f);
+                screenObject.transform.localScale = new Vector3(0.28f, 0.18f, 1f);
+            }
+            else
+            {
+                screenObject.transform.position = droneTransform.position + new Vector3(2.2f, 1.4f, 0f);
+                screenObject.transform.rotation = Quaternion.LookRotation((droneTransform.position + Vector3.up * 1.1f) - screenObject.transform.position);
+                screenObject.transform.localScale = new Vector3(1.1f, 0.65f, 1f);
+            }
 
             Renderer screenRenderer = screenObject.GetComponent<Renderer>();
             if (screenRenderer != null)
