@@ -225,3 +225,33 @@ Benchmark session `session_20260402_170046` validated the previous pass's archit
 
 ### Required next step
 Full benchmark rerun (F9 in Play Mode) + closed-loop comparison to validate.
+
+---
+
+## Narrow pass: yaw asymmetry simplification (April 2, 2026, post `session_20260402_182438`)
+
+### Why this pass was chosen
+- Latest comparison input moved the strongest high-confidence mismatch to **`yaw_left`**.
+- `yaw_right` did not measurably improve in onset / overshoot / settle in the newest rerun.
+- Continuing to stack right-only logic was no longer justified; this pass prioritizes directional consistency.
+
+### Changes in this pass
+1. **Removed right-release special-case yaw stop path in controller code**
+   - Deleted post-release right-yaw stop timer/window behavior.
+   - Neutral yaw stop now uses one shared path (`yawStopSpeed`, with optional `yawRightStopMultiplier` only).
+2. **Rebalanced directional command gains in Normal mode**
+   - `yawLeftCommandGain`: `0.9 -> 1.0` (primary `yaw_left` correction).
+   - `yawRightCommandGain`: `1.14 -> 1.10` (preserves right authority while narrowing asymmetry gap).
+   - `yawRightStopMultiplier`: `1.2 -> 1.1` (keeps light right-side stop protection without heavy bias).
+3. **Schema/docs cleanup**
+   - Removed unused right-release stop fields from `DroneFlightModeConfig`.
+   - Updated tuning guide language to match the simplified yaw model.
+
+### Scope protection
+- No forward/lateral/vertical tuning changes in this pass.
+- No benchmark pipeline, input mapping, camera, HUD, or controller-screen changes.
+
+### Validation expectation
+- Primary expected movement: lower `yaw_left` divergence (response shape + directional parity).
+- Secondary expected movement: `yaw_right` remains stable or modestly improved from reduced branch interaction.
+- Requires exactly one new full rerun to confirm.

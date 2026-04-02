@@ -95,4 +95,4 @@
 - Lateral right acceptable: False
 - Yaw left acceptable: False
 - Normal-mode fidelity good enough to move on: False
-- Single next tuning target: yaw_right
+- Single next tuning target: yaw_left (yaw asymmetry simplification pass; supersedes earlier yaw_right-only recommendation after latest `session_20260402_182438` comparison)

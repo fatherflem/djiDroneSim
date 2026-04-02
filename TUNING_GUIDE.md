@@ -21,7 +21,7 @@ Tune these first (in this order):
 13. `yawCatchUpSpeed` / `yawStopSpeed` (mode config)
 14. `yawRightCommandGain` / `yawLeftCommandGain` (mode config, directional-only)
 15. `yawRightStopMultiplier` (mode config, right-only neutral braking)
-16. `yawRightCatchUpMultiplier` / `yawRightReleaseStopMultiplier` / `yawRightReleaseStopDuration` (mode config, right-yaw response-shape refinements)
+16. `yawRightCatchUpMultiplier` (mode config, optional right-yaw onset refinement when needed)
 17. `gravityCancelMultiplier` (DJIStyleFlightController)
 
 ## What each parameter changes
@@ -40,7 +40,6 @@ Tune these first (in this order):
 - **yawRightCommandGain / yawLeftCommandGain**: Directional yaw command scaling for measured right-vs-left mismatch correction.
 - **yawRightStopMultiplier**: Extra neutral-input yaw damping applied only while current yaw rate is rightward; useful for right-turn stop/overshoot shaping without changing left stop behavior.
 - **yawRightCatchUpMultiplier**: Scales active right-yaw catch-up authority (<1 softens right-yaw onset acceleration while preserving left behavior).
-- **yawRightReleaseStopMultiplier / yawRightReleaseStopDuration**: Adds a short right-yaw-only neutral braking window immediately after stick release to reduce overshoot and improve settle.
 - **gravityCancelMultiplier**: Baseline upward assist against gravity; affects hover feel.
 
 ## CSV benchmark workflow (Airdata)

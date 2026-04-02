@@ -2053,14 +2053,15 @@
     "climb_status": "directionally_improved",
     "descent_status": "directionally_improved",
     "normal_mode_good_enough_to_move_on": false,
-    "single_next_tuning_target": "yaw_right",
+    "single_next_tuning_target": "yaw_left",
     "divergence_scores": {
       "yaw_right": 128.362,
       "yaw_left": 171.34,
       "lateral_right": 0.667,
       "climb/descent": 8.489,
       "forward_step": 11.032
-    }
+    },
+    "notes": "Updated after session_20260402_182438: prioritize yaw asymmetry simplification with yaw_left as primary mismatch."
   },
   "confidence_notes": {
     "high_confidence": [

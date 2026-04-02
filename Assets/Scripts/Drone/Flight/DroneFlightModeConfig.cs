@@ -81,14 +81,8 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Directional command gain for left yaw input (negative rudder).")]
         [Min(0.1f)] public float yawLeftCommandGain = 1f;
 
-        [Tooltip("Multiplier on neutral yaw braking while current yaw rate is rightward (positive).")]
+        [Tooltip("Multiplier on neutral yaw braking while current yaw rate is rightward (positive). Kept as the only right-only yaw stop override.")]
         [Min(0.1f)] public float yawRightStopMultiplier = 1f;
-
-        [Tooltip("Temporary extra right-yaw neutral braking applied immediately after releasing right yaw input to reduce overshoot and improve settle.")]
-        [Min(1f)] public float yawRightReleaseStopMultiplier = 1f;
-
-        [Tooltip("Duration in seconds for the post-release right-yaw stop multiplier window. Set 0 to disable.")]
-        [Min(0f)] public float yawRightReleaseStopDuration = 0f;
 
         [Header("Visual attitude")]
         [Tooltip("Maximum visible pitch/roll tilt angle used by the visual rig.")]
