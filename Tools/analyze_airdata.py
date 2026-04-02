@@ -17,7 +17,7 @@ import statistics
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 MPS_PER_MPH = 0.44704
 AXIS_TO_RC = {
@@ -687,9 +687,103 @@ def read_session_amplitude_metadata(manifest_path: str) -> Dict[str, dict]:
     return category_meta
 
 
+def parse_session_manifest(manifest_path: str) -> dict:
+    session = {"session_metadata": None, "runs": []}
+    if not os.path.exists(manifest_path):
+        return session
+
+    with open(manifest_path, encoding="utf-8") as fp:
+        for line in fp:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            et = entry.get("type")
+            if et == "session_metadata":
+                session["session_metadata"] = entry
+            elif et == "run":
+                session["runs"].append(entry)
+    return session
+
+
+def identify_primary_protocol_runs(manifest: dict) -> dict:
+    expected_order = {name: idx + 1 for idx, name in enumerate(COMPARISON_CATEGORIES)}
+    primary = []
+    excluded = []
+    seen_categories: Set[str] = set()
+
+    all_runs = sorted(manifest.get("runs", []), key=lambda r: int(r.get("run_number", 0)))
+    for run in all_runs:
+        category = normalize_protocol_category(run.get("protocol_category", ""))
+        run_number = int(run.get("run_number", 0))
+        run_source = (run.get("run_source") or "").strip().lower()
+        protocol_order = int(run.get("protocol_order", -1))
+
+        if category not in expected_order:
+            excluded.append(
+                {
+                    "run_number": run_number,
+                    "category": category,
+                    "reason": "outside_core_comparison_categories",
+                }
+            )
+            continue
+
+        if run_source != "full_protocol":
+            excluded.append(
+                {
+                    "run_number": run_number,
+                    "category": category,
+                    "reason": f"run_source_{run_source or 'unknown'}_not_full_protocol",
+                }
+            )
+            continue
+
+        expected = expected_order[category]
+        if protocol_order != expected:
+            excluded.append(
+                {
+                    "run_number": run_number,
+                    "category": category,
+                    "reason": f"protocol_order_{protocol_order}_expected_{expected}",
+                }
+            )
+            continue
+
+        if category in seen_categories:
+            excluded.append(
+                {
+                    "run_number": run_number,
+                    "category": category,
+                    "reason": "duplicate_category_in_full_protocol",
+                }
+            )
+            continue
+
+        seen_categories.add(category)
+        primary.append(
+            {
+                "run_number": run_number,
+                "category": category,
+                "maneuver_name": run.get("maneuver_name", ""),
+                "protocol_order": protocol_order,
+                "run_source": run_source,
+                "manifest_entry": run,
+            }
+        )
+
+    return {"primary_runs": primary, "excluded_runs": excluded}
+
+
 def read_sim_runs(patterns: List[str]) -> List[dict]:
     runs = []
     seen = set()
+    session_meta_cache: Dict[str, dict] = {}
+    amp_cache: Dict[str, Dict[str, dict]] = {}
+    protocol_cache: Dict[str, dict] = {}
     for pattern in patterns:
         for path in sorted(glob.glob(pattern, recursive=True)):
             if not path.endswith(".csv"):
@@ -707,9 +801,50 @@ def read_sim_runs(patterns: List[str]) -> List[dict]:
             parent = Path(path).resolve().parent
             manifest_path = parent / "session_manifest.jsonl"
             amplitude_meta = None
+            run_manifest_entry = None
+            in_primary_protocol = None
+            exclusion_reason = None
             if manifest_path.exists():
-                amplitude_meta = read_session_amplitude_metadata(str(manifest_path)).get(category)
-            runs.append({"path": path, "rows": rows, "category": category, "amplitude_metadata": amplitude_meta})
+                manifest_key = str(manifest_path)
+                if manifest_key not in amp_cache:
+                    amp_cache[manifest_key] = read_session_amplitude_metadata(manifest_key)
+                if manifest_key not in session_meta_cache:
+                    session_meta_cache[manifest_key] = parse_session_manifest(manifest_key)
+                    protocol_cache[manifest_key] = identify_primary_protocol_runs(session_meta_cache[manifest_key])
+                amplitude_meta = amp_cache[manifest_key].get(category)
+
+                stem = Path(path).stem
+                for entry in session_meta_cache[manifest_key].get("runs", []):
+                    if int(entry.get("run_number", 0)) == int(rows[0].get("run_number", 0)) or stem.startswith(
+                        f"run_{int(entry.get('run_number', 0)):03d}_"
+                    ):
+                        run_manifest_entry = entry
+                        break
+
+                selected = {
+                    item["run_number"]: item
+                    for item in protocol_cache[manifest_key].get("primary_runs", [])
+                }
+                excluded = {
+                    item["run_number"]: item["reason"]
+                    for item in protocol_cache[manifest_key].get("excluded_runs", [])
+                }
+                run_num = int(rows[0].get("run_number", 0))
+                in_primary_protocol = run_num in selected
+                if run_num in excluded:
+                    exclusion_reason = excluded[run_num]
+
+            runs.append(
+                {
+                    "path": path,
+                    "rows": rows,
+                    "category": category,
+                    "amplitude_metadata": amplitude_meta,
+                    "run_manifest_entry": run_manifest_entry,
+                    "in_primary_protocol": in_primary_protocol,
+                    "exclusion_reason": exclusion_reason,
+                }
+            )
     return runs
 
 
@@ -721,29 +856,40 @@ def _get_times(rows: List[dict]) -> List[float]:
 
 def summarize_sim_run(run: dict, category: str) -> dict:
     rows = run["rows"]
-    times = _get_times(rows)
+    analysis_rows = [r for r in rows if (r.get("benchmark_phase") or "").strip().lower() in ("input", "settle")]
+    if not analysis_rows:
+        analysis_rows = rows
+    times = _get_times(analysis_rows)
     mode = rows[0].get("maneuver_mode", "Unknown") if rows else "Unknown"
+    input_only_rows = [r for r in analysis_rows if (r.get("benchmark_phase") or "").strip().lower() == "input"]
+    settle_only_rows = [r for r in analysis_rows if (r.get("benchmark_phase") or "").strip().lower() == "settle"]
 
     if category in ("forward_step", "lateral_right", "lateral_left"):
-        signal = [_safe_float(r, "horizontal_speed_mps") for r in rows]
+        signal = [abs(_safe_float(r, "forward_speed_mps")) for r in analysis_rows] if category == "forward_step" else [
+            abs(_safe_float(r, "lateral_speed_mps")) for r in analysis_rows
+        ]
     elif category in ("climb", "descent"):
-        signal = [abs(_safe_float(r, "vertical_speed_mps")) for r in rows]
+        signal = [abs(_safe_float(r, "vertical_speed_mps")) for r in analysis_rows]
     elif category in ("yaw_right", "yaw_left"):
-        signal = [abs(_safe_float(r, "yaw_rate_degps")) for r in rows]
+        signal = [abs(_safe_float(r, "yaw_rate_degps")) for r in analysis_rows]
     else:
-        hs = [_safe_float(r, "horizontal_speed_mps") for r in rows]
-        vs = [_safe_float(r, "vertical_speed_mps") for r in rows]
+        hs = [_safe_float(r, "horizontal_speed_mps") for r in analysis_rows]
+        vs = [_safe_float(r, "vertical_speed_mps") for r in analysis_rows]
+        alt = [_safe_float(r, "pos_y_m") for r in analysis_rows]
         if not hs:
             return {}
         return {
             "path": run["path"],
             "mode": mode,
-            "response_delay_s": None,
-            "peak_rate": max(hs),
+            "response_delay_s": 0.0,
+            "peak_rate": max(hs) if hs else 0.0,
             "settle_time_s": 0.0,
             "max_accel": 0.0,
             "overshoot": 0.0,
             "residual_drift": statistics.fmean(abs(v) for v in hs + vs),
+            "vertical_rms_mps": math.sqrt(statistics.fmean(v * v for v in vs)) if vs else 0.0,
+            "horizontal_rms_mps": math.sqrt(statistics.fmean(v * v for v in hs)) if hs else 0.0,
+            "alt_std_m": statistics.pstdev(alt) if len(alt) > 1 else 0.0,
             "measured_from": "sim_csv_direct",
         }
 
@@ -758,7 +904,16 @@ def summarize_sim_run(run: dict, category: str) -> dict:
         dt = 0.02
 
     accel = max(((signal[i + 1] - signal[i]) / dt) for i in range(len(signal) - 1)) if len(signal) > 1 else 0.0
-    steady = statistics.fmean(signal[-min(5, len(signal)) :])
+    steady_source = settle_only_rows if settle_only_rows else analysis_rows[-min(8, len(analysis_rows)) :]
+    if category == "forward_step":
+        steady_values = [abs(_safe_float(r, "forward_speed_mps")) for r in steady_source]
+    elif category in ("lateral_right", "lateral_left"):
+        steady_values = [abs(_safe_float(r, "lateral_speed_mps")) for r in steady_source]
+    elif category in ("climb", "descent"):
+        steady_values = [abs(_safe_float(r, "vertical_speed_mps")) for r in steady_source]
+    else:
+        steady_values = [abs(_safe_float(r, "yaw_rate_degps")) for r in steady_source]
+    steady = statistics.fmean(steady_values) if steady_values else statistics.fmean(signal[-min(5, len(signal)) :])
     return {
         "path": run["path"],
         "mode": mode,
@@ -788,6 +943,8 @@ def comparison_note(delta: Optional[float], magnitude_threshold: float = 0.15) -
 def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> Dict[str, dict]:
     by_cat = defaultdict(list)
     for run in sim_runs:
+        if run.get("in_primary_protocol") is False:
+            continue
         by_cat[run["category"]].append(run)
 
     out = {}
@@ -822,6 +979,9 @@ def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> 
             "settle_time_s_mean": _agg_metric(sim_summaries, "settle_time_s"),
             "overshoot_mean": _agg_metric(sim_summaries, "overshoot"),
             "residual_drift_mean": _agg_metric(sim_summaries, "residual_drift"),
+            "horizontal_rms_mps_mean": _agg_metric(sim_summaries, "horizontal_rms_mps"),
+            "vertical_rms_mps_mean": _agg_metric(sim_summaries, "vertical_rms_mps"),
+            "alt_std_m_mean": _agg_metric(sim_summaries, "alt_std_m"),
         }
 
         deltas = {}
@@ -893,6 +1053,37 @@ def write_markdown(path: str, payload: dict):
         f"- `{payload['source_csv']}`",
         f"- Sim CSV patterns: `{', '.join(payload['sim_csv_inputs']) if payload['sim_csv_inputs'] else '(none)'}`",
         "",
+        "## Simulator session selection",
+        "",
+        f"- Primary protocol runs included: {len(payload.get('sim_primary_protocol_runs', []))}",
+        f"- Runs excluded from primary protocol comparison: {len(payload.get('sim_excluded_runs', []))}",
+        "",
+    ]
+
+    if payload.get("sim_primary_protocol_runs"):
+        lines += [
+            "| Included run # | Category | Protocol order | Run source | File |",
+            "|---:|---|---:|---|---|",
+        ]
+        for row in payload["sim_primary_protocol_runs"]:
+            lines.append(
+                f"| {row.get('run_number')} | {row.get('category')} | {row.get('protocol_order')} | {row.get('run_source')} | `{row.get('path')}` |"
+            )
+        lines.append("")
+
+    if payload.get("sim_excluded_runs"):
+        lines += [
+            "| Excluded run # | Category | Reason | File |",
+            "|---:|---|---|---|",
+        ]
+        for row in payload["sim_excluded_runs"]:
+            lines.append(
+                f"| {row.get('run_number')} | {row.get('category')} | {row.get('reason')} | `{row.get('path', '-')}` |"
+            )
+        lines.append("")
+
+    lines += [
+        "",
         "## Segmentation confidence overview (real flight)",
         "",
         "| Maneuver | Count | High | Medium | Low | Peak mean | Delay mean |",
@@ -939,8 +1130,11 @@ def write_markdown(path: str, payload: dict):
             continue
         d = row["delta_sim_minus_real"]
         verdict = row["delta_assessment"].get("peak_rate_mean", "insufficient_data")
+        def fmt_delta(key: str) -> str:
+            value = d.get(key)
+            return "-" if value is None else f"{value}"
         lines.append(
-            f"| {cat} | compared | {row.get('sim_input_amplitude_confidence', 'unknown')} | {row.get('sim_input_amplitude_provenance', 'unknown')} | {d.get('response_delay_s_mean', 0)} | {d.get('peak_rate_mean', 0)} | {d.get('max_accel_mean', 0)} | {d.get('settle_time_s_mean', 0)} | {d.get('overshoot_mean', 0)} | {verdict} |"
+            f"| {cat} | compared | {row.get('sim_input_amplitude_confidence', 'unknown')} | {row.get('sim_input_amplitude_provenance', 'unknown')} | {fmt_delta('response_delay_s_mean')} | {fmt_delta('peak_rate_mean')} | {fmt_delta('max_accel_mean')} | {fmt_delta('settle_time_s_mean')} | {fmt_delta('overshoot_mean')} | {verdict} |"
         )
 
     lines += [
@@ -1008,6 +1202,24 @@ def main():
     amplitudes = derive_input_amplitudes(usable, segments)
     sim_runs = read_sim_runs(sim_patterns)
     comparison = compare_real_vs_sim(metrics, sim_runs)
+    primary_runs = []
+    excluded_runs = []
+    for run in sim_runs:
+        row = run["rows"][0] if run.get("rows") else {}
+        run_number = int(row.get("run_number", 0))
+        entry = run.get("run_manifest_entry") or {}
+        info = {
+            "run_number": run_number,
+            "category": run.get("category"),
+            "protocol_order": int(entry.get("protocol_order", row.get("protocol_order", -1))),
+            "run_source": entry.get("run_source", row.get("run_source", "unknown")),
+            "path": run.get("path"),
+        }
+        if run.get("in_primary_protocol") is True:
+            primary_runs.append(info)
+        elif run.get("in_primary_protocol") is False:
+            info["reason"] = run.get("exclusion_reason", "not_in_primary_protocol")
+            excluded_runs.append(info)
 
     payload = {
         "source_csv": args.csv,
@@ -1037,10 +1249,14 @@ def main():
                 "path": r["path"],
                 "category": r["category"],
                 "rows": len(r["rows"]),
+                "in_primary_protocol": r.get("in_primary_protocol"),
+                "exclusion_reason": r.get("exclusion_reason"),
                 "amplitude_metadata": r.get("amplitude_metadata"),
             }
             for r in sim_runs
         ],
+        "sim_primary_protocol_runs": sorted(primary_runs, key=lambda row: row["run_number"]),
+        "sim_excluded_runs": sorted(excluded_runs, key=lambda row: row["run_number"]),
     }
 
     with open(args.json_out, "w", encoding="utf-8") as fp:

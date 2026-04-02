@@ -42,7 +42,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 47676,
+      "cluster_id": 1345,
       "sequence_index": 7
     },
     {
@@ -63,7 +63,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 76343,
+      "cluster_id": 6270,
       "sequence_index": 7
     },
     {
@@ -85,7 +85,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 75831,
+      "cluster_id": 97723,
       "sequence_index": 7
     },
     {
@@ -106,7 +106,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 41026,
+      "cluster_id": 69498,
       "sequence_index": 7
     },
     {
@@ -125,7 +125,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 99387,
+      "cluster_id": 49073,
       "sequence_index": 7
     },
     {
@@ -147,7 +147,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 40555,
+      "cluster_id": 73930,
       "sequence_index": 7
     },
     {
@@ -170,7 +170,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 97109,
+      "cluster_id": 17320,
       "sequence_index": 7
     },
     {
@@ -192,7 +192,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 89122,
+      "cluster_id": 93491,
       "sequence_index": 7
     },
     {
@@ -215,7 +215,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 84831,
+      "cluster_id": 97009,
       "sequence_index": 7
     },
     {
@@ -238,7 +238,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 97109,
+      "cluster_id": 17320,
       "sequence_index": 7
     },
     {
@@ -259,7 +259,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 40467,
+      "cluster_id": 27851,
       "sequence_index": 7
     },
     {
@@ -281,7 +281,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 53463,
+      "cluster_id": 38293,
       "sequence_index": 7
     },
     {
@@ -303,7 +303,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 36954,
+      "cluster_id": 21784,
       "sequence_index": 7
     },
     {
@@ -326,7 +326,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 19038,
+      "cluster_id": 3868,
       "sequence_index": 7
     },
     {
@@ -349,7 +349,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 19038,
+      "cluster_id": 3868,
       "sequence_index": 7
     },
     {
@@ -369,7 +369,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 27826,
+      "cluster_id": 70563,
       "sequence_index": 7
     },
     {
@@ -389,7 +389,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 78646,
+      "cluster_id": 98808,
       "sequence_index": 7
     },
     {
@@ -409,7 +409,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 63271,
+      "cluster_id": 8519,
       "sequence_index": 7
     },
     {
@@ -430,7 +430,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 81125,
+      "cluster_id": 93037,
       "sequence_index": 7
     },
     {
@@ -451,7 +451,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 59088,
+      "cluster_id": 50408,
       "sequence_index": 7
     },
     {
@@ -471,7 +471,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 48252,
+      "cluster_id": 6132,
       "sequence_index": 7
     },
     {
@@ -492,7 +492,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 30897,
+      "cluster_id": 88777,
       "sequence_index": 7
     },
     {
@@ -513,7 +513,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 17010,
+      "cluster_id": 8848,
       "sequence_index": 7
     },
     {
@@ -535,7 +535,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 27085,
+      "cluster_id": 46423,
       "sequence_index": 7
     },
     {
@@ -556,7 +556,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 54013,
+      "cluster_id": 32121,
       "sequence_index": 7
     },
     {
@@ -577,7 +577,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 51292,
+      "cluster_id": 22216,
       "sequence_index": 7
     },
     {
@@ -599,7 +599,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 71607,
+      "cluster_id": 25371,
       "sequence_index": 7
     },
     {
@@ -620,7 +620,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 29760,
+      "cluster_id": 26604,
       "sequence_index": 7
     },
     {
@@ -640,7 +640,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 50154,
+      "cluster_id": 46460,
       "sequence_index": 7
     },
     {
@@ -660,7 +660,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 73459,
+      "cluster_id": 41026,
       "sequence_index": 7
     },
     {
@@ -680,7 +680,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 34015,
+      "cluster_id": 30629,
       "sequence_index": 7
     },
     {
@@ -700,7 +700,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 34586,
+      "cluster_id": 45720,
       "sequence_index": 7
     },
     {
@@ -721,7 +721,7 @@
         "out-of-order vs expected protocol",
         "repeated-run cluster support"
       ],
-      "cluster_id": 84831,
+      "cluster_id": 97009,
       "sequence_index": 7
     },
     {
@@ -742,7 +742,7 @@
         "motion sign agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 53896,
+      "cluster_id": 66074,
       "sequence_index": 7
     }
   ],
@@ -1735,17 +1735,47 @@
   },
   "sim_vs_real_comparison": {
     "hover_hold": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "horizontal_rms_mps_mean": 0.412,
         "vertical_rms_mps_mean": 0.312,
         "alt_std_m_mean": 0.139
       },
+      "sim": {
+        "response_delay_s_mean": 0.0,
+        "peak_rate_mean": 0.0,
+        "max_accel_mean": 0.0,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 0.0,
+        "residual_drift_mean": 0.0,
+        "horizontal_rms_mps_mean": 0.0,
+        "vertical_rms_mps_mean": 0.0,
+        "alt_std_m_mean": 0.0
+      },
+      "delta_sim_minus_real": {
+        "horizontal_rms_mps_mean": -0.412,
+        "vertical_rms_mps_mean": -0.312,
+        "alt_std_m_mean": -0.139
+      },
+      "delta_assessment": {
+        "horizontal_rms_mps_mean": "too_sluggish_provisional_input_amplitude",
+        "vertical_rms_mps_mean": "too_sluggish_provisional_input_amplitude",
+        "alt_std_m_mean": "matches_well_provisional_input_amplitude"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "high",
+      "sim_input_amplitude_provenance": "designer_assumption",
+      "sim_input_amplitude_provisional": true,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_002_hover_hold_hover_hold_Normal_20260402_133237_run002.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     },
     "forward_step": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "response_delay_s_mean": 0.0,
         "peak_rate_mean": 1.067,
@@ -1754,11 +1784,47 @@
         "overshoot_mean": 0.142,
         "residual_drift_mean": 0.913
       },
+      "sim": {
+        "response_delay_s_mean": 0.08,
+        "peak_rate_mean": 3.954,
+        "max_accel_mean": 8.0,
+        "settle_time_s_mean": 1.02,
+        "overshoot_mean": 3.184,
+        "residual_drift_mean": 0.001,
+        "horizontal_rms_mps_mean": null,
+        "vertical_rms_mps_mean": null,
+        "alt_std_m_mean": null
+      },
+      "delta_sim_minus_real": {
+        "response_delay_s_mean": 0.08,
+        "peak_rate_mean": 2.887,
+        "max_accel_mean": 7.333,
+        "settle_time_s_mean": 0.47,
+        "overshoot_mean": 3.042,
+        "residual_drift_mean": -0.912
+      },
+      "delta_assessment": {
+        "response_delay_s_mean": "too_aggressive_provisional_input_amplitude",
+        "peak_rate_mean": "too_aggressive_provisional_input_amplitude",
+        "max_accel_mean": "too_aggressive_provisional_input_amplitude",
+        "settle_time_s_mean": "too_aggressive_provisional_input_amplitude",
+        "overshoot_mean": "too_aggressive_provisional_input_amplitude",
+        "residual_drift_mean": "too_sluggish_provisional_input_amplitude"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "medium",
+      "sim_input_amplitude_provenance": "estimated_from_limited_segments",
+      "sim_input_amplitude_provisional": true,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_003_forward_step_forward_step_Normal_20260402_133241_run003.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     },
     "lateral_right": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "response_delay_s_mean": 0.0,
         "peak_rate_mean": 0.2,
@@ -1767,16 +1833,52 @@
         "overshoot_mean": 0.2,
         "residual_drift_mean": 0.0
       },
+      "sim": {
+        "response_delay_s_mean": 0.08,
+        "peak_rate_mean": 4.11,
+        "max_accel_mean": 8.0,
+        "settle_time_s_mean": 0.98,
+        "overshoot_mean": 3.268,
+        "residual_drift_mean": 0.002,
+        "horizontal_rms_mps_mean": null,
+        "vertical_rms_mps_mean": null,
+        "alt_std_m_mean": null
+      },
+      "delta_sim_minus_real": {
+        "response_delay_s_mean": 0.08,
+        "peak_rate_mean": 3.91,
+        "max_accel_mean": 7.667,
+        "settle_time_s_mean": -0.12,
+        "overshoot_mean": 3.068,
+        "residual_drift_mean": 0.002
+      },
+      "delta_assessment": {
+        "response_delay_s_mean": "too_aggressive",
+        "peak_rate_mean": "too_aggressive",
+        "max_accel_mean": "too_aggressive",
+        "settle_time_s_mean": "matches_well",
+        "overshoot_mean": "too_aggressive",
+        "residual_drift_mean": "matches_well"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "high",
+      "sim_input_amplitude_provenance": "directly_measured",
+      "sim_input_amplitude_provisional": false,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_004_lateral_right_lateral_right_Normal_20260402_133245_run004.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     },
     "lateral_left": {
       "status": "no_real_data",
-      "sim_runs": 0,
+      "sim_runs": 1,
       "real_evidence": "designer_assumption"
     },
     "climb": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "response_delay_s_mean": 0.25,
         "peak_rate_mean": 3.625,
@@ -1785,11 +1887,47 @@
         "overshoot_mean": 1.04,
         "residual_drift_mean": 1.847
       },
+      "sim": {
+        "response_delay_s_mean": 0.06,
+        "peak_rate_mean": 2.386,
+        "max_accel_mean": 10.0,
+        "settle_time_s_mean": 1.06,
+        "overshoot_mean": 2.022,
+        "residual_drift_mean": 0.002,
+        "horizontal_rms_mps_mean": null,
+        "vertical_rms_mps_mean": null,
+        "alt_std_m_mean": null
+      },
+      "delta_sim_minus_real": {
+        "response_delay_s_mean": -0.19,
+        "peak_rate_mean": -1.239,
+        "max_accel_mean": 4.25,
+        "settle_time_s_mean": 1.06,
+        "overshoot_mean": 0.982,
+        "residual_drift_mean": -1.845
+      },
+      "delta_assessment": {
+        "response_delay_s_mean": "too_sluggish_provisional_input_amplitude",
+        "peak_rate_mean": "too_sluggish_provisional_input_amplitude",
+        "max_accel_mean": "too_aggressive_provisional_input_amplitude",
+        "settle_time_s_mean": "too_aggressive_provisional_input_amplitude",
+        "overshoot_mean": "too_aggressive_provisional_input_amplitude",
+        "residual_drift_mean": "too_sluggish_provisional_input_amplitude"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "medium",
+      "sim_input_amplitude_provenance": "estimated_from_limited_segments",
+      "sim_input_amplitude_provisional": true,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_006_climb_climb_Normal_20260402_133253_run006.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     },
     "descent": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "response_delay_s_mean": 0.167,
         "peak_rate_mean": 4.067,
@@ -1798,11 +1936,47 @@
         "overshoot_mean": 0.687,
         "residual_drift_mean": 3.233
       },
+      "sim": {
+        "response_delay_s_mean": 0.06,
+        "peak_rate_mean": 2.981,
+        "max_accel_mean": 10.0,
+        "settle_time_s_mean": 1.06,
+        "overshoot_mean": 2.501,
+        "residual_drift_mean": 0.003,
+        "horizontal_rms_mps_mean": null,
+        "vertical_rms_mps_mean": null,
+        "alt_std_m_mean": null
+      },
+      "delta_sim_minus_real": {
+        "response_delay_s_mean": -0.107,
+        "peak_rate_mean": -1.086,
+        "max_accel_mean": 6.0,
+        "settle_time_s_mean": 1.06,
+        "overshoot_mean": 1.814,
+        "residual_drift_mean": -3.23
+      },
+      "delta_assessment": {
+        "response_delay_s_mean": "too_sluggish_provisional_input_amplitude",
+        "peak_rate_mean": "too_sluggish_provisional_input_amplitude",
+        "max_accel_mean": "too_aggressive_provisional_input_amplitude",
+        "settle_time_s_mean": "too_aggressive_provisional_input_amplitude",
+        "overshoot_mean": "too_aggressive_provisional_input_amplitude",
+        "residual_drift_mean": "too_sluggish_provisional_input_amplitude"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "medium",
+      "sim_input_amplitude_provenance": "estimated_from_limited_segments",
+      "sim_input_amplitude_provisional": true,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_007_descent_descent_Normal_20260402_133257_run007.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     },
     "yaw_right": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "response_delay_s_mean": 0.24,
         "peak_rate_mean": 84.6,
@@ -1811,11 +1985,47 @@
         "overshoot_mean": 4.6,
         "residual_drift_mean": 79.225
       },
+      "sim": {
+        "response_delay_s_mean": 0.04,
+        "peak_rate_mean": 81.998,
+        "max_accel_mean": 743.203,
+        "settle_time_s_mean": 1.28,
+        "overshoot_mean": 74.967,
+        "residual_drift_mean": 0.0,
+        "horizontal_rms_mps_mean": null,
+        "vertical_rms_mps_mean": null,
+        "alt_std_m_mean": null
+      },
+      "delta_sim_minus_real": {
+        "response_delay_s_mean": -0.2,
+        "peak_rate_mean": -2.602,
+        "max_accel_mean": 431.203,
+        "settle_time_s_mean": 1.28,
+        "overshoot_mean": 70.367,
+        "residual_drift_mean": -79.225
+      },
+      "delta_assessment": {
+        "response_delay_s_mean": "too_sluggish",
+        "peak_rate_mean": "too_sluggish",
+        "max_accel_mean": "too_aggressive",
+        "settle_time_s_mean": "too_aggressive",
+        "overshoot_mean": "too_aggressive",
+        "residual_drift_mean": "too_sluggish"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "high",
+      "sim_input_amplitude_provenance": "directly_measured",
+      "sim_input_amplitude_provisional": false,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_008_yaw_right_yaw_right_Normal_20260402_133301_run008.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     },
     "yaw_left": {
-      "status": "real_only",
+      "status": "compared",
       "real": {
         "response_delay_s_mean": 0.25,
         "peak_rate_mean": 70.75,
@@ -1824,10 +2034,243 @@
         "overshoot_mean": 6.9,
         "residual_drift_mean": 63.312
       },
+      "sim": {
+        "response_delay_s_mean": 0.04,
+        "peak_rate_mean": 81.999,
+        "max_accel_mean": 743.179,
+        "settle_time_s_mean": 1.28,
+        "overshoot_mean": 74.968,
+        "residual_drift_mean": 0.0,
+        "horizontal_rms_mps_mean": null,
+        "vertical_rms_mps_mean": null,
+        "alt_std_m_mean": null
+      },
+      "delta_sim_minus_real": {
+        "response_delay_s_mean": -0.21,
+        "peak_rate_mean": 11.249,
+        "max_accel_mean": 565.679,
+        "settle_time_s_mean": 1.28,
+        "overshoot_mean": 68.068,
+        "residual_drift_mean": -63.312
+      },
+      "delta_assessment": {
+        "response_delay_s_mean": "too_sluggish",
+        "peak_rate_mean": "too_aggressive",
+        "max_accel_mean": "too_aggressive",
+        "settle_time_s_mean": "too_aggressive",
+        "overshoot_mean": "too_aggressive",
+        "residual_drift_mean": "too_sluggish"
+      },
       "real_evidence": "directly_measured_from_airdata",
-      "note": "no simulator benchmark CSVs supplied for this category"
+      "sim_evidence": "directly_measured_from_sim_csv",
+      "sim_input_amplitude_confidence": "high",
+      "sim_input_amplitude_provenance": "directly_measured",
+      "sim_input_amplitude_provisional": false,
+      "sim_sources": [
+        "BenchmarkRuns/session_20260402_133209/run_009_yaw_left_yaw_left_Normal_20260402_133305_run009.csv"
+      ],
+      "sim_modes": [
+        "Normal"
+      ]
     }
   },
-  "sim_csv_inputs": [],
-  "sim_runs_index": []
+  "sim_csv_inputs": [
+    "BenchmarkRuns/**/*.csv"
+  ],
+  "sim_runs_index": [
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_001_climb_climb_Normal_20260402_133222_run001.csv",
+      "category": "climb",
+      "rows": 203,
+      "in_primary_protocol": false,
+      "exclusion_reason": "run_source_manual_not_full_protocol",
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_002_hover_hold_hover_hold_Normal_20260402_133237_run002.csv",
+      "category": "hover_hold",
+      "rows": 503,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "designer_assumption",
+        "provisional": true,
+        "active_axis_magnitude": 0.0,
+        "notes": ""
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_003_forward_step_forward_step_Normal_20260402_133241_run003.csv",
+      "category": "forward_step",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 0.7699999809265137,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented plateau medians; recommended +0.77 normalized pitch."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_004_lateral_right_lateral_right_Normal_20260402_133245_run004.csv",
+      "category": "lateral_right",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_005_lateral_left_lateral_left_Normal_20260402_133249_run005.csv",
+      "category": "lateral_left",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "low",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_006_climb_climb_Normal_20260402_133253_run006.csv",
+      "category": "climb",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_007_descent_descent_Normal_20260402_133257_run007.csv",
+      "category": "descent",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_008_yaw_right_yaw_right_Normal_20260402_133301_run008.csv",
+      "category": "yaw_right",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
+      }
+    },
+    {
+      "path": "BenchmarkRuns/session_20260402_133209/run_009_yaw_left_yaw_left_Normal_20260402_133305_run009.csv",
+      "category": "yaw_left",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
+      }
+    }
+  ],
+  "sim_primary_protocol_runs": [
+    {
+      "run_number": 2,
+      "category": "hover_hold",
+      "protocol_order": 1,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_002_hover_hold_hover_hold_Normal_20260402_133237_run002.csv"
+    },
+    {
+      "run_number": 3,
+      "category": "forward_step",
+      "protocol_order": 2,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_003_forward_step_forward_step_Normal_20260402_133241_run003.csv"
+    },
+    {
+      "run_number": 4,
+      "category": "lateral_right",
+      "protocol_order": 3,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_004_lateral_right_lateral_right_Normal_20260402_133245_run004.csv"
+    },
+    {
+      "run_number": 5,
+      "category": "lateral_left",
+      "protocol_order": 4,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_005_lateral_left_lateral_left_Normal_20260402_133249_run005.csv"
+    },
+    {
+      "run_number": 6,
+      "category": "climb",
+      "protocol_order": 5,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_006_climb_climb_Normal_20260402_133253_run006.csv"
+    },
+    {
+      "run_number": 7,
+      "category": "descent",
+      "protocol_order": 6,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_007_descent_descent_Normal_20260402_133257_run007.csv"
+    },
+    {
+      "run_number": 8,
+      "category": "yaw_right",
+      "protocol_order": 7,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_008_yaw_right_yaw_right_Normal_20260402_133301_run008.csv"
+    },
+    {
+      "run_number": 9,
+      "category": "yaw_left",
+      "protocol_order": 8,
+      "run_source": "full_protocol",
+      "path": "BenchmarkRuns/session_20260402_133209/run_009_yaw_left_yaw_left_Normal_20260402_133305_run009.csv"
+    }
+  ],
+  "sim_excluded_runs": [
+    {
+      "run_number": 1,
+      "category": "climb",
+      "protocol_order": 5,
+      "run_source": "manual",
+      "path": "BenchmarkRuns/session_20260402_133209/run_001_climb_climb_Normal_20260402_133222_run001.csv",
+      "reason": "run_source_manual_not_full_protocol"
+    }
+  ]
 }
