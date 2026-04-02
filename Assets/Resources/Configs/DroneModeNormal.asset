@@ -13,26 +13,26 @@ MonoBehaviour:
   m_Name: DroneModeNormal
   m_EditorClassIdentifier: 
   mode: 1
-  maxForwardSpeed: 4.6
+  maxForwardSpeed: 4
   maxLateralSpeed: 2.8
-  forwardAcceleration: 4
+  forwardAcceleration: 3.2
   lateralAcceleration: 2.8
-  forwardStopStrength: 7.2
+  forwardStopStrength: 6.5
   lateralStopStrength: 7.1
-  lateralRightSpeedMultiplier: 0.9
-  lateralRightAccelerationMultiplier: 0.82
-  lateralRightStopMultiplier: 1.15
-  maxClimbSpeed: 2.5
-  maxDescentSpeed: 3.1
-  verticalAcceleration: 5
+  lateralRightSpeedMultiplier: 0.5
+  lateralRightAccelerationMultiplier: 0.4
+  lateralRightStopMultiplier: 1.3
+  maxClimbSpeed: 3.8
+  maxDescentSpeed: 4.3
+  verticalAcceleration: 3.5
   maxYawRateDegrees: 74
-  yawCatchUpSpeed: 10
-  yawRightCatchUpMultiplier: 0.82
+  yawCatchUpSpeed: 7
+  yawRightCatchUpMultiplier: 1
   yawStopSpeed: 13
   yawRightCommandGain: 1.14
   yawLeftCommandGain: 0.9
   yawRightStopMultiplier: 1.2
-  yawRightReleaseStopMultiplier: 1.35
-  yawRightReleaseStopDuration: 0.22
+  yawRightReleaseStopMultiplier: 1
+  yawRightReleaseStopDuration: 0
   tiltLimitDegrees: 30
   tiltSmoothing: 12

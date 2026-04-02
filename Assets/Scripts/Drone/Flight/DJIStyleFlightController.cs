@@ -45,7 +45,7 @@ namespace DroneSim.Drone.Flight
 
         [FormerlySerializedAs("maxVerticalAcceleration")]
         [Tooltip("Global vertical acceleration cap across all modes.")]
-        [SerializeField] private float globalVerticalAccelLimit = 10f;
+        [SerializeField] private float globalVerticalAccelLimit = 7f;
 
         [FormerlySerializedAs("brakingDeadband")]
         [Tooltip("Stick magnitude below this is treated as neutral for active horizontal braking.")]
@@ -176,9 +176,20 @@ namespace DroneSim.Drone.Flight
             }
 
             float yawCatchUpAuthority = config.yawCatchUpSpeed * (rightYawInputActive ? config.yawRightCatchUpMultiplier : 1f);
-            float yawAuthority = yawInputNeutral ? yawStopAuthority : yawCatchUpAuthority;
-            float yawBlend = 1f - Mathf.Exp(-yawAuthority * Time.fixedDeltaTime);
-            currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
+
+            if (yawInputNeutral)
+            {
+                // Hard yaw stop — matches real DJI behavior (near-instant stop on stick release).
+                // MoveTowards gives linear deceleration instead of exponential tail.
+                float maxYawDecel = yawStopAuthority * Time.fixedDeltaTime * config.maxYawRateDegrees;
+                currentYawRate = Mathf.MoveTowards(currentYawRate, 0f, maxYawDecel);
+            }
+            else
+            {
+                // Exponential catch-up for onset (preserves existing smooth ramp-up behavior).
+                float yawBlend = 1f - Mathf.Exp(-yawCatchUpAuthority * Time.fixedDeltaTime);
+                currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
+            }
             wasYawInputNeutral = yawInputNeutral;
             wasRightYawInputActive = rightYawInputActive;
 
