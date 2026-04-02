@@ -27,6 +27,8 @@ MonoBehaviour:
   verticalAcceleration: 7.2
   maxYawRateDegrees: 120
   yawCatchUpSpeed: 10
+  yawRightCatchUpMultiplier: 1
+  yawLeftCatchUpMultiplier: 1
   yawStopSpeed: 10
   yawRightCommandGain: 1
   yawLeftCommandGain: 1

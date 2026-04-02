@@ -157,7 +157,7 @@ namespace DroneSim.Drone.Flight
             bool rightwardYawRate = currentYawRate >= 0f;
             float yawStopAuthority = config.yawStopSpeed * (rightwardYawRate ? config.yawRightStopMultiplier : 1f);
 
-            float yawCatchUpAuthority = config.yawCatchUpSpeed * (rightYawInputActive ? config.yawRightCatchUpMultiplier : 1f);
+            float yawCatchUpAuthority = config.yawCatchUpSpeed * (rightYawInputActive ? config.yawRightCatchUpMultiplier : config.yawLeftCatchUpMultiplier);
 
             if (yawInputNeutral)
             {
