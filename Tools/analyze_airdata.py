@@ -56,6 +56,15 @@ COMPARISON_CATEGORIES = [
     "yaw_right",
     "yaw_left",
 ]
+AMPLITUDE_TARGETS = [
+    "forward_step",
+    "lateral_right",
+    "lateral_left",
+    "climb",
+    "descent",
+    "yaw_right",
+    "yaw_left",
+]
 
 
 @dataclass
@@ -372,6 +381,122 @@ def metrics_for_segments(usable: List[dict], segments: List[Segment]) -> Dict[st
     return out
 
 
+def _channel_for_maneuver(maneuver: str) -> Tuple[str, int]:
+    if maneuver == "forward_step":
+        return "rc_elevator", 1
+    if maneuver == "lateral_right":
+        return "rc_aileron", 1
+    if maneuver == "lateral_left":
+        return "rc_aileron", -1
+    if maneuver == "climb":
+        return "rc_throttle", 1
+    if maneuver == "descent":
+        return "rc_throttle", -1
+    if maneuver == "yaw_right":
+        return "rc_rudder", 1
+    if maneuver == "yaw_left":
+        return "rc_rudder", -1
+    return "", 1
+
+
+def _plateau_magnitude(window: List[dict], channel: str, sign: int) -> Optional[float]:
+    aligned = [sign * row[channel] for row in window]
+    active = [v for v in aligned if v > 0]
+    if not active:
+        return None
+    peak = max(active)
+    plateau_gate = peak * 0.7
+    plateau = [v for v in active if v >= plateau_gate]
+    samples = plateau if plateau else active
+    return statistics.median(samples)
+
+
+def derive_input_amplitudes(usable: List[dict], segments: List[Segment]) -> Dict[str, dict]:
+    by_maneuver: Dict[str, List[dict]] = defaultdict(list)
+    for seg in segments:
+        channel, sign = _channel_for_maneuver(seg.maneuver)
+        if not channel:
+            continue
+        window = usable[seg.start : seg.end + 1]
+        plateau = _plateau_magnitude(window, channel, sign)
+        if plateau is None:
+            continue
+        by_maneuver[seg.maneuver].append(
+            {
+                "start_s": seg.start_s,
+                "end_s": seg.end_s,
+                "confidence_label": seg.confidence_label,
+                "confidence_score": seg.confidence_score,
+                "plateau_percent": round(plateau, 3),
+            }
+        )
+
+    summary = {}
+    for maneuver in AMPLITUDE_TARGETS:
+        runs = by_maneuver.get(maneuver, [])
+        if not runs:
+            summary[maneuver] = {
+                "channel": _channel_for_maneuver(maneuver)[0],
+                "classification": "uncertain",
+                "reason": "no segmented RC plateau windows for this maneuver in this log",
+                "derived_from": "none",
+                "recommended_percent": None,
+                "recommended_normalized": None,
+                "consistency": "insufficient_data",
+                "runs_used": [],
+            }
+            continue
+
+        high = [r for r in runs if r["confidence_label"] == "high"]
+        medium = [r for r in runs if r["confidence_label"] == "medium"]
+        selected = high if high else (high + medium)
+        if not selected:
+            selected = runs
+        values = [r["plateau_percent"] for r in selected]
+        rec_percent = statistics.median(values)
+        spread = statistics.pstdev(values) if len(values) > 1 else 0.0
+        cv = spread / rec_percent if rec_percent > 1e-4 else 1.0
+
+        if len(high) >= 3 and cv <= 0.18:
+            classification = "directly_measured_from_clean_rc_plateaus"
+        elif len(high) >= 1 or len(medium) >= 2:
+            classification = "estimated_from_noisy_or_limited_segments"
+        else:
+            classification = "uncertain"
+
+        consistency = "high" if cv <= 0.1 else "moderate" if cv <= 0.2 else "low"
+        _, maneuver_sign = _channel_for_maneuver(maneuver)
+        summary[maneuver] = {
+            "channel": _channel_for_maneuver(maneuver)[0],
+            "classification": classification,
+            "derived_from": "segmented_rc_plateaus",
+            "recommended_percent": round(rec_percent, 1),
+            "recommended_normalized": round(max(-1.0, min(1.0, maneuver_sign * rec_percent / 100.0)), 3),
+            "consistency": consistency,
+            "spread_percent_stddev": round(spread, 2),
+            "runs_used": selected,
+        }
+
+    lat_left = summary.get("lateral_left")
+    if lat_left and lat_left.get("recommended_normalized") is None:
+        right = summary.get("lateral_right", {})
+        right_norm = right.get("recommended_normalized")
+        if right_norm is not None:
+            lat_left.update(
+                {
+                    "classification": "estimated_from_noisy_or_limited_segments",
+                    "reason": "no clean lateral_left RC plateau windows; mirrored from lateral_right median magnitude",
+                    "derived_from": "symmetry_from_lateral_right",
+                    "recommended_percent": round(abs(right_norm) * 100.0, 1),
+                    "recommended_normalized": round(-abs(right_norm), 3),
+                    "consistency": "inferred",
+                    "runs_used": [],
+                }
+            )
+
+    return summary
+
+
 def hover_metrics(usable: List[dict], neutral_windows) -> dict:
     runs = []
     for i, j in neutral_windows:
@@ -668,6 +793,7 @@ def write_markdown(path: str, payload: dict):
     metrics = payload["metrics"]
     evidence = payload["evidence_classification"]
     comp = payload["sim_vs_real_comparison"]
+    amplitudes = payload.get("recommended_protocol_amplitudes", {})
 
     lines = [
         "# Airdata + Simulator Benchmark Comparison",
@@ -726,6 +852,21 @@ def write_markdown(path: str, payload: dict):
 
     lines += [
         "",
+        "## Recommended default protocol stick amplitudes (from Airdata RC)",
+        "",
+        "| Maneuver | RC channel | Recommended % | Normalized | Classification | Consistency |",
+        "|---|---|---:|---:|---|---|",
+    ]
+    for maneuver in AMPLITUDE_TARGETS:
+        row = amplitudes.get(maneuver, {})
+        rec_pct = "-" if row.get("recommended_percent") is None else f"{row['recommended_percent']:.1f}"
+        rec_norm = "-" if row.get("recommended_normalized") is None else f"{row['recommended_normalized']:.3f}"
+        lines.append(
+            f"| {maneuver} | {row.get('channel', '-')} | {rec_pct} | {rec_norm} | {row.get('classification', 'unknown')} | {row.get('consistency', 'unknown')} |"
+        )
+
+    lines += [
+        "",
         "## Confidence policy",
         "",
         "- **directly_measured**: at least 2 high-confidence segments for that target maneuver.",
@@ -756,6 +897,7 @@ def main():
         metrics["hover_hold"] = hover
 
     evidence = evidence_table(metrics)
+    amplitudes = derive_input_amplitudes(usable, segments)
     sim_runs = read_sim_runs(sim_patterns)
     comparison = compare_real_vs_sim(metrics, sim_runs)
 
@@ -779,6 +921,7 @@ def main():
         "segments": [asdict(s) for s in segments],
         "metrics": metrics,
         "evidence_classification": evidence,
+        "recommended_protocol_amplitudes": amplitudes,
         "sim_vs_real_comparison": comparison,
         "sim_csv_inputs": sim_patterns,
         "sim_runs_index": [{"path": r["path"], "category": r["category"], "rows": len(r["rows"])} for r in sim_runs],

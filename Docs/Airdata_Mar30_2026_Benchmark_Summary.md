@@ -2,7 +2,7 @@
 
 Source CSV (used directly):
 - `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
-- Sim CSV patterns: `BenchmarkRuns/**/*.csv`
+- Sim CSV patterns: `(none)`
 
 ## Segmentation confidence overview (real flight)
 
@@ -49,6 +49,18 @@ Source CSV (used directly):
 | descent | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
 | yaw_right | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
 | yaw_left | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+
+## Recommended default protocol stick amplitudes (from Airdata RC)
+
+| Maneuver | RC channel | Recommended % | Normalized | Classification | Consistency |
+|---|---|---:|---:|---|---|
+| forward_step | rc_elevator | 77.0 | 0.770 | estimated_from_noisy_or_limited_segments | low |
+| lateral_right | rc_aileron | 100.0 | 1.000 | directly_measured_from_clean_rc_plateaus | high |
+| lateral_left | rc_aileron | 100.0 | -1.000 | estimated_from_noisy_or_limited_segments | inferred |
+| climb | rc_throttle | 100.0 | 1.000 | estimated_from_noisy_or_limited_segments | high |
+| descent | rc_throttle | 100.0 | -1.000 | estimated_from_noisy_or_limited_segments | high |
+| yaw_right | rc_rudder | 100.0 | 1.000 | directly_measured_from_clean_rc_plateaus | high |
+| yaw_left | rc_rudder | 100.0 | -1.000 | directly_measured_from_clean_rc_plateaus | moderate |
 
 ## Confidence policy
 

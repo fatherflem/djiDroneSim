@@ -55,6 +55,22 @@ namespace DroneSim.Drone.Benchmark
             public int maneuver_count;
             public int default_protocol_maneuver_count;
             public List<string> default_protocol_categories;
+            public List<ProtocolInputAmplitudeSnapshot> default_protocol_input_amplitudes;
+        }
+
+        [Serializable]
+        private class ProtocolInputAmplitudeSnapshot
+        {
+            public string maneuver_name;
+            public string protocol_category;
+            public string active_axis;
+            public float roll;
+            public float pitch;
+            public float throttle;
+            public float yaw;
+            public float active_axis_magnitude;
+            public string evidence_classification;
+            public string notes;
         }
 
         [Serializable]
@@ -539,7 +555,8 @@ namespace DroneSim.Drone.Benchmark
                     reset_mode_between_runs = resetRequestedModeToManeuver,
                     maneuver_count = maneuvers.Count,
                     default_protocol_maneuver_count = GetDefaultProtocolManeuvers().Count,
-                    default_protocol_categories = BuildDefaultProtocolCategoryList()
+                    default_protocol_categories = BuildDefaultProtocolCategoryList(),
+                    default_protocol_input_amplitudes = BuildDefaultProtocolAmplitudeSnapshots()
                 },
                 controller_settings = new ControllerSettingsSnapshot
                 {
@@ -653,6 +670,84 @@ namespace DroneSim.Drone.Benchmark
             }
 
             return categories;
+        }
+
+        private List<ProtocolInputAmplitudeSnapshot> BuildDefaultProtocolAmplitudeSnapshots()
+        {
+            List<ManeuverDefinition> protocol = GetDefaultProtocolManeuvers();
+            List<ProtocolInputAmplitudeSnapshot> snapshots = new List<ProtocolInputAmplitudeSnapshot>(protocol.Count);
+            for (int i = 0; i < protocol.Count; i++)
+            {
+                ManeuverDefinition maneuver = protocol[i];
+                if (maneuver == null)
+                {
+                    continue;
+                }
+
+                Vector4 amplitudes = GetManeuverAxisAmplitudes(maneuver);
+                string activeAxis = ResolveDominantAxis(amplitudes);
+                float activeMagnitude = Mathf.Max(Mathf.Abs(amplitudes.x), Mathf.Abs(amplitudes.y), Mathf.Abs(amplitudes.z), Mathf.Abs(amplitudes.w));
+                snapshots.Add(new ProtocolInputAmplitudeSnapshot
+                {
+                    maneuver_name = maneuver.maneuverName,
+                    protocol_category = maneuver.EffectiveProtocolCategory,
+                    active_axis = activeAxis,
+                    roll = amplitudes.x,
+                    pitch = amplitudes.y,
+                    throttle = amplitudes.z,
+                    yaw = amplitudes.w,
+                    active_axis_magnitude = activeMagnitude,
+                    evidence_classification = string.IsNullOrWhiteSpace(maneuver.inputAmplitudeEvidence)
+                        ? "unspecified"
+                        : maneuver.inputAmplitudeEvidence.Trim(),
+                    notes = string.IsNullOrWhiteSpace(maneuver.inputAmplitudeNotes)
+                        ? ""
+                        : maneuver.inputAmplitudeNotes.Trim()
+                });
+            }
+
+            return snapshots;
+        }
+
+        private static Vector4 GetManeuverAxisAmplitudes(ManeuverDefinition maneuver)
+        {
+            float roll = 0f;
+            float pitch = 0f;
+            float throttle = 0f;
+            float yaw = 0f;
+
+            if (maneuver != null && maneuver.segments != null)
+            {
+                for (int i = 0; i < maneuver.segments.Count; i++)
+                {
+                    ManeuverDefinition.InputSegment segment = maneuver.segments[i];
+                    roll = Mathf.Abs(segment.roll) > Mathf.Abs(roll) ? segment.roll : roll;
+                    pitch = Mathf.Abs(segment.pitch) > Mathf.Abs(pitch) ? segment.pitch : pitch;
+                    throttle = Mathf.Abs(segment.throttle) > Mathf.Abs(throttle) ? segment.throttle : throttle;
+                    yaw = Mathf.Abs(segment.yaw) > Mathf.Abs(yaw) ? segment.yaw : yaw;
+                }
+            }
+
+            return new Vector4(roll, pitch, throttle, yaw);
+        }
+
+        private static string ResolveDominantAxis(Vector4 amplitudes)
+        {
+            float absRoll = Mathf.Abs(amplitudes.x);
+            float absPitch = Mathf.Abs(amplitudes.y);
+            float absThrottle = Mathf.Abs(amplitudes.z);
+            float absYaw = Mathf.Abs(amplitudes.w);
+            float max = Mathf.Max(absRoll, absPitch, absThrottle, absYaw);
+
+            if (max <= 0.0001f)
+            {
+                return "neutral";
+            }
+
+            if (Mathf.Approximately(max, absPitch)) return "pitch";
+            if (Mathf.Approximately(max, absRoll)) return "roll";
+            if (Mathf.Approximately(max, absThrottle)) return "throttle";
+            return "yaw";
         }
 
         public void SelectNextManeuver()
