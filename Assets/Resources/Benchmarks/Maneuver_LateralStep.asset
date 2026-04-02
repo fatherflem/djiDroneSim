@@ -18,6 +18,8 @@ MonoBehaviour:
   protocolCategory: lateral_right
   protocolOrder: 3
   includeInDefaultProtocol: 1
+  amplitudeConfidence: 0
+  amplitudeProvenance: 0
   inputAmplitudeEvidence: directly_measured_from_clean_rc_plateaus
   inputAmplitudeNotes: 'Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean
     plateaus; recommended +1.00 normalized roll.'

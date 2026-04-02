@@ -39,16 +39,16 @@ Source CSV (used directly):
 
 ## Sim vs real deltas
 
-| Category | Status | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |
-|---|---|---:|---:|---:|---:|---:|---|
-| hover_hold | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| forward_step | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| lateral_right | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| lateral_left | no_real_data | - | - | - | - | - | insufficient data |
-| climb | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| descent | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| yaw_right | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| yaw_left | real_only | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| Category | Status | Sim input confidence | Sim input provenance | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |
+|---|---|---|---|---:|---:|---:|---:|---:|---|
+| hover_hold | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| forward_step | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| lateral_right | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| lateral_left | no_real_data | - | - | - | - | - | - | - | insufficient data |
+| climb | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| descent | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| yaw_right | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| yaw_left | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
 
 ## Recommended default protocol stick amplitudes (from Airdata RC)
 
@@ -62,8 +62,14 @@ Source CSV (used directly):
 | yaw_right | rc_rudder | 100.0 | 1.000 | directly_measured_from_clean_rc_plateaus | high |
 | yaw_left | rc_rudder | 100.0 | -1.000 | directly_measured_from_clean_rc_plateaus | moderate |
 
+## Strength of comparison categories
+
+- **Strong categories** (directly measured default simulator amplitude): lateral_right, yaw_right, yaw_left
+- **Provisional categories** (estimated or assumed default simulator amplitude): forward_step, lateral_left, climb, descent
+
 ## Confidence policy
 
 - **directly_measured**: at least 2 high-confidence segments for that target maneuver.
 - **estimated_from_limited_segments**: only medium-confidence or single high-confidence support.
 - **designer_assumption**: no reliable segments in this log.
+- If simulator input amplitude confidence/provenance is provisional, treat mismatch verdicts as directional guidance (not final tuning proof).

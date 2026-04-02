@@ -32,14 +32,14 @@ Default benchmark timing for protocol maneuvers:
 Default benchmark amplitude:
 - maneuver segment channels are normalized stick values in `[-1, 1]`
 - the default protocol now uses Airdata-calibrated amplitudes from `Mar-30th-2026-08-31AM-Flight-Airdata.csv`:
-  - `forward_step`: `pitch +0.77` (estimated_from_noisy_or_limited_segments)
-  - `lateral_right`: `roll +1.00` (directly_measured_from_clean_rc_plateaus)
-  - `lateral_left`: `roll -1.00` (estimated_from_noisy_or_limited_segments; mirrored from right due missing clean left)
-  - `climb`: `throttle +1.00` (estimated_from_noisy_or_limited_segments)
-  - `descent`: `throttle -1.00` (estimated_from_noisy_or_limited_segments)
-  - `yaw_right`: `yaw +1.00` (directly_measured_from_clean_rc_plateaus)
-  - `yaw_left`: `yaw -1.00` (directly_measured_from_clean_rc_plateaus)
-- inspect/change amplitudes and evidence directly in `Assets/Resources/Benchmarks/Maneuver_*.asset`
+  - `forward_step`: `pitch +0.77` (confidence: medium, provenance: estimated_from_limited_segments)
+  - `lateral_right`: `roll +1.00` (confidence: high, provenance: directly_measured)
+  - `lateral_left`: `roll -1.00` (confidence: low, provenance: estimated_from_limited_segments; mirrored from right due missing clean left)
+  - `climb`: `throttle +1.00` (confidence: medium, provenance: estimated_from_limited_segments)
+  - `descent`: `throttle -1.00` (confidence: medium, provenance: estimated_from_limited_segments)
+  - `yaw_right`: `yaw +1.00` (confidence: high, provenance: directly_measured)
+  - `yaw_left`: `yaw -1.00` (confidence: high, provenance: directly_measured)
+- inspect/change amplitudes and confidence/provenance in `Assets/Resources/Benchmarks/Maneuver_*.asset` (`amplitudeConfidence`, `amplitudeProvenance`, plus `inputAmplitudeNotes`)
 
 ## 2) Collect simulator exports
 Unity exports to:
@@ -55,6 +55,7 @@ Each session includes:
 - `run_###_<category>_<maneuver>_<mode>_<label>.csv`
 
 Run manifest entries include `maneuver_name`, `protocol_category`, `protocol_order`, timing, and `run_source` (`manual` or `full_protocol`).
+They now also include `amplitude_confidence_label`, `amplitude_provenance`, and `amplitude_provisional`.
 
 ## 3) Run analysis
 From repo root:
@@ -76,11 +77,13 @@ python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
   - `sim_runs_index`: discovered simulator runs
   - `sim_vs_real_comparison`: delta per category and metric
 - `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
-  - quick comparison table and verdicts
+  - comparison table with simulator amplitude confidence/provenance columns
+  - strong vs provisional category grouping to avoid overstating weakly grounded amplitudes
 
 ## Measured vs inferred policy
 - Real baseline metrics: segmented from Airdata with confidence labels.
 - Sim metrics: directly measured from benchmark CSV exports.
 - Any missing/weak category is explicitly marked as `insufficient_data` or `designer_assumption`.
+- If simulator amplitude confidence/provenance is provisional, mismatch verdicts are explicitly marked as provisional.
 
 No combined “single score” is used.

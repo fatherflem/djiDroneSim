@@ -67,6 +67,16 @@ AMPLITUDE_TARGETS = [
 ]
 
 
+def _confidence_rank(label: str) -> int:
+    mapping = {"high": 3, "medium": 2, "low": 1}
+    return mapping.get((label or "").strip().lower(), 0)
+
+
+def _is_provisional_confidence(label: str, provenance: str) -> bool:
+    normalized_prov = (provenance or "").strip().lower()
+    return _confidence_rank(label) < _confidence_rank("high") or normalized_prov != "directly_measured"
+
+
 @dataclass
 class Segment:
     maneuver: str
@@ -624,6 +634,59 @@ def infer_category_from_row(row: dict) -> str:
     return category
 
 
+def _provenance_from_legacy_evidence(evidence: str) -> str:
+    normalized = (evidence or "").strip().lower()
+    if "directly_measured" in normalized:
+        return "directly_measured"
+    if "estimated" in normalized:
+        return "estimated_from_limited_segments"
+    if "assumption" in normalized:
+        return "designer_assumption"
+    return "designer_assumption"
+
+
+def read_session_amplitude_metadata(manifest_path: str) -> Dict[str, dict]:
+    category_meta: Dict[str, dict] = {}
+    with open(manifest_path, encoding="utf-8") as fp:
+        for line in fp:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+
+            if entry.get("type") != "session_metadata":
+                continue
+            amps = (
+                entry.get("benchmark_settings", {}).get("default_protocol_input_amplitudes", [])
+                if isinstance(entry.get("benchmark_settings", {}), dict)
+                else []
+            )
+            for amp in amps:
+                category = normalize_protocol_category(amp.get("protocol_category", ""))
+                if not category:
+                    continue
+                confidence = (amp.get("confidence_label") or "").strip().lower()
+                provenance = (amp.get("provenance_classification") or "").strip().lower()
+                if not confidence:
+                    confidence = "medium"
+                if not provenance:
+                    provenance = _provenance_from_legacy_evidence(amp.get("evidence_classification", ""))
+                category_meta[category] = {
+                    "confidence_label": confidence,
+                    "provenance": provenance,
+                    "provisional": amp.get("provisional")
+                    if isinstance(amp.get("provisional"), bool)
+                    else _is_provisional_confidence(confidence, provenance),
+                    "active_axis_magnitude": amp.get("active_axis_magnitude"),
+                    "notes": amp.get("notes", ""),
+                }
+            break
+    return category_meta
+
+
 def read_sim_runs(patterns: List[str]) -> List[dict]:
     runs = []
     seen = set()
@@ -641,7 +704,12 @@ def read_sim_runs(patterns: List[str]) -> List[dict]:
             if not rows:
                 continue
             category = infer_category_from_row(rows[0])
-            runs.append({"path": path, "rows": rows, "category": category})
+            parent = Path(path).resolve().parent
+            manifest_path = parent / "session_manifest.jsonl"
+            amplitude_meta = None
+            if manifest_path.exists():
+                amplitude_meta = read_session_amplitude_metadata(str(manifest_path)).get(category)
+            runs.append({"path": path, "rows": rows, "category": category, "amplitude_metadata": amplitude_meta})
     return runs
 
 
@@ -728,6 +796,7 @@ def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> 
         matching = by_cat.get(category, [])
         sim_summaries = [summarize_sim_run(run, category) for run in matching]
         sim_summaries = [s for s in sim_summaries if s]
+        amplitude_metadata = [run.get("amplitude_metadata") for run in matching if run.get("amplitude_metadata")]
 
         if not real:
             out[category] = {
@@ -768,6 +837,25 @@ def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> 
             threshold = 0.03 if "delay" in k else 0.1 if "overshoot" in k else 0.15
             assessment[k] = comparison_note(delta, threshold)
 
+        amplitude_confidence = "unknown"
+        amplitude_provenance = "unknown"
+        amplitude_provisional = False
+        if amplitude_metadata:
+            amplitude_confidence = min(
+                (m.get("confidence_label", "unknown") for m in amplitude_metadata),
+                key=_confidence_rank,
+            )
+            provenance_values = [m.get("provenance", "unknown") for m in amplitude_metadata]
+            amplitude_provenance = provenance_values[0] if len(set(provenance_values)) == 1 else "mixed"
+            amplitude_provisional = any(bool(m.get("provisional")) for m in amplitude_metadata) or _is_provisional_confidence(
+                amplitude_confidence, amplitude_provenance
+            )
+
+        if amplitude_provisional:
+            for key, verdict in list(assessment.items()):
+                if verdict not in ("insufficient_data",):
+                    assessment[key] = f"{verdict}_provisional_input_amplitude"
+
         out[category] = {
             "status": "compared",
             "real": real.get("aggregate", {}),
@@ -776,6 +864,9 @@ def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> 
             "delta_assessment": assessment,
             "real_evidence": "directly_measured_from_airdata",
             "sim_evidence": "directly_measured_from_sim_csv",
+            "sim_input_amplitude_confidence": amplitude_confidence,
+            "sim_input_amplitude_provenance": amplitude_provenance,
+            "sim_input_amplitude_provisional": amplitude_provisional,
             "sim_sources": [s["path"] for s in sim_summaries],
             "sim_modes": sorted({s["mode"] for s in sim_summaries}),
         }
@@ -836,18 +927,20 @@ def write_markdown(path: str, payload: dict):
         "",
         "## Sim vs real deltas",
         "",
-        "| Category | Status | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |",
-        "|---|---|---:|---:|---:|---:|---:|---|",
+        "| Category | Status | Sim input confidence | Sim input provenance | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |",
+        "|---|---|---|---|---:|---:|---:|---:|---:|---|",
     ]
     for cat in COMPARISON_CATEGORIES:
         row = comp.get(cat, {})
         if row.get("status") != "compared":
-            lines.append(f"| {cat} | {row.get('status', 'missing')} | - | - | - | - | - | {row.get('note', 'insufficient data')} |")
+            lines.append(
+                f"| {cat} | {row.get('status', 'missing')} | - | - | - | - | - | - | - | {row.get('note', 'insufficient data')} |"
+            )
             continue
         d = row["delta_sim_minus_real"]
         verdict = row["delta_assessment"].get("peak_rate_mean", "insufficient_data")
         lines.append(
-            f"| {cat} | compared | {d.get('response_delay_s_mean', 0)} | {d.get('peak_rate_mean', 0)} | {d.get('max_accel_mean', 0)} | {d.get('settle_time_s_mean', 0)} | {d.get('overshoot_mean', 0)} | {verdict} |"
+            f"| {cat} | compared | {row.get('sim_input_amplitude_confidence', 'unknown')} | {row.get('sim_input_amplitude_provenance', 'unknown')} | {d.get('response_delay_s_mean', 0)} | {d.get('peak_rate_mean', 0)} | {d.get('max_accel_mean', 0)} | {d.get('settle_time_s_mean', 0)} | {d.get('overshoot_mean', 0)} | {verdict} |"
         )
 
     lines += [
@@ -865,13 +958,28 @@ def write_markdown(path: str, payload: dict):
             f"| {maneuver} | {row.get('channel', '-')} | {rec_pct} | {rec_norm} | {row.get('classification', 'unknown')} | {row.get('consistency', 'unknown')} |"
         )
 
+    strong = []
+    provisional = []
+    for maneuver in AMPLITUDE_TARGETS:
+        cls = (amplitudes.get(maneuver, {}).get("classification", "") or "").strip().lower()
+        if cls == "directly_measured_from_clean_rc_plateaus":
+            strong.append(maneuver)
+        else:
+            provisional.append(maneuver)
+
     lines += [
+        "",
+        "## Strength of comparison categories",
+        "",
+        f"- **Strong categories** (directly measured default simulator amplitude): {', '.join(strong) if strong else '(none)'}",
+        f"- **Provisional categories** (estimated or assumed default simulator amplitude): {', '.join(provisional) if provisional else '(none)'}",
         "",
         "## Confidence policy",
         "",
         "- **directly_measured**: at least 2 high-confidence segments for that target maneuver.",
         "- **estimated_from_limited_segments**: only medium-confidence or single high-confidence support.",
         "- **designer_assumption**: no reliable segments in this log.",
+        "- If simulator input amplitude confidence/provenance is provisional, treat mismatch verdicts as directional guidance (not final tuning proof).",
     ]
 
     with open(path, "w", encoding="utf-8") as fp:
@@ -924,7 +1032,15 @@ def main():
         "recommended_protocol_amplitudes": amplitudes,
         "sim_vs_real_comparison": comparison,
         "sim_csv_inputs": sim_patterns,
-        "sim_runs_index": [{"path": r["path"], "category": r["category"], "rows": len(r["rows"])} for r in sim_runs],
+        "sim_runs_index": [
+            {
+                "path": r["path"],
+                "category": r["category"],
+                "rows": len(r["rows"]),
+                "amplitude_metadata": r.get("amplitude_metadata"),
+            }
+            for r in sim_runs
+        ],
     }
 
     with open(args.json_out, "w", encoding="utf-8") as fp:
