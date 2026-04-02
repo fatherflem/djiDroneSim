@@ -44,8 +44,18 @@ Default protocol timing for direct real-world comparison:
 
 Default protocol stick amplitude:
 - benchmark maneuver segment channels are normalized stick commands in `[-1, 1]`
-- default protocol step maneuvers use full-scale magnitudes (`±1`) for the active channel
-- edit `segments` on `Assets/Resources/Benchmarks/Maneuver_*.asset` to change benchmark amplitude
+- default protocol step amplitudes are calibrated from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` RC channels using segmented active windows + median plateau magnitude per maneuver family
+- current default protocol amplitudes:
+  - `forward_step`: `pitch = +0.77` (**estimated_from_noisy_or_limited_segments**, rc_elevator plateau medians varied across repeated runs)
+  - `lateral_right`: `roll = +1.00` (**directly_measured_from_clean_rc_plateaus**)
+  - `lateral_left`: `roll = -1.00` (**estimated_from_noisy_or_limited_segments**, mirrored from right due missing clean left segment in this log)
+  - `climb`: `throttle = +1.00` (**estimated_from_noisy_or_limited_segments**, medium-confidence segmentation but consistent plateaus)
+  - `descent`: `throttle = -1.00` (**estimated_from_noisy_or_limited_segments**, mixed confidence but consistent plateaus)
+  - `yaw_right`: `yaw = +1.00` (**directly_measured_from_clean_rc_plateaus**)
+  - `yaw_left`: `yaw = -1.00` (**directly_measured_from_clean_rc_plateaus**)
+- edit `segments` + `inputAmplitudeEvidence`/`inputAmplitudeNotes` on `Assets/Resources/Benchmarks/Maneuver_*.asset` to change benchmark amplitude and evidence labels
+- regenerate RC-derived recommendation artifacts with:
+  - `python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root ""`
 
 ## Repeatable reset policy before every run
 Before each run begins, `BenchmarkRunner` performs an explicit benchmark reset:
@@ -80,6 +90,7 @@ The first `session_manifest.jsonl` line now records capture context including:
 - `Application.version`, `Time.fixedDeltaTime`
 - benchmark area origin and spawn offset
 - benchmark runner settings (pre-roll/settle defaults, maneuver library, protocol ordering)
+- default protocol input amplitudes snapshot (`default_protocol_input_amplitudes`) including per-maneuver axis values and evidence labels
 - controller global limits
 - active mode config values (Cine/Normal/Sport tuning snapshots)
 

@@ -31,8 +31,15 @@ Default benchmark timing for protocol maneuvers:
 
 Default benchmark amplitude:
 - maneuver segment channels are normalized stick values in `[-1, 1]`
-- the default protocol uses full-scale step amplitudes (`±1`) on the active axis
-- inspect or change amplitudes directly in `Assets/Resources/Benchmarks/Maneuver_*.asset`
+- the default protocol now uses Airdata-calibrated amplitudes from `Mar-30th-2026-08-31AM-Flight-Airdata.csv`:
+  - `forward_step`: `pitch +0.77` (estimated_from_noisy_or_limited_segments)
+  - `lateral_right`: `roll +1.00` (directly_measured_from_clean_rc_plateaus)
+  - `lateral_left`: `roll -1.00` (estimated_from_noisy_or_limited_segments; mirrored from right due missing clean left)
+  - `climb`: `throttle +1.00` (estimated_from_noisy_or_limited_segments)
+  - `descent`: `throttle -1.00` (estimated_from_noisy_or_limited_segments)
+  - `yaw_right`: `yaw +1.00` (directly_measured_from_clean_rc_plateaus)
+  - `yaw_left`: `yaw -1.00` (directly_measured_from_clean_rc_plateaus)
+- inspect/change amplitudes and evidence directly in `Assets/Resources/Benchmarks/Maneuver_*.asset`
 
 ## 2) Collect simulator exports
 Unity exports to:

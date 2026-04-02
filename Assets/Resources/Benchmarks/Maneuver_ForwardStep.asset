@@ -18,6 +18,9 @@ MonoBehaviour:
   protocolCategory: forward_step
   protocolOrder: 2
   includeInDefaultProtocol: 1
+  inputAmplitudeEvidence: estimated_from_noisy_or_limited_segments
+  inputAmplitudeNotes: 'Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented
+    plateau medians; recommended +0.77 normalized pitch.'
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
   overridePreRollDuration: 0
@@ -27,6 +30,6 @@ MonoBehaviour:
   segments:
   - duration: 1
     roll: 0
-    pitch: 1
+    pitch: 0.77
     throttle: 0
     yaw: 0

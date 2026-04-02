@@ -12,13 +12,13 @@ namespace DroneSim.Drone.Benchmark
         public struct InputSegment
         {
             [Min(0.01f)] public float duration;
-            [Tooltip("Normalized right-stick X input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
+            [Tooltip("Normalized right-stick X input (-1..1). Default protocol amplitudes are calibrated from Mar-30th-2026 Airdata RC command plateaus.")]
             [Range(-1f, 1f)] public float roll;
-            [Tooltip("Normalized right-stick Y input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
+            [Tooltip("Normalized right-stick Y input (-1..1). Default protocol amplitudes are calibrated from Mar-30th-2026 Airdata RC command plateaus.")]
             [Range(-1f, 1f)] public float pitch;
-            [Tooltip("Normalized left-stick Y input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
+            [Tooltip("Normalized left-stick Y input (-1..1). Default protocol amplitudes are calibrated from Mar-30th-2026 Airdata RC command plateaus.")]
             [Range(-1f, 1f)] public float throttle;
-            [Tooltip("Normalized left-stick X input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
+            [Tooltip("Normalized left-stick X input (-1..1). Default protocol amplitudes are calibrated from Mar-30th-2026 Airdata RC command plateaus.")]
             [Range(-1f, 1f)] public float yaw;
         }
 
@@ -32,6 +32,10 @@ namespace DroneSim.Drone.Benchmark
         public int protocolOrder = -1;
         [Tooltip("If enabled, this maneuver is included when running the default full benchmark protocol.")]
         public bool includeInDefaultProtocol = true;
+        [Tooltip("Amplitude evidence classification for this maneuver (directly_measured_from_clean_rc_plateaus, estimated_from_noisy_or_limited_segments, uncertain).")]
+        public string inputAmplitudeEvidence = "";
+        [Tooltip("Human-readable source/note for where this maneuver amplitude came from.")]
+        [TextArea] public string inputAmplitudeNotes = "";
 
         [Header("Initial state")]
         [Tooltip("World-space starting position before maneuver playback.")]
