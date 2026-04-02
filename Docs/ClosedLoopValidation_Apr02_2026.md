@@ -1,12 +1,17 @@
 # Closed-Loop Validation (Real vs Baseline Sim vs Post-Tuning Sim)
 
 - Real benchmark CSV: `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
-- Baseline simulator session: `BenchmarkRuns/session_20260402_133209.zip`
-- Post-tuning simulator session: `BenchmarkRuns/session_20260402_140700.zip`
-- Missing run(s) in post-tuning session (vs baseline protocol coverage): run_001:climb source=manual order=5
+- Baseline simulator session: `BenchmarkRuns/session_20260402_133209.zip` (zip)
+- Post-tuning simulator session: `BenchmarkRuns/session_20260402_140700.zip` (zip)
+- Canonical drop location for benchmark sessions: `BenchmarkRuns/`.
+- Workflow note: drop session zip files directly into `BenchmarkRuns/`; no manual per-session folder setup is required.
+- Missing run(s) in post-tuning session (vs baseline expected runs): run_001:climb source=manual order=5
+- Missing category label(s) in post-tuning session: climb
 
 ## Session coverage
 
+- Baseline manifest run count (expected for this comparison): 9
+- Post-tuning manifest run count: 8
 - Baseline primary protocol run count: 8
 - Post-tuning primary protocol run count: 8
 - Baseline excluded runs: 1
@@ -67,13 +72,13 @@
 
 ## Strong-category assessment
 
-- lateral_right: improved; abs delta improvement (peak/delay/settle) = 1.82, 0.0, 0.04.
-- yaw_right: not_improved; abs delta improvement (peak/delay/settle) = -8.001, 0.0, -0.04.
-- yaw_left: improved; abs delta improvement (peak/delay/settle) = 7.098, 0.0, -0.04.
+- lateral_right: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=4/5; response_shape=improved; notes=Status is based on absolute-delta movement against the real benchmark values.
+- yaw_right: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=2/5; response_shape=improved; notes=Status is based on absolute-delta movement against the real benchmark values.
+- yaw_left: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=3/5; response_shape=improved; notes=Status is based on absolute-delta movement against the real benchmark values.
 
 ## Provisional-category notes
 
-- forward_step: peak-rate abs delta improvement = 0.476; treat as provisional directionality.
-- lateral_left: peak-rate abs delta improvement = None; treat as provisional directionality.
-- climb: peak-rate abs delta improvement = 0.102; treat as provisional directionality.
-- descent: peak-rate abs delta improvement = 0.103; treat as provisional directionality.
+- forward_step: directionally_improved; moved_correct_direction=True; real_segmentation_confidence=high; sim_amplitude_confidence=medium; sim_amplitude_provenance=estimated_from_limited_segments.
+- lateral_left: no_clear_directional_gain; moved_correct_direction=False; real_segmentation_confidence=unknown; sim_amplitude_confidence=unknown; sim_amplitude_provenance=unknown.
+- climb: directionally_improved; moved_correct_direction=True; real_segmentation_confidence=high; sim_amplitude_confidence=medium; sim_amplitude_provenance=estimated_from_limited_segments.
+- descent: directionally_improved; moved_correct_direction=True; real_segmentation_confidence=high; sim_amplitude_confidence=medium; sim_amplitude_provenance=estimated_from_limited_segments.

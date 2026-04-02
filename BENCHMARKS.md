@@ -136,6 +136,8 @@ Optional scene debug:
 3. Use **F9** for one clean full-protocol capture (recommended), or **F7/F8** for manual per-maneuver runs.
 4. Exit Play Mode, zip the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/`, and place `session_<timestamp>.zip` directly in repo-local `BenchmarkRuns/` (canonical analysis source).
 
+`BenchmarkRuns/` is the only user-facing drop location for comparison inputs. Manual per-session subfolders are not required in the repo workflow.
+
 ## Analysis workflow (real + sim)
 Real-only pass:
 

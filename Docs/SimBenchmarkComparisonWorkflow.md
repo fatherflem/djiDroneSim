@@ -46,9 +46,11 @@ Unity exports to:
 
 `<Application.persistentDataPath>/BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
 
-Zip each exported `session_*` folder and place the zip directly in repo-local `BenchmarkRuns/` (canonical source for analysis):
+Zip each exported `session_*` folder and drop the zip directly in repo-local `BenchmarkRuns/`:
 
 `BenchmarkRuns/session_<yyyyMMdd_HHmmss>.zip`
+
+`BenchmarkRuns/` is the only user-facing drop location. Do **not** create manual per-session subfolders in the repo workflow.
 
 Each session archive includes:
 - `session_manifest.jsonl`
@@ -81,6 +83,20 @@ python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
 - `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
   - comparison table with simulator amplitude confidence/provenance columns
   - strong vs provisional category grouping to avoid overstating weakly grounded amplitudes
+
+## 5) Closed-loop old vs new vs real session comparison
+Run the dedicated comparison script (auto-discovers sessions from `BenchmarkRuns/`, whether each session is a zip or extracted directory):
+
+```bash
+python Tools/closed_loop_validation.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+  --benchmark-runs-root BenchmarkRuns \
+  --baseline-session-id session_20260402_133209 \
+  --post-session-id session_20260402_140700
+```
+
+Outputs:
+- `Docs/ClosedLoopValidation_Apr02_2026.json`
+- `Docs/ClosedLoopValidation_Apr02_2026.md`
 
 ## Measured vs inferred policy
 - Real baseline metrics: segmented from Airdata with confidence labels.
