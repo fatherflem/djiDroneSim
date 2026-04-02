@@ -14,6 +14,19 @@ namespace DroneSim.Drone.Benchmark
         public float Yaw;
         public DroneMode Mode;
 
+        public static BenchmarkInputFrame Neutral(DroneMode mode)
+        {
+            return new BenchmarkInputFrame
+            {
+                Time = 0f,
+                Roll = 0f,
+                Pitch = 0f,
+                Throttle = 0f,
+                Yaw = 0f,
+                Mode = mode
+            };
+        }
+
         public DroneInputFrame ToDroneInputFrame()
         {
             return new DroneInputFrame

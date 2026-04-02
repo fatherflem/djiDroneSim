@@ -7,38 +7,70 @@ This harness closes the loop between:
 3. side-by-side comparison deltas.
 
 ## Simulator benchmark export convention
-`BenchmarkRunner` now writes benchmark sessions under:
+`BenchmarkRunner` writes benchmark sessions under:
 
 `<Application.persistentDataPath>/BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
 
 Each session contains:
-- `session_manifest.jsonl` (session header + one line per run)
+- `session_manifest.jsonl`
+  - first line = session metadata/config snapshot
+  - one additional line per run
 - one CSV per run:
   - `run_<run#>_<protocol_category>_<maneuver>_<mode>_<timestamp_run#>.csv`
 
-CSV columns include session/run metadata plus telemetry:
-- `session_id`, `session_dir`, `run_label`, `run_number`
-- `maneuver_name`, `protocol_category`, `protocol_order`, `maneuver_mode`, `maneuver_duration_s`
-- `sample_index`, `time_s`
-- position + velocity vectors
-- `horizontal_speed_mps`, `vertical_speed_mps`
-- `yaw_deg`, `pitch_deg`, `roll_deg`, `yaw_rate_degps`
-- commanded input channels: `input_roll`, `input_pitch`, `input_throttle`, `input_yaw`
+## Run structure (trustworthy capture)
+Every benchmark run now uses a fixed structure:
+1. **Pre-roll (neutral)**: no commanded stick input, captures baseline hover/drift.
+2. **Input phase**: maneuver-defined segment playback.
+3. **Settle (neutral)**: no commanded stick input, captures overshoot/coast/braking.
+4. **Export**.
 
-## Supported maneuver categories for comparison
-Use these protocol categories to align with Airdata analysis:
-- `hover_hold`
-- `forward_step`
-- `lateral_right`
-- `lateral_left`
-- `climb`
-- `descent`
-- `yaw_right`
-- `yaw_left`
+Duration controls:
+- global defaults on `BenchmarkRunner`:
+  - `defaultPreRollDuration` (default 1.5s)
+  - `defaultSettleDuration` (default 1.5s)
+- optional per-maneuver overrides on `ManeuverDefinition`:
+  - `overridePreRollDuration` + `preRollDuration`
+  - `overrideSettleDuration` + `settleDuration`
 
+## Repeatable reset policy before every run
+Before each run begins, `BenchmarkRunner` performs an explicit benchmark reset:
+- resets `DroneInputReader` smoothing + external frame state to neutral
+- resets `DJIStyleFlightController` transient state (yaw-rate integrator, commanded acceleration, visual tilt)
+- repositions drone to benchmark start transform (plus benchmark area offset when enabled)
+- reapplies initial yaw
+- clears rigidbody linear and angular velocity to zero
+- sleeps/wakes rigidbody to avoid momentum carryover
+
+This avoids cross-run contamination from prior inputs or stabilization state.
+
+## CSV fields (analysis-complete)
+CSV columns include:
+- session/run metadata:
+  - `session_id`, `session_dir`, `run_label`, `run_number`
+  - `maneuver_name`, `protocol_category`, `protocol_order`, `maneuver_mode`
+- phase + timing context:
+  - `benchmark_phase` (`preroll`, `input`, `settle`)
+  - `maneuver_preroll_s`, `maneuver_duration_s`, `maneuver_settle_s`
+  - `sample_index`, `time_s`
+- kinematics:
+  - position + velocity vectors
+  - `forward_speed_mps`, `lateral_speed_mps`, `horizontal_speed_mps`, `vertical_speed_mps`
+  - `yaw_deg`, `pitch_deg`, `roll_deg`, `yaw_rate_degps`
+- commanded channels:
+  - `input_roll`, `input_pitch`, `input_throttle`, `input_yaw`
+
+## Session metadata/config snapshot
+The first `session_manifest.jsonl` line now records capture context including:
+- `session_id`, UTC timestamp, export directory
+- `Application.version`, `Time.fixedDeltaTime`
+- benchmark area origin and spawn offset
+- benchmark runner settings (pre-roll/settle defaults, maneuver library, protocol ordering)
+- controller global limits
+- active mode config values (Cine/Normal/Sport tuning snapshots)
 
 ## Benchmark-safe environment isolation
-`BenchmarkRunner` now coordinates a `BenchmarkEnvironmentController` so benchmark maneuvers run in a sterile area:
+`BenchmarkRunner` coordinates `BenchmarkEnvironmentController` so benchmark maneuvers run in a sterile area:
 
 - On benchmark start, the controller disables colliders and rigidbody collision participation on presentation-only objects, including:
   - `VRUserPlaceholder`
@@ -51,12 +83,27 @@ Use these protocol categories to align with Airdata analysis:
 To change the clean benchmark spawn/reset area, edit `benchmarkSpawnOffset` on `BenchmarkEnvironmentController`.
 Disable dedicated offset behavior via `useDedicatedBenchmarkArea` if you need authored positions exactly.
 
+## Repeatable execution paths
+In Play Mode:
+- **F7**: cycle maneuver
+- **F8**: run/stop selected maneuver
+- **F9**: run full protocol queue (ordered by `protocolOrder`, then maneuver name)
+
+The benchmark debug window now shows:
+- selected maneuver and queue info
+- active phase (`PreRoll`, `Input`, `Settle`)
+- elapsed phase/total timing
+- effective pre-roll/input/settle durations
+- session/run counters
+
+Optional scene debug:
+- select `BenchmarkRunner` to show gizmo marker for benchmark start origin + heading.
+
 ## Unity run steps
 1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 2. Enter Play Mode.
-3. Use **F7** to cycle maneuvers.
-4. Use **F8** to start/stop the selected maneuver.
-5. Exit Play Mode and copy the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/` (recommended for analysis history).
+3. Use **F9** for full protocol capture (recommended), or **F7/F8** for manual per-maneuver runs.
+4. Exit Play Mode and copy the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/` (recommended for analysis history).
 
 ## Analysis workflow (real + sim)
 Real-only pass:
@@ -79,6 +126,17 @@ You can also provide explicit globs:
 python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
   --sim-csv-glob "BenchmarkRuns/session_*/run_*.csv"
 ```
+
+## Supported maneuver categories for comparison
+Use these protocol categories to align with Airdata analysis:
+- `hover_hold`
+- `forward_step`
+- `lateral_right`
+- `lateral_left`
+- `climb`
+- `descent`
+- `yaw_right`
+- `yaw_left`
 
 ## Outputs
 - `Docs/airdata_mar30_analysis.json`
