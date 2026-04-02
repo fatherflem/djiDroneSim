@@ -69,6 +69,9 @@ namespace DroneSim.Drone.Flight
         [Tooltip("How quickly yaw rate catches up to stick command. Higher = snappier.")]
         [Min(0.1f)] public float yawCatchUpSpeed = 8f;
 
+        [Tooltip("Multiplier on active yaw catch-up authority for right yaw input (positive rudder); <1 softens right-yaw onset accel without changing left.")]
+        [Min(0.1f)] public float yawRightCatchUpMultiplier = 1f;
+
         [Tooltip("How quickly yaw rate damps toward zero when yaw input is near neutral.")]
         [Min(0.1f)] public float yawStopSpeed = 10f;
 
@@ -80,6 +83,12 @@ namespace DroneSim.Drone.Flight
 
         [Tooltip("Multiplier on neutral yaw braking while current yaw rate is rightward (positive).")]
         [Min(0.1f)] public float yawRightStopMultiplier = 1f;
+
+        [Tooltip("Temporary extra right-yaw neutral braking applied immediately after releasing right yaw input to reduce overshoot and improve settle.")]
+        [Min(1f)] public float yawRightReleaseStopMultiplier = 1f;
+
+        [Tooltip("Duration in seconds for the post-release right-yaw stop multiplier window. Set 0 to disable.")]
+        [Min(0f)] public float yawRightReleaseStopDuration = 0f;
 
         [Header("Visual attitude")]
         [Tooltip("Maximum visible pitch/roll tilt angle used by the visual rig.")]
