@@ -24,6 +24,15 @@ Default full protocol order:
 8. `yaw_left`
 
 Protocol assets are input-only for non-hover categories. `BenchmarkRunner` owns neutral pre-roll and settle timing.
+Default benchmark timing for protocol maneuvers:
+- non-hover steps: `1.0s` active input segments
+- runner neutral windows: `1.5s` pre-roll + `1.5s` settle
+- hover total neutral hold: `10.0s` (`1.5 + 7.0 + 1.5`)
+
+Default benchmark amplitude:
+- maneuver segment channels are normalized stick values in `[-1, 1]`
+- the default protocol uses full-scale step amplitudes (`±1`) on the active axis
+- inspect or change amplitudes directly in `Assets/Resources/Benchmarks/Maneuver_*.asset`
 
 ## 2) Collect simulator exports
 Unity exports to:

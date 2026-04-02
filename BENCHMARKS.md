@@ -36,6 +36,17 @@ Duration controls:
 For protocol trustworthiness, non-hover maneuvers should define **input-only segments**.  
 Do not add neutral-before or neutral-after segments to those assets; the runner already provides pre-roll/settle neutral windows.
 
+Default protocol timing for direct real-world comparison:
+- runner neutral pre-roll: `1.5s` (`BenchmarkRunner.defaultPreRollDuration`)
+- non-hover step input window: `1.0s` (single segment in each non-hover protocol maneuver asset)
+- runner neutral settle: `1.5s` (`BenchmarkRunner.defaultSettleDuration`)
+- hover neutral total hold: `10.0s` via `1.5s` pre-roll + `7.0s` hover maneuver segment + `1.5s` settle
+
+Default protocol stick amplitude:
+- benchmark maneuver segment channels are normalized stick commands in `[-1, 1]`
+- default protocol step maneuvers use full-scale magnitudes (`±1`) for the active channel
+- edit `segments` on `Assets/Resources/Benchmarks/Maneuver_*.asset` to change benchmark amplitude
+
 ## Repeatable reset policy before every run
 Before each run begins, `BenchmarkRunner` performs an explicit benchmark reset:
 - resets `DroneInputReader` smoothing + external frame state to neutral

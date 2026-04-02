@@ -12,9 +12,13 @@ namespace DroneSim.Drone.Benchmark
         public struct InputSegment
         {
             [Min(0.01f)] public float duration;
+            [Tooltip("Normalized right-stick X input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
             [Range(-1f, 1f)] public float roll;
+            [Tooltip("Normalized right-stick Y input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
             [Range(-1f, 1f)] public float pitch;
+            [Tooltip("Normalized left-stick Y input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
             [Range(-1f, 1f)] public float throttle;
+            [Tooltip("Normalized left-stick X input (-1..1). Default protocol uses full-scale step magnitudes (±1).")]
             [Range(-1f, 1f)] public float yaw;
         }
 
