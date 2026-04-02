@@ -54,6 +54,7 @@ namespace DroneSim.Drone.Benchmark
             public bool reset_mode_between_runs;
             public int maneuver_count;
             public int default_protocol_maneuver_count;
+            public bool has_provisional_default_amplitudes;
             public List<string> default_protocol_categories;
             public List<ProtocolInputAmplitudeSnapshot> default_protocol_input_amplitudes;
         }
@@ -69,6 +70,9 @@ namespace DroneSim.Drone.Benchmark
             public float throttle;
             public float yaw;
             public float active_axis_magnitude;
+            public string confidence_label;
+            public string provenance_classification;
+            public bool provisional;
             public string evidence_classification;
             public string notes;
         }
@@ -308,6 +312,11 @@ namespace DroneSim.Drone.Benchmark
 
                 GUILayout.Label($"Durations => Pre-roll: {GetManeuverPreRollDuration(GetSelectedManeuver()):F2}s, Input: {GetSelectedManeuver()?.Duration ?? 0f:F2}s, Settle: {GetManeuverSettleDuration(GetSelectedManeuver()):F2}s");
                 GUILayout.Label($"Session: {sessionId ?? "(pending)"}, Runs: {runCounter}, Protocol Queue: {queuedProtocolIndices.Count}");
+                ManeuverDefinition selected = GetSelectedManeuver();
+                if (selected != null && selected.UsesProvisionalAmplitude)
+                {
+                    GUILayout.Label($"⚠ Provisional amplitude: {selected.AmplitudeConfidenceLabelNormalized} confidence / {selected.AmplitudeProvenanceNormalized}");
+                }
             }
 
             GUILayout.EndVertical();
@@ -408,6 +417,10 @@ namespace DroneSim.Drone.Benchmark
 
             string launchKind = fromProtocolQueue ? "protocol" : "manual";
             Debug.Log($"BenchmarkRunner started '{activeManeuver.maneuverName}' ({launchKind}) with pre-roll {activePreRollDuration:F2}s, input {activeManeuver.Duration:F2}s, settle {activeSettleDuration:F2}s in {activeManeuver.flightMode} mode.");
+            if (activeManeuver.UsesProvisionalAmplitude)
+            {
+                Debug.LogWarning($"BenchmarkRunner maneuver '{activeManeuver.maneuverName}' uses provisional amplitude ({activeManeuver.AmplitudeConfidenceLabelNormalized}, {activeManeuver.AmplitudeProvenanceNormalized}). Interpret sim-vs-real deltas cautiously.");
+            }
         }
 
         private void StartNextQueuedManeuver()
@@ -555,6 +568,7 @@ namespace DroneSim.Drone.Benchmark
                     reset_mode_between_runs = resetRequestedModeToManeuver,
                     maneuver_count = maneuvers.Count,
                     default_protocol_maneuver_count = GetDefaultProtocolManeuvers().Count,
+                    has_provisional_default_amplitudes = HasProvisionalDefaultProtocolAmplitudes(),
                     default_protocol_categories = BuildDefaultProtocolCategoryList(),
                     default_protocol_input_amplitudes = BuildDefaultProtocolAmplitudeSnapshots()
                 },
@@ -636,6 +650,9 @@ namespace DroneSim.Drone.Benchmark
                 .Append("\"protocol_category\":\"").Append(maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown").Append("\",")
                 .Append("\"protocol_order\":").Append(maneuver != null ? maneuver.protocolOrder : -1).Append(',')
                 .Append("\"mode\":\"").Append(maneuver != null ? maneuver.flightMode.ToString() : "Unknown").Append("\",")
+                .Append("\"amplitude_confidence_label\":\"").Append(maneuver != null ? maneuver.AmplitudeConfidenceLabelNormalized : "unknown").Append("\",")
+                .Append("\"amplitude_provenance\":\"").Append(maneuver != null ? maneuver.AmplitudeProvenanceNormalized : "unknown").Append("\",")
+                .Append("\"amplitude_provisional\":").Append(maneuver != null && maneuver.UsesProvisionalAmplitude ? "true" : "false").Append(',')
                 .Append("\"run_source\":\"").Append(activeRunSource).Append("\",")
                 .Append("\"pre_roll_s\":").Append(GetManeuverPreRollDuration(maneuver).ToString("0.###", CultureInfo.InvariantCulture)).Append(',')
                 .Append("\"input_duration_s\":").Append(maneuver != null ? maneuver.Duration.ToString("0.###", CultureInfo.InvariantCulture) : "0").Append(',')
@@ -697,6 +714,9 @@ namespace DroneSim.Drone.Benchmark
                     throttle = amplitudes.z,
                     yaw = amplitudes.w,
                     active_axis_magnitude = activeMagnitude,
+                    confidence_label = maneuver.AmplitudeConfidenceLabelNormalized,
+                    provenance_classification = maneuver.AmplitudeProvenanceNormalized,
+                    provisional = maneuver.UsesProvisionalAmplitude,
                     evidence_classification = string.IsNullOrWhiteSpace(maneuver.inputAmplitudeEvidence)
                         ? "unspecified"
                         : maneuver.inputAmplitudeEvidence.Trim(),
@@ -707,6 +727,20 @@ namespace DroneSim.Drone.Benchmark
             }
 
             return snapshots;
+        }
+
+        private bool HasProvisionalDefaultProtocolAmplitudes()
+        {
+            List<ManeuverDefinition> protocol = GetDefaultProtocolManeuvers();
+            for (int i = 0; i < protocol.Count; i++)
+            {
+                if (protocol[i] != null && protocol[i].UsesProvisionalAmplitude)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static Vector4 GetManeuverAxisAmplitudes(ManeuverDefinition maneuver)

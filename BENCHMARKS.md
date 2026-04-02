@@ -46,14 +46,18 @@ Default protocol stick amplitude:
 - benchmark maneuver segment channels are normalized stick commands in `[-1, 1]`
 - default protocol step amplitudes are calibrated from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` RC channels using segmented active windows + median plateau magnitude per maneuver family
 - current default protocol amplitudes:
-  - `forward_step`: `pitch = +0.77` (**estimated_from_noisy_or_limited_segments**, rc_elevator plateau medians varied across repeated runs)
-  - `lateral_right`: `roll = +1.00` (**directly_measured_from_clean_rc_plateaus**)
-  - `lateral_left`: `roll = -1.00` (**estimated_from_noisy_or_limited_segments**, mirrored from right due missing clean left segment in this log)
-  - `climb`: `throttle = +1.00` (**estimated_from_noisy_or_limited_segments**, medium-confidence segmentation but consistent plateaus)
-  - `descent`: `throttle = -1.00` (**estimated_from_noisy_or_limited_segments**, mixed confidence but consistent plateaus)
-  - `yaw_right`: `yaw = +1.00` (**directly_measured_from_clean_rc_plateaus**)
-  - `yaw_left`: `yaw = -1.00` (**directly_measured_from_clean_rc_plateaus**)
-- edit `segments` + `inputAmplitudeEvidence`/`inputAmplitudeNotes` on `Assets/Resources/Benchmarks/Maneuver_*.asset` to change benchmark amplitude and evidence labels
+  - `forward_step`: `pitch = +0.77` (**confidence: medium**, **provenance: estimated_from_limited_segments**)
+  - `lateral_right`: `roll = +1.00` (**confidence: high**, **provenance: directly_measured**)
+  - `lateral_left`: `roll = -1.00` (**confidence: low**, **provenance: estimated_from_limited_segments**, mirrored from right due missing clean left segment in this log)
+  - `climb`: `throttle = +1.00` (**confidence: medium**, **provenance: estimated_from_limited_segments**)
+  - `descent`: `throttle = -1.00` (**confidence: medium**, **provenance: estimated_from_limited_segments**)
+  - `yaw_right`: `yaw = +1.00` (**confidence: high**, **provenance: directly_measured**)
+  - `yaw_left`: `yaw = -1.00` (**confidence: high**, **provenance: directly_measured**)
+- amplitude trust metadata is stored per maneuver asset in:
+  - `amplitudeConfidence` (`High`, `Medium`, `Low`)
+  - `amplitudeProvenance` (`DirectlyMeasured`, `EstimatedFromLimitedSegments`, `DesignerAssumption`)
+  - legacy/freetext trace notes remain in `inputAmplitudeEvidence` + `inputAmplitudeNotes`
+- update these fields in `Assets/Resources/Benchmarks/Maneuver_*.asset` whenever new real logs improve evidence quality
 - regenerate RC-derived recommendation artifacts with:
   - `python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root ""`
 
@@ -90,7 +94,9 @@ The first `session_manifest.jsonl` line now records capture context including:
 - `Application.version`, `Time.fixedDeltaTime`
 - benchmark area origin and spawn offset
 - benchmark runner settings (pre-roll/settle defaults, maneuver library, protocol ordering)
-- default protocol input amplitudes snapshot (`default_protocol_input_amplitudes`) including per-maneuver axis values and evidence labels
+- default protocol input amplitudes snapshot (`default_protocol_input_amplitudes`) including per-maneuver axis values, `confidence_label`, `provenance_classification`, and `provisional`
+- `has_provisional_default_amplitudes` session-level flag for quick caution checks
+- each run manifest line also includes `amplitude_confidence_label`, `amplitude_provenance`, `amplitude_provisional`
 - controller global limits
 - active mode config values (Cine/Normal/Sport tuning snapshots)
 
@@ -188,5 +194,6 @@ Values stay explicitly separated as:
 - `directly_measured_from_sim_csv`
 - `estimated_from_limited_segments`
 - `designer_assumption`
+- plus simulator input-amplitude trust labels (`high`/`medium`/`low`) and provenance (`directly_measured`, `estimated_from_limited_segments`, `designer_assumption`)
 
 Do **not** collapse these into a single score.

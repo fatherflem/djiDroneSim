@@ -18,6 +18,8 @@ MonoBehaviour:
   protocolCategory: non_protocol
   protocolOrder: -1
   includeInDefaultProtocol: 0
+  amplitudeConfidence: 2
+  amplitudeProvenance: 2
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
   overridePreRollDuration: 0

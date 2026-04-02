@@ -8,6 +8,20 @@ namespace DroneSim.Drone.Benchmark
     [CreateAssetMenu(menuName = "DroneSim/Benchmark/Maneuver Definition", fileName = "ManeuverDefinition")]
     public class ManeuverDefinition : ScriptableObject
     {
+        public enum AmplitudeConfidenceLabel
+        {
+            High,
+            Medium,
+            Low
+        }
+
+        public enum AmplitudeProvenance
+        {
+            DirectlyMeasured,
+            EstimatedFromLimitedSegments,
+            DesignerAssumption
+        }
+
         [Serializable]
         public struct InputSegment
         {
@@ -32,6 +46,10 @@ namespace DroneSim.Drone.Benchmark
         public int protocolOrder = -1;
         [Tooltip("If enabled, this maneuver is included when running the default full benchmark protocol.")]
         public bool includeInDefaultProtocol = true;
+        [Tooltip("Confidence in the default active-axis stick amplitude for this maneuver.")]
+        public AmplitudeConfidenceLabel amplitudeConfidence = AmplitudeConfidenceLabel.Medium;
+        [Tooltip("Where the default active-axis stick amplitude came from.")]
+        public AmplitudeProvenance amplitudeProvenance = AmplitudeProvenance.EstimatedFromLimitedSegments;
         [Tooltip("Amplitude evidence classification for this maneuver (directly_measured_from_clean_rc_plateaus, estimated_from_noisy_or_limited_segments, uncertain).")]
         public string inputAmplitudeEvidence = "";
         [Tooltip("Human-readable source/note for where this maneuver amplitude came from.")]
@@ -86,6 +104,27 @@ namespace DroneSim.Drone.Benchmark
         public bool HasCustomPreRollDuration => overridePreRollDuration;
         public bool HasCustomSettleDuration => overrideSettleDuration;
         public bool IsIncludedInDefaultProtocol => includeInDefaultProtocol;
+        public bool UsesProvisionalAmplitude => amplitudeConfidence != AmplitudeConfidenceLabel.High || amplitudeProvenance != AmplitudeProvenance.DirectlyMeasured;
+
+        public string AmplitudeConfidenceLabelNormalized => amplitudeConfidence.ToString().ToLowerInvariant();
+
+        public string AmplitudeProvenanceNormalized
+        {
+            get
+            {
+                if (amplitudeProvenance == AmplitudeProvenance.DirectlyMeasured)
+                {
+                    return "directly_measured";
+                }
+
+                if (amplitudeProvenance == AmplitudeProvenance.EstimatedFromLimitedSegments)
+                {
+                    return "estimated_from_limited_segments";
+                }
+
+                return "designer_assumption";
+            }
+        }
 
         public float Duration
         {

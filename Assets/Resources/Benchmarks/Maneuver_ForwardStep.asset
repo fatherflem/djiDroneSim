@@ -18,6 +18,8 @@ MonoBehaviour:
   protocolCategory: forward_step
   protocolOrder: 2
   includeInDefaultProtocol: 1
+  amplitudeConfidence: 1
+  amplitudeProvenance: 1
   inputAmplitudeEvidence: estimated_from_noisy_or_limited_segments
   inputAmplitudeNotes: 'Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented
     plateau medians; recommended +0.77 normalized pitch.'
