@@ -164,3 +164,64 @@ These are modest changes given the provisional input amplitude (0.77 normalized)
 
 ### Required next step
 Full benchmark rerun (F9 in Play Mode) + closed-loop comparison to validate these predictions.
+
+---
+
+## Follow-up pass: yaw accel / lateral-right / forward refinement (April 2, 2026)
+
+### Motivation
+Benchmark session `session_20260402_170046` validated the previous pass's architectural yaw-stop fix (overshoot → 0°, settle → 0.1s, peak rates matched). However, three problems remained:
+
+1. **Yaw onset acceleration too sharp (both directions):** max_accel 1154°/s² right / 962°/s² left vs real 312 / 178. Response delay 0.04s sim vs 0.24s real.
+2. **Lateral right peak rate still 4.8× too high:** 0.96 m/s sim vs 0.20 real.
+3. **Forward peak rate still 2.8× too high (provisional):** 2.97 m/s sim vs 1.07 real.
+
+### Changes implemented
+
+#### 1. Yaw onset slowed further (`DroneModeNormal.asset`)
+- `yawCatchUpSpeed`: 7 → 4.5
+  - Blend per tick: `1 - exp(-4.5 * 0.02) = 0.086` (8.6% of error per tick)
+  - At target 74°/s, after 0.2s (10 ticks): ~43.7°/s — matches real ~0.2s onset delay
+- `yawStopSpeed`: 13 → 10
+  - Decel per tick: `10 * 0.02 * 74 = 14.8 °/s`
+  - Stop from 80°/s in ~5.4 ticks ≈ 0.11s (was ~4 ticks ≈ 0.08s)
+  - Softens the MoveTowards decel contribution to max_accel readings
+
+#### 2. Lateral right aggressiveness reduced further (`DroneModeNormal.asset`)
+- `lateralRightSpeedMultiplier`: 0.5 → 0.12 (effective right lateral max: 2.8 × 0.12 = 0.34 m/s)
+- `lateralRightAccelerationMultiplier`: 0.4 → 0.15 (effective right accel: 2.8 × 0.15 = 0.42 m/s²)
+- `lateralRightStopMultiplier`: kept at 1.3 (reduced speed/accel should handle it)
+- Base `maxLateralSpeed` and `lateralAcceleration` unchanged (left behavior unaffected)
+
+#### 3. Forward step reduced modestly (`DroneModeNormal.asset`)
+- `maxForwardSpeed`: 4.0 → 3.5
+- `forwardAcceleration`: 3.2 → 2.8
+- Kept modest because input amplitude (0.77 normalized pitch) is estimated, not measured
+
+#### 4. No controller code changes
+- `DJIStyleFlightController.cs` MoveTowards architecture preserved; only the rate parameter was tuned via asset
+- `yawRightCatchUpMultiplier` already 1.0 from previous pass
+
+### What was NOT changed
+- MoveTowards yaw stop architecture (correct, only rate tuned)
+- Yaw peak rate behavior (matched at 84.3 / 66.5 vs real 84.6 / 70.8)
+- Climb/descent tuning (peak rates nailed at 3.70 / 4.18 vs real 3.63 / 4.07)
+- Forward settle time (nailed at 0.56s vs real 0.55s)
+- Cine/Sport modes, camera/FPV systems, benchmark infrastructure, input systems
+
+### Acceptance targets for next benchmark
+| Category | Metric | Target | Tolerance |
+|---|---|---:|---|
+| yaw_right | max_accel | < 500 °/s² | down from 1154, toward 312 real |
+| yaw_left | max_accel | < 400 °/s² | down from 962, toward 178 real |
+| yaw_right | overshoot | < 5° | must stay fixed |
+| yaw_left | overshoot | < 7° | must stay fixed |
+| yaw (both) | settle_time | < 0.2s | must stay fixed |
+| yaw_right | peak_rate | > 78°/s | must not drop significantly |
+| lateral_right | peak_rate | < 0.5 m/s | down from 0.96, toward 0.20 real |
+| forward_step | peak_rate | < 2.5 m/s | modest improvement from 2.97 |
+| climb | peak_rate | 3.5–4.0 m/s | must stay nailed |
+| descent | peak_rate | 3.8–4.5 m/s | must stay nailed |
+
+### Required next step
+Full benchmark rerun (F9 in Play Mode) + closed-loop comparison to validate.
