@@ -1,22 +1,23 @@
-# Yaw / Lateral Validation Update — April 2, 2026 (session_20260402_175500)
+# Yaw / Lateral Validation Update — April 2, 2026 (session_20260402_182438)
 
 ## Scope and session roles
 
 - **Baseline sim session:** `BenchmarkRuns/session_20260402_133209.zip`
-- **Most relevant pre-latest comparison session:** `BenchmarkRuns/session_20260402_171257.zip`
-- **Newest validation session under test:** `BenchmarkRuns/session_20260402_175500.zip`
+- **Most relevant pre-latest comparison session:** `BenchmarkRuns/session_20260402_175500.zip`
+- **Newest validation session under test:** `BenchmarkRuns/session_20260402_182438.zip`
 - **Real benchmark source:** `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
 
-Coverage check outcome for newest session (`175500`):
+Coverage check outcome for newest session (`182438`):
 - Included protocol categories: 8/8
 - Included order: `hover_hold`, `forward_step`, `lateral_right`, `lateral_left`, `climb`, `descent`, `yaw_right`, `yaw_left`
 - Missing categories in newest rerun vs baseline: none
+- Missing full-protocol runs in newest rerun vs baseline: none
 
 Conclusion: protocol coverage is complete for the intended Normal-mode comparison.
 
 ## Primary yaw_right comparison (pre-latest vs newest)
 
-| Metric | Real | Pre-latest sim (171257) | Newest sim (175500) | Pre-latest Δ vs real | Newest Δ vs real | Direction (171257→175500) |
+| Metric | Real | Pre-latest sim (175500) | Newest sim (182438) | Pre-latest Δ vs real | Newest Δ vs real | Direction (175500→182438) |
 |---|---:|---:|---:|---:|---:|---|
 | response_delay_s | 0.240 | 0.060 | 0.060 | -0.180 | -0.180 | unchanged |
 | peak_rate | 84.600 | 83.503 | 83.503 | -1.097 | -1.097 | unchanged |
@@ -37,7 +38,7 @@ Overall classification for `yaw_right`: **unchanged vs pre-latest, and still imp
 
 ### yaw_left stability / acceptability
 
-| Metric | Real | Pre-latest sim (171257) | Newest sim (175500) | Pre-latest Δ | Newest Δ | Direction |
+| Metric | Real | Pre-latest sim (175500) | Newest sim (182438) | Pre-latest Δ | Newest Δ | Direction |
 |---|---:|---:|---:|---:|---:|---|
 | response_delay_s | 0.250 | 0.060 | 0.060 | -0.190 | -0.190 | unchanged |
 | peak_rate | 70.750 | 65.924 | 65.924 | -4.826 | -4.826 | unchanged |
@@ -49,7 +50,7 @@ Overall classification for `yaw_right`: **unchanged vs pre-latest, and still imp
 
 ### lateral_right acceptability
 
-| Metric | Real | Pre-latest sim (171257) | Newest sim (175500) | Pre-latest Δ | Newest Δ | Direction |
+| Metric | Real | Pre-latest sim (175500) | Newest sim (182438) | Pre-latest Δ | Newest Δ | Direction |
 |---|---:|---:|---:|---:|---:|---|
 | response_delay_s | 0.000 | 0.120 | 0.120 | +0.120 | +0.120 | unchanged |
 | peak_rate | 0.200 | 0.117 | 0.117 | -0.083 | -0.083 | unchanged |
@@ -63,11 +64,11 @@ Overall classification for `yaw_right`: **unchanged vs pre-latest, and still imp
 
 - Strong categories (`lateral_right`, `yaw_right`, `yaw_left`) remain **improved-but-still-off**.
 - Provisional categories (`forward_step`, `lateral_left`, `climb`, `descent`) **remain provisional** in this pass.
-- In the regenerated closed-loop output for `175500`, the highest high-confidence divergence score remains **`yaw_left`**.
+- In the regenerated closed-loop output for `182438`, the highest high-confidence divergence score remains **`yaw_left`**.
 
 ## Direct answers
 
-- Did `yaw_right` improve? **No measurable improvement vs `171257`; unchanged in `175500`.**
+- Did `yaw_right` improve? **No measurable improvement vs `175500`; unchanged in `182438`.**
 - Did `yaw_right` overshoot improve? **No; unchanged.**
 - Did `yaw_right` settle behavior improve? **No; unchanged and still off.**
 - Did `yaw_right` onset/accel shape improve? **No; unchanged.**
@@ -82,4 +83,4 @@ Overall classification for `yaw_right`: **unchanged vs pre-latest, and still imp
 
 **one more narrow `yaw_right` pass**
 
-Reason: this latest rerun is effectively flat relative to `171257`; a tightly scoped right-yaw pass is still the most direct way to reduce the remaining non-provisional yaw divergence without broad retuning.
+Reason: the latest rerun is effectively flat relative to `175500`; a tightly scoped right-yaw pass is still the most direct way to reduce persistent yaw-right overshoot/settle divergence without broad retuning.
