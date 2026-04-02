@@ -73,3 +73,22 @@ For full-stick `yaw_right` (`inputYaw = +1.0`), `yawRightCommandGain > 1.0` satu
 - `yaw_left` remains unacceptable from prior closed-loop results and remains a non-target here.
 - `lateral_right` remains unacceptable from prior closed-loop results and remains a non-target here.
 - Another full benchmark rerun + comparison regeneration is required before making any acceptance claim.
+
+## Post-fix validation outcome (session_20260402_163547)
+
+A fresh closed-loop comparison was run using:
+- baseline: `session_20260402_133209`
+- pre-fix reference: `session_20260402_161237`
+- post-fix rerun: `session_20260402_163547`
+
+Result summary for the narrow right-yaw pass:
+- `yaw_right` onset/acceleration moved closer to real.
+- `yaw_right` release overshoot and settle did **not** improve (slight regressions).
+- `yaw_right` peak-rate closeness was effectively preserved (minor negative drift only).
+- `yaw_left` remained stable (no measurable regression), matching right-only protection intent.
+
+Validation classification:
+- `yaw_right`: improved-but-still-off (shape mismatch remains concentrated in release/settle control).
+
+Single next step from this result set:
+- **one more narrow `yaw_right` pass** focused specifically on right-release stop/settle shaping.
