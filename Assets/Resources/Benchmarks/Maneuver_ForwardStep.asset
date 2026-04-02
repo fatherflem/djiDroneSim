@@ -25,7 +25,7 @@ MonoBehaviour:
   overrideSettleDuration: 0
   settleDuration: 1.5
   segments:
-  - duration: 2
+  - duration: 1
     roll: 0
     pitch: 1
     throttle: 0
