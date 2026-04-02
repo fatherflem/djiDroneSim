@@ -12,24 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e57e519972452a8bca4bf9a0ce1002, type: 3}
   m_Name: Maneuver_ForwardYawCombined
   m_EditorClassIdentifier: 
-  maneuverName: Forward + Yaw Combined Response
-  description: Neutral, then combined forward pitch and yaw pulse to observe coupled response.
+  maneuverName: forward_yaw_combined
+  description: Non-protocol extra maneuver kept for exploratory tuning only.
   flightMode: 1
+  protocolCategory: non_protocol
+  protocolOrder: -1
+  includeInDefaultProtocol: 0
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
+  overridePreRollDuration: 0
+  preRollDuration: 1.5
+  overrideSettleDuration: 0
+  settleDuration: 1.5
   segments:
-  - duration: 2
-    roll: 0
-    pitch: 0
-    throttle: 0
-    yaw: 0
   - duration: 1
     roll: 0
     pitch: 0.4
     throttle: 0
     yaw: 0.4
-  - duration: 5
-    roll: 0
-    pitch: 0
-    throttle: 0
-    yaw: 0

@@ -10,9 +10,20 @@ This is the focused validation loop for comparing Unity benchmark maneuvers agai
 ## 1) Run simulator benchmark maneuvers in Unity
 1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 2. Enter Play Mode.
-3. Press **F7** to choose maneuver.
-4. Press **F8** to run selected maneuver.
-5. Repeat runs for each protocol category (`hover_hold`, `forward_step`, `lateral_right`, `lateral_left`, `climb`, `descent`, `yaw_right`, `yaw_left`).
+3. Press **F9** once to run the default full protocol end-to-end.
+4. Optional manual path: **F7** chooses maneuver and **F8** runs selected maneuver.
+
+Default full protocol order:
+1. `hover_hold`
+2. `forward_step`
+3. `lateral_right`
+4. `lateral_left`
+5. `climb`
+6. `descent`
+7. `yaw_right`
+8. `yaw_left`
+
+Protocol assets are input-only for non-hover categories. `BenchmarkRunner` owns neutral pre-roll and settle timing.
 
 ## 2) Collect simulator exports
 Unity exports to:
@@ -26,6 +37,8 @@ Copy that whole `session_*` folder into repo-local:
 Each session includes:
 - `session_manifest.jsonl`
 - `run_###_<category>_<maneuver>_<mode>_<label>.csv`
+
+Run manifest entries include `maneuver_name`, `protocol_category`, `protocol_order`, timing, and `run_source` (`manual` or `full_protocol`).
 
 ## 3) Run analysis
 From repo root:

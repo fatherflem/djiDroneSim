@@ -33,6 +33,9 @@ Duration controls:
   - `overridePreRollDuration` + `preRollDuration`
   - `overrideSettleDuration` + `settleDuration`
 
+For protocol trustworthiness, non-hover maneuvers should define **input-only segments**.  
+Do not add neutral-before or neutral-after segments to those assets; the runner already provides pre-roll/settle neutral windows.
+
 ## Repeatable reset policy before every run
 Before each run begins, `BenchmarkRunner` performs an explicit benchmark reset:
 - resets `DroneInputReader` smoothing + external frame state to neutral
@@ -87,7 +90,7 @@ Disable dedicated offset behavior via `useDedicatedBenchmarkArea` if you need au
 In Play Mode:
 - **F7**: cycle maneuver
 - **F8**: run/stop selected maneuver
-- **F9**: run full protocol queue (ordered by `protocolOrder`, then maneuver name)
+- **F9**: run full default protocol queue (maneuvers where `includeInDefaultProtocol = true`, ordered by `protocolOrder`, then maneuver name)
 
 The benchmark debug window now shows:
 - selected maneuver and queue info
@@ -102,7 +105,7 @@ Optional scene debug:
 ## Unity run steps
 1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 2. Enter Play Mode.
-3. Use **F9** for full protocol capture (recommended), or **F7/F8** for manual per-maneuver runs.
+3. Use **F9** for one clean full-protocol capture (recommended), or **F7/F8** for manual per-maneuver runs.
 4. Exit Play Mode and copy the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/` (recommended for analysis history).
 
 ## Analysis workflow (real + sim)
@@ -128,6 +131,16 @@ python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
 ```
 
 ## Supported maneuver categories for comparison
+Default comparison protocol (`includeInDefaultProtocol = true`) runs this order:
+1. `hover_hold`
+2. `forward_step`
+3. `lateral_right`
+4. `lateral_left`
+5. `climb`
+6. `descent`
+7. `yaw_right`
+8. `yaw_left`
+
 Use these protocol categories to align with Airdata analysis:
 - `hover_hold`
 - `forward_step`
