@@ -34,6 +34,23 @@ namespace DroneSim.Drone.Benchmark
         [Tooltip("Initial world yaw in degrees before maneuver playback.")]
         public float initialYawDegrees;
 
+
+
+        [Header("Benchmark timing")]
+        [Tooltip("If enabled, this maneuver overrides runner default neutral pre-roll duration.")]
+        public bool overridePreRollDuration;
+
+        [Min(0f)]
+        [Tooltip("Neutral pre-roll duration used when override is enabled.")]
+        public float preRollDuration = 1.5f;
+
+        [Tooltip("If enabled, this maneuver overrides runner default post-input settle duration.")]
+        public bool overrideSettleDuration;
+
+        [Min(0f)]
+        [Tooltip("Neutral settle duration used when override is enabled.")]
+        public float settleDuration = 1.5f;
+
         [Header("Input sequence")]
         public List<InputSegment> segments = new List<InputSegment>();
 
@@ -55,6 +72,9 @@ namespace DroneSim.Drone.Benchmark
                 return normalized;
             }
         }
+
+        public bool HasCustomPreRollDuration => overridePreRollDuration;
+        public bool HasCustomSettleDuration => overrideSettleDuration;
 
         public float Duration
         {

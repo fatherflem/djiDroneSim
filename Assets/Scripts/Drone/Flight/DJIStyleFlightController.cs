@@ -58,6 +58,14 @@ namespace DroneSim.Drone.Flight
         public DroneMode ActiveMode => activeMode;
         public DroneFlightModeConfig ActiveConfig => GetActiveConfig();
         public Vector3 LastCommandedAcceleration => lastCommandedAcceleration;
+        public float GravityCancelMultiplier => gravityCancelMultiplier;
+        public float GlobalForwardAccelLimit => globalForwardAccelLimit;
+        public float GlobalLateralAccelLimit => globalLateralAccelLimit;
+        public float GlobalVerticalAccelLimit => globalVerticalAccelLimit;
+        public float BrakingInputDeadband => brakingInputDeadband;
+        public DroneFlightModeConfig CineConfig => cineConfig;
+        public DroneFlightModeConfig NormalConfig => normalConfig;
+        public DroneFlightModeConfig SportConfig => sportConfig;
 
         public void Initialize(
             DroneInputReader reader,
@@ -73,6 +81,20 @@ namespace DroneSim.Drone.Flight
             cineConfig = cine;
             normalConfig = normal;
             sportConfig = sport;
+        }
+
+
+
+        public void ResetForBenchmark(DroneMode mode)
+        {
+            currentYawRate = 0f;
+            lastCommandedAcceleration = Vector3.zero;
+            activeMode = mode;
+
+            if (visualTiltRoot != null)
+            {
+                visualTiltRoot.localRotation = Quaternion.identity;
+            }
         }
 
         private void Reset() => AutoWireReferences();

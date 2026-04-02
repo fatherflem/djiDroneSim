@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
@@ -15,10 +14,13 @@ namespace DroneSim.Drone.Benchmark
         {
             public int SampleIndex;
             public float ElapsedTime;
+            public string Phase;
             public Vector3 Position;
             public Vector3 Velocity;
-            public float HorizontalSpeed;
+            public float ForwardSpeed;
+            public float LateralSpeed;
             public float VerticalSpeed;
+            public float HorizontalSpeed;
             public float YawDegrees;
             public float PitchDegrees;
             public float RollDegrees;
@@ -42,9 +44,10 @@ namespace DroneSim.Drone.Benchmark
             hasPreviousYaw = false;
         }
 
-        public void Record(float elapsedTime, DronePhysicsBody body, BenchmarkInputFrame inputFrame)
+        public void Record(float elapsedTime, DronePhysicsBody body, BenchmarkInputFrame inputFrame, string phase)
         {
             Vector3 velocity = body.Velocity;
+            Vector3 localVelocity = Quaternion.Inverse(body.transform.rotation) * velocity;
             Vector3 euler = body.transform.rotation.eulerAngles;
             float pitch = NormalizeSignedAngle(euler.x);
             float yaw = NormalizeSignedAngle(euler.y);
@@ -64,10 +67,13 @@ namespace DroneSim.Drone.Benchmark
             {
                 SampleIndex = samples.Count,
                 ElapsedTime = elapsedTime,
+                Phase = string.IsNullOrWhiteSpace(phase) ? "unknown" : phase,
                 Position = body.transform.position,
                 Velocity = velocity,
-                HorizontalSpeed = body.HorizontalVelocity.magnitude,
+                ForwardSpeed = localVelocity.z,
+                LateralSpeed = localVelocity.x,
                 VerticalSpeed = body.VerticalSpeed,
+                HorizontalSpeed = body.HorizontalVelocity.magnitude,
                 YawDegrees = yaw,
                 PitchDegrees = pitch,
                 RollDegrees = roll,

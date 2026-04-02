@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using DroneSim.Drone.Flight;
@@ -12,9 +13,78 @@ namespace DroneSim.Drone.Benchmark
 {
     /// <summary>
     /// Plays back scripted input maneuvers against the existing stabilized flight stack.
+    /// Run structure: pre-roll neutral -> scripted input -> settle neutral.
     /// </summary>
     public class BenchmarkRunner : MonoBehaviour
     {
+        private enum RunPhase
+        {
+            Idle,
+            PreRoll,
+            Input,
+            Settle
+        }
+
+        [Serializable]
+        private class SessionMetadata
+        {
+            public string type = "session_metadata";
+            public string session_id;
+            public string created_utc;
+            public string export_directory;
+            public string application_version;
+            public float fixed_timestep_s;
+            public string benchmark_area_origin;
+            public string benchmark_spawn_offset;
+            public bool benchmark_dedicated_area_enabled;
+            public string maneuver_library;
+            public BenchmarkSettingsSnapshot benchmark_settings;
+            public ControllerSettingsSnapshot controller_settings;
+            public List<ModeConfigSnapshot> mode_configs;
+        }
+
+        [Serializable]
+        private class BenchmarkSettingsSnapshot
+        {
+            public bool auto_load_from_resources;
+            public string resources_folder;
+            public float default_pre_roll_s;
+            public float default_settle_s;
+            public bool run_protocol_in_order;
+            public bool reset_mode_between_runs;
+            public int maneuver_count;
+        }
+
+        [Serializable]
+        private class ControllerSettingsSnapshot
+        {
+            public float gravity_cancel_multiplier;
+            public float global_forward_accel_limit;
+            public float global_lateral_accel_limit;
+            public float global_vertical_accel_limit;
+            public float braking_input_deadband;
+        }
+
+        [Serializable]
+        private class ModeConfigSnapshot
+        {
+            public string config_asset;
+            public string mode;
+            public float max_forward_speed;
+            public float max_lateral_speed;
+            public float forward_acceleration;
+            public float lateral_acceleration;
+            public float forward_stop_strength;
+            public float lateral_stop_strength;
+            public float max_climb_speed;
+            public float max_descent_speed;
+            public float vertical_acceleration;
+            public float max_yaw_rate_degrees;
+            public float yaw_catch_up_speed;
+            public float tilt_limit_degrees;
+            public float tilt_smoothing;
+        }
+
         [Header("References")]
         [SerializeField] private DroneInputReader inputReader;
         [SerializeField] private DronePhysicsBody physicsBody;
@@ -31,22 +101,39 @@ namespace DroneSim.Drone.Benchmark
         [SerializeField] private bool autoStartOnPlay;
         [SerializeField] private KeyCode runManeuverKey = KeyCode.F8;
         [SerializeField] private KeyCode cycleManeuverKey = KeyCode.F7;
+        [SerializeField] private KeyCode runFullProtocolKey = KeyCode.F9;
         [SerializeField] private string exportDirectoryName = "BenchmarkRuns";
+        [SerializeField, Min(0f)] private float defaultPreRollDuration = 1.5f;
+        [SerializeField, Min(0f)] private float defaultSettleDuration = 1.5f;
+        [SerializeField] private bool runProtocolInOrder = true;
+        [SerializeField] private bool resetRequestedModeToManeuver = true;
 
         [Header("Debug window")]
         [SerializeField] private bool showDebugWindow = true;
         [SerializeField] private bool startCollapsed;
-        [SerializeField] private Rect defaultWindowRect = new Rect(16f, 312f, 430f, 110f);
+        [SerializeField] private Rect defaultWindowRect = new Rect(16f, 312f, 460f, 170f);
+
+        [Header("Debug gizmos")]
+        [SerializeField] private bool showBenchmarkOriginGizmo = true;
+        [SerializeField] private Color benchmarkOriginColor = new Color(0.2f, 0.95f, 1f, 0.85f);
+        [SerializeField, Min(0.1f)] private float benchmarkOriginRadius = 0.5f;
 
         private readonly BenchmarkTelemetryRecorder recorder = new BenchmarkTelemetryRecorder();
+        private readonly Queue<int> queuedProtocolIndices = new Queue<int>();
+
         private ManeuverDefinition activeManeuver;
         private float runElapsedTime;
+        private float phaseElapsedTime;
+        private RunPhase runPhase = RunPhase.Idle;
         private bool isRunning;
+        private bool isProtocolRunActive;
         private int runCounter;
         private Rect windowRect;
         private bool isCollapsed;
         private string sessionId;
         private string sessionDirectoryPath;
+        private float activePreRollDuration;
+        private float activeSettleDuration;
 
         public bool IsRunning => isRunning;
         public string CurrentManeuverName => GetSelectedManeuver() != null ? GetSelectedManeuver().maneuverName : "None";
@@ -108,6 +195,11 @@ namespace DroneSim.Drone.Benchmark
                     StartSelectedManeuver();
                 }
             }
+
+            if (LegacyInput.GetKeyDown(runFullProtocolKey) && !isRunning)
+            {
+                StartFullProtocol();
+            }
         }
 
         private void FixedUpdate()
@@ -118,14 +210,37 @@ namespace DroneSim.Drone.Benchmark
             }
 
             runElapsedTime += Time.fixedDeltaTime;
-            BenchmarkInputFrame benchmarkInput = activeManeuver.Evaluate(runElapsedTime);
-            inputReader.SetExternalInputFrame(benchmarkInput.ToDroneInputFrame());
-            recorder.Record(runElapsedTime, physicsBody, benchmarkInput);
+            phaseElapsedTime += Time.fixedDeltaTime;
 
-            if (runElapsedTime >= activeManeuver.Duration)
+            BenchmarkInputFrame benchmarkInput = EvaluateInputForCurrentPhase();
+            inputReader.SetExternalInputFrame(benchmarkInput.ToDroneInputFrame());
+            recorder.Record(runElapsedTime, physicsBody, benchmarkInput, runPhase.ToString().ToLowerInvariant());
+
+            AdvanceRunPhaseIfNeeded();
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (!showBenchmarkOriginGizmo)
             {
-                StopRun();
+                return;
             }
+
+            ManeuverDefinition maneuver = GetSelectedManeuver();
+            if (maneuver == null)
+            {
+                return;
+            }
+
+            Vector3 origin = environmentController != null
+                ? environmentController.GetBenchmarkSpawnPosition(maneuver.initialPosition)
+                : maneuver.initialPosition;
+
+            Gizmos.color = benchmarkOriginColor;
+            Gizmos.DrawSphere(origin, benchmarkOriginRadius);
+
+            Vector3 heading = Quaternion.Euler(0f, maneuver.initialYawDegrees, 0f) * Vector3.forward;
+            Gizmos.DrawLine(origin, origin + heading * 2f);
         }
 
         private void OnGUI()
@@ -156,8 +271,24 @@ namespace DroneSim.Drone.Benchmark
             if (!isCollapsed)
             {
                 GUILayout.Label($"Benchmark: {CurrentManeuverName} (#{selectedManeuverIndex + 1}/{Mathf.Max(1, maneuvers.Count)})");
-                GUILayout.Label($"Run Key: {runManeuverKey} | Cycle Key: {cycleManeuverKey}");
-                GUILayout.Label(isRunning ? $"Status: Running ({runElapsedTime:F2}s/{activeManeuver.Duration:F2}s)" : "Status: Idle (manual input active)");
+                GUILayout.Label($"Run Key: {runManeuverKey} | Cycle Key: {cycleManeuverKey} | Full Protocol Key: {runFullProtocolKey}");
+
+                if (isRunning)
+                {
+                    string status = $"Status: Running {runPhase} ({phaseElapsedTime:F2}s phase, {runElapsedTime:F2}s total)";
+                    if (runPhase == RunPhase.Input)
+                    {
+                        status += $" / Input {activeManeuver.Duration:F2}s";
+                    }
+                    GUILayout.Label(status);
+                }
+                else
+                {
+                    GUILayout.Label("Status: Idle (manual input active)");
+                }
+
+                GUILayout.Label($"Durations => Pre-roll: {GetManeuverPreRollDuration(GetSelectedManeuver()):F2}s, Input: {GetSelectedManeuver()?.Duration ?? 0f:F2}s, Settle: {GetManeuverSettleDuration(GetSelectedManeuver()):F2}s");
+                GUILayout.Label($"Session: {sessionId ?? "(pending)"}, Runs: {runCounter}, Protocol Queue: {queuedProtocolIndices.Count}");
             }
 
             GUILayout.EndVertical();
@@ -167,23 +298,26 @@ namespace DroneSim.Drone.Benchmark
         public void StartSelectedManeuver()
         {
             ManeuverDefinition maneuver = GetSelectedManeuver();
-            if (maneuver == null || inputReader == null || physicsBody == null)
+            StartManeuver(maneuver, false);
+        }
+
+        public void StartFullProtocol()
+        {
+            if (maneuvers.Count == 0)
             {
-                Debug.LogWarning("BenchmarkRunner could not start maneuver. Missing setup or maneuver list.");
+                Debug.LogWarning("BenchmarkRunner cannot start protocol because no maneuvers are configured.");
                 return;
             }
 
-            activeManeuver = maneuver;
-            runElapsedTime = 0f;
-            isRunning = true;
+            queuedProtocolIndices.Clear();
+            List<int> indices = BuildProtocolOrder();
+            for (int i = 0; i < indices.Count; i++)
+            {
+                queuedProtocolIndices.Enqueue(indices[i]);
+            }
 
-            environmentController?.SetBenchmarkIsolationActive(true);
-            ResetDroneState(activeManeuver);
-            recorder.BeginRun();
-            inputReader.SetExternalInputEnabled(true);
-            inputReader.SetExternalInputFrame(activeManeuver.Evaluate(0f).ToDroneInputFrame());
-
-            Debug.Log($"BenchmarkRunner started '{activeManeuver.maneuverName}' in {activeManeuver.flightMode} mode.");
+            isProtocolRunActive = queuedProtocolIndices.Count > 0;
+            StartNextQueuedManeuver();
         }
 
         public void StopRun()
@@ -194,6 +328,7 @@ namespace DroneSim.Drone.Benchmark
             }
 
             isRunning = false;
+            runPhase = RunPhase.Idle;
             inputReader.SetExternalInputEnabled(false);
             environmentController?.SetBenchmarkIsolationActive(false);
 
@@ -204,14 +339,154 @@ namespace DroneSim.Drone.Benchmark
             string runLabel = $"{timestamp}_run{runNumber:000}";
             runCounter++;
 
-            BenchmarkCsvExporter.RunContext context = new BenchmarkCsvExporter.RunContext(sessionId, sessionDirectoryPath, runLabel, runNumber);
+            BenchmarkCsvExporter.RunContext context = new BenchmarkCsvExporter.RunContext(
+                sessionId,
+                sessionDirectoryPath,
+                runLabel,
+                runNumber,
+                activePreRollDuration,
+                activeManeuver != null ? activeManeuver.Duration : 0f,
+                activeSettleDuration);
             recorder.ExportCsv(sessionDirectoryPath, context, activeManeuver);
             WriteRunManifestEntry(context, activeManeuver);
 
             Debug.Log($"BenchmarkRunner finished '{activeManeuver.maneuverName}'. CSV saved to {sessionDirectoryPath}");
             activeManeuver = null;
+
+            if (isProtocolRunActive)
+            {
+                StartNextQueuedManeuver();
+            }
         }
 
+        private void StartManeuver(ManeuverDefinition maneuver, bool fromProtocolQueue)
+        {
+            if (maneuver == null || inputReader == null || physicsBody == null || controller == null)
+            {
+                Debug.LogWarning("BenchmarkRunner could not start maneuver. Missing setup or maneuver list.");
+                isProtocolRunActive = false;
+                queuedProtocolIndices.Clear();
+                return;
+            }
+
+            activeManeuver = maneuver;
+            runElapsedTime = 0f;
+            phaseElapsedTime = 0f;
+            runPhase = RunPhase.PreRoll;
+            isRunning = true;
+
+            activePreRollDuration = GetManeuverPreRollDuration(activeManeuver);
+            activeSettleDuration = GetManeuverSettleDuration(activeManeuver);
+
+            environmentController?.SetBenchmarkIsolationActive(true);
+            ResetDroneState(activeManeuver);
+
+            recorder.BeginRun();
+            inputReader.SetExternalInputEnabled(true);
+            BenchmarkInputFrame neutralFrame = BenchmarkInputFrame.Neutral(activeManeuver.flightMode);
+            inputReader.SetExternalInputFrame(neutralFrame.ToDroneInputFrame());
+
+            string launchKind = fromProtocolQueue ? "protocol" : "manual";
+            Debug.Log($"BenchmarkRunner started '{activeManeuver.maneuverName}' ({launchKind}) with pre-roll {activePreRollDuration:F2}s, input {activeManeuver.Duration:F2}s, settle {activeSettleDuration:F2}s in {activeManeuver.flightMode} mode.");
+        }
+
+        private void StartNextQueuedManeuver()
+        {
+            if (queuedProtocolIndices.Count == 0)
+            {
+                isProtocolRunActive = false;
+                return;
+            }
+
+            int nextIndex = queuedProtocolIndices.Dequeue();
+            selectedManeuverIndex = Mathf.Clamp(nextIndex, 0, Mathf.Max(0, maneuvers.Count - 1));
+            StartManeuver(GetSelectedManeuver(), true);
+        }
+
+        private BenchmarkInputFrame EvaluateInputForCurrentPhase()
+        {
+            if (runPhase == RunPhase.Input)
+            {
+                return activeManeuver.Evaluate(phaseElapsedTime);
+            }
+
+            return BenchmarkInputFrame.Neutral(activeManeuver.flightMode);
+        }
+
+        private void AdvanceRunPhaseIfNeeded()
+        {
+            switch (runPhase)
+            {
+                case RunPhase.PreRoll:
+                    if (phaseElapsedTime >= activePreRollDuration)
+                    {
+                        runPhase = RunPhase.Input;
+                        phaseElapsedTime = 0f;
+                    }
+                    break;
+                case RunPhase.Input:
+                    if (phaseElapsedTime >= activeManeuver.Duration)
+                    {
+                        runPhase = RunPhase.Settle;
+                        phaseElapsedTime = 0f;
+                    }
+                    break;
+                case RunPhase.Settle:
+                    if (phaseElapsedTime >= activeSettleDuration)
+                    {
+                        StopRun();
+                    }
+                    break;
+            }
+        }
+
+        private float GetManeuverPreRollDuration(ManeuverDefinition maneuver)
+        {
+            return maneuver != null && maneuver.HasCustomPreRollDuration
+                ? maneuver.preRollDuration
+                : defaultPreRollDuration;
+        }
+
+        private float GetManeuverSettleDuration(ManeuverDefinition maneuver)
+        {
+            return maneuver != null && maneuver.HasCustomSettleDuration
+                ? maneuver.settleDuration
+                : defaultSettleDuration;
+        }
+
+        private List<int> BuildProtocolOrder()
+        {
+            List<int> indices = new List<int>(maneuvers.Count);
+            for (int i = 0; i < maneuvers.Count; i++)
+            {
+                if (maneuvers[i] != null)
+                {
+                    indices.Add(i);
+                }
+            }
+
+            if (!runProtocolInOrder)
+            {
+                return indices;
+            }
+
+            indices.Sort((a, b) =>
+            {
+                ManeuverDefinition left = maneuvers[a];
+                ManeuverDefinition right = maneuvers[b];
+                int leftOrder = left != null && left.protocolOrder >= 0 ? left.protocolOrder : int.MaxValue;
+                int rightOrder = right != null && right.protocolOrder >= 0 ? right.protocolOrder : int.MaxValue;
+                int orderCompare = leftOrder.CompareTo(rightOrder);
+                if (orderCompare != 0)
+                {
+                    return orderCompare;
+                }
+
+                return string.Compare(left != null ? left.maneuverName : string.Empty, right != null ? right.maneuverName : string.Empty, StringComparison.Ordinal);
+            });
+
+            return indices;
+        }
 
         private void EnsureSessionInitialized()
         {
@@ -236,20 +511,96 @@ namespace DroneSim.Drone.Benchmark
                 return;
             }
 
-            StringBuilder sb = new StringBuilder(256);
-            sb.Append('{')
-                .Append("\"type\":\"session_metadata\",")
-                .Append("\"session_id\":\"").Append(sessionId).Append("\",")
-                .Append("\"created_utc\":\"").Append(DateTime.UtcNow.ToString("O")).Append("\",")
-                .Append("\"export_directory\":\"").Append(sessionDirectoryPath.Replace("\\", "\\\\")).Append("\"")
-                .Append('}');
-            File.WriteAllText(manifestPath, sb.ToString() + "\n");
+            SessionMetadata metadata = new SessionMetadata
+            {
+                session_id = sessionId,
+                created_utc = DateTime.UtcNow.ToString("O"),
+                export_directory = sessionDirectoryPath,
+                application_version = Application.version,
+                fixed_timestep_s = Time.fixedDeltaTime,
+                benchmark_area_origin = GetBenchmarkOriginString(),
+                benchmark_spawn_offset = environmentController != null ? environmentController.BenchmarkSpawnOffset.ToString("F3") : Vector3.zero.ToString("F3"),
+                benchmark_dedicated_area_enabled = environmentController != null && environmentController.UseDedicatedBenchmarkArea,
+                maneuver_library = resourcesFolder,
+                benchmark_settings = new BenchmarkSettingsSnapshot
+                {
+                    auto_load_from_resources = autoLoadFromResources,
+                    resources_folder = resourcesFolder,
+                    default_pre_roll_s = defaultPreRollDuration,
+                    default_settle_s = defaultSettleDuration,
+                    run_protocol_in_order = runProtocolInOrder,
+                    reset_mode_between_runs = resetRequestedModeToManeuver,
+                    maneuver_count = maneuvers.Count
+                },
+                controller_settings = new ControllerSettingsSnapshot
+                {
+                    gravity_cancel_multiplier = controller.GravityCancelMultiplier,
+                    global_forward_accel_limit = controller.GlobalForwardAccelLimit,
+                    global_lateral_accel_limit = controller.GlobalLateralAccelLimit,
+                    global_vertical_accel_limit = controller.GlobalVerticalAccelLimit,
+                    braking_input_deadband = controller.BrakingInputDeadband
+                },
+                mode_configs = BuildModeConfigSnapshots()
+            };
+
+            string metadataJson = JsonUtility.ToJson(metadata);
+            File.WriteAllText(manifestPath, metadataJson + "\n");
+        }
+
+        private string GetBenchmarkOriginString()
+        {
+            ManeuverDefinition selected = GetSelectedManeuver();
+            if (selected == null)
+            {
+                return Vector3.zero.ToString("F3");
+            }
+
+            Vector3 origin = environmentController != null
+                ? environmentController.GetBenchmarkSpawnPosition(selected.initialPosition)
+                : selected.initialPosition;
+            return origin.ToString("F3");
+        }
+
+        private List<ModeConfigSnapshot> BuildModeConfigSnapshots()
+        {
+            List<ModeConfigSnapshot> snapshots = new List<ModeConfigSnapshot>();
+            AddModeConfigSnapshot(controller.CineConfig, snapshots);
+            AddModeConfigSnapshot(controller.NormalConfig, snapshots);
+            AddModeConfigSnapshot(controller.SportConfig, snapshots);
+            return snapshots;
+        }
+
+        private void AddModeConfigSnapshot(DroneFlightModeConfig config, List<ModeConfigSnapshot> snapshots)
+        {
+            if (config == null)
+            {
+                return;
+            }
+
+            snapshots.Add(new ModeConfigSnapshot
+            {
+                config_asset = config.name,
+                mode = config.mode.ToString(),
+                max_forward_speed = config.maxForwardSpeed,
+                max_lateral_speed = config.maxLateralSpeed,
+                forward_acceleration = config.forwardAcceleration,
+                lateral_acceleration = config.lateralAcceleration,
+                forward_stop_strength = config.forwardStopStrength,
+                lateral_stop_strength = config.lateralStopStrength,
+                max_climb_speed = config.maxClimbSpeed,
+                max_descent_speed = config.maxDescentSpeed,
+                vertical_acceleration = config.verticalAcceleration,
+                max_yaw_rate_degrees = config.maxYawRateDegrees,
+                yaw_catch_up_speed = config.yawCatchUpSpeed,
+                tilt_limit_degrees = config.tiltLimitDegrees,
+                tilt_smoothing = config.tiltSmoothing
+            });
         }
 
         private void WriteRunManifestEntry(BenchmarkCsvExporter.RunContext context, ManeuverDefinition maneuver)
         {
             string manifestPath = Path.Combine(sessionDirectoryPath, "session_manifest.jsonl");
-            StringBuilder sb = new StringBuilder(384);
+            StringBuilder sb = new StringBuilder(512);
             sb.Append('{')
                 .Append("\"type\":\"run\",")
                 .Append("\"session_id\":\"").Append(context.SessionId).Append("\",")
@@ -257,8 +608,11 @@ namespace DroneSim.Drone.Benchmark
                 .Append("\"run_label\":\"").Append(context.RunLabel).Append("\",")
                 .Append("\"maneuver_name\":\"").Append(maneuver != null ? maneuver.maneuverName : "Unknown").Append("\",")
                 .Append("\"protocol_category\":\"").Append(maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown").Append("\",")
+                .Append("\"protocol_order\":").Append(maneuver != null ? maneuver.protocolOrder : -1).Append(',')
                 .Append("\"mode\":\"").Append(maneuver != null ? maneuver.flightMode.ToString() : "Unknown").Append("\",")
-                .Append("\"duration_s\":").Append(maneuver != null ? maneuver.Duration.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture) : "0")
+                .Append("\"pre_roll_s\":").Append(GetManeuverPreRollDuration(maneuver).ToString("0.###", CultureInfo.InvariantCulture)).Append(',')
+                .Append("\"input_duration_s\":").Append(maneuver != null ? maneuver.Duration.ToString("0.###", CultureInfo.InvariantCulture) : "0").Append(',')
+                .Append("\"settle_duration_s\":").Append(GetManeuverSettleDuration(maneuver).ToString("0.###", CultureInfo.InvariantCulture))
                 .Append('}');
             File.AppendAllText(manifestPath, sb.ToString() + "\n");
         }
@@ -298,10 +652,18 @@ namespace DroneSim.Drone.Benchmark
             {
                 environmentController.SetBenchmarkIsolationActive(false);
             }
+
+            if (inputReader != null)
+            {
+                inputReader.SetExternalInputEnabled(false);
+            }
         }
 
         private void ResetDroneState(ManeuverDefinition maneuver)
         {
+            inputReader.ResetForBenchmark(resetRequestedModeToManeuver ? maneuver.flightMode : inputReader.CurrentInput.RequestedMode);
+            controller.ResetForBenchmark(maneuver.flightMode);
+
             Rigidbody body = physicsBody.Body;
             Vector3 benchmarkStartPosition = environmentController != null
                 ? environmentController.GetBenchmarkSpawnPosition(maneuver.initialPosition)

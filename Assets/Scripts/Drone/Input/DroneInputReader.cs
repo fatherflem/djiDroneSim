@@ -59,6 +59,21 @@ namespace DroneSim.Drone.Input
             externalInput = frame;
         }
 
+        public void ResetForBenchmark(DroneMode mode)
+        {
+            smoothedAxes = Vector4.zero;
+            currentInput = new DroneInputFrame
+            {
+                Roll = 0f,
+                Pitch = 0f,
+                Yaw = 0f,
+                Throttle = 0f,
+                RequestedMode = mode
+            };
+            externalInput = currentInput;
+            useExternalInput = false;
+        }
+
         private void OnEnable() => RebuildActions();
 
         private void OnDisable() => DisableActions();

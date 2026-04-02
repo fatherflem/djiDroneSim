@@ -22,6 +22,9 @@ namespace DroneSim.Drone.Benchmark
         [SerializeField] private List<Transform> explicitPresentationRoots = new List<Transform>();
         [SerializeField] private bool autoDiscoverPresentationRoots = true;
 
+        public bool UseDedicatedBenchmarkArea => useDedicatedBenchmarkArea;
+        public Vector3 BenchmarkSpawnOffset => benchmarkSpawnOffset;
+
         private readonly List<Transform> cachedRoots = new List<Transform>();
         private readonly List<ColliderState> colliderStates = new List<ColliderState>();
         private readonly List<RigidbodyState> rigidbodyStates = new List<RigidbodyState>();
