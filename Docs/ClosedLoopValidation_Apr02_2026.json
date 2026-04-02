@@ -453,444 +453,6 @@
     }
   },
   "prior_post_tuning_session": {
-    "session_path": "BenchmarkRuns/session_20260402_140700.zip",
-    "session_source_type": "zip",
-    "session_id": "session_20260402_140700",
-    "session_metadata": {
-      "type": "session_metadata",
-      "session_id": "session_20260402_140700",
-      "created_utc": "2026-04-02T14:07:00.4410244Z",
-      "export_directory": "C:/Users/josh_fleming/AppData/LocalLow/DefaultCompany/DJI Drone Sim\\BenchmarkRuns\\session_20260402_140700",
-      "application_version": "1.0",
-      "fixed_timestep_s": 0.019999992102384567,
-      "benchmark_area_origin": "(0.000, 2.000, 40.000)",
-      "benchmark_spawn_offset": "(0.000, 0.000, 40.000)",
-      "benchmark_dedicated_area_enabled": true,
-      "maneuver_library": "Benchmarks",
-      "benchmark_settings": {
-        "auto_load_from_resources": true,
-        "resources_folder": "Benchmarks",
-        "default_pre_roll_s": 1.5,
-        "default_settle_s": 1.5,
-        "run_protocol_in_order": true,
-        "reset_mode_between_runs": true,
-        "maneuver_count": 9,
-        "default_protocol_maneuver_count": 8,
-        "has_provisional_default_amplitudes": true,
-        "default_protocol_categories": [
-          "hover_hold",
-          "forward_step",
-          "lateral_right",
-          "lateral_left",
-          "climb",
-          "descent",
-          "yaw_right",
-          "yaw_left"
-        ],
-        "default_protocol_input_amplitudes": [
-          {
-            "maneuver_name": "hover_hold",
-            "protocol_category": "hover_hold",
-            "active_axis": "neutral",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 0.0,
-            "confidence_label": "high",
-            "provenance_classification": "designer_assumption",
-            "provisional": true,
-            "evidence_classification": "unspecified",
-            "notes": ""
-          },
-          {
-            "maneuver_name": "forward_step",
-            "protocol_category": "forward_step",
-            "active_axis": "pitch",
-            "roll": 0.0,
-            "pitch": 0.7699999809265137,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 0.7699999809265137,
-            "confidence_label": "medium",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented plateau medians; recommended +0.77 normalized pitch."
-          },
-          {
-            "maneuver_name": "lateral_right",
-            "protocol_category": "lateral_right",
-            "active_axis": "roll",
-            "roll": 1.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "high",
-            "provenance_classification": "directly_measured",
-            "provisional": false,
-            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
-          },
-          {
-            "maneuver_name": "lateral_left",
-            "protocol_category": "lateral_left",
-            "active_axis": "roll",
-            "roll": -1.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "low",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
-          },
-          {
-            "maneuver_name": "climb",
-            "protocol_category": "climb",
-            "active_axis": "throttle",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 1.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "medium",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
-          },
-          {
-            "maneuver_name": "descent",
-            "protocol_category": "descent",
-            "active_axis": "throttle",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": -1.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "medium",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
-          },
-          {
-            "maneuver_name": "yaw_right",
-            "protocol_category": "yaw_right",
-            "active_axis": "yaw",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 1.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "high",
-            "provenance_classification": "directly_measured",
-            "provisional": false,
-            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
-          },
-          {
-            "maneuver_name": "yaw_left",
-            "protocol_category": "yaw_left",
-            "active_axis": "yaw",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": -1.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "high",
-            "provenance_classification": "directly_measured",
-            "provisional": false,
-            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
-          }
-        ]
-      },
-      "controller_settings": {
-        "gravity_cancel_multiplier": 1.0,
-        "global_forward_accel_limit": 8.0,
-        "global_lateral_accel_limit": 8.0,
-        "global_vertical_accel_limit": 10.0,
-        "braking_input_deadband": 0.07999999821186066
-      },
-      "mode_configs": [
-        {
-          "config_asset": "DroneModeCine",
-          "mode": "Cine",
-          "max_forward_speed": 3.299999952316284,
-          "max_lateral_speed": 2.799999952316284,
-          "forward_acceleration": 3.5,
-          "lateral_acceleration": 3.0999999046325684,
-          "forward_stop_strength": 5.199999809265137,
-          "lateral_stop_strength": 4.599999904632568,
-          "max_climb_speed": 1.7999999523162842,
-          "max_descent_speed": 2.200000047683716,
-          "vertical_acceleration": 4.199999809265137,
-          "max_yaw_rate_degrees": 48.0,
-          "yaw_catch_up_speed": 7.0,
-          "tilt_limit_degrees": 14.0,
-          "tilt_smoothing": 7.5
-        },
-        {
-          "config_asset": "DroneModeNormal",
-          "mode": "Normal",
-          "max_forward_speed": 4.599999904632568,
-          "max_lateral_speed": 2.799999952316284,
-          "forward_acceleration": 4.0,
-          "lateral_acceleration": 2.799999952316284,
-          "forward_stop_strength": 7.199999809265137,
-          "lateral_stop_strength": 7.099999904632568,
-          "max_climb_speed": 2.5,
-          "max_descent_speed": 3.0999999046325684,
-          "vertical_acceleration": 5.0,
-          "max_yaw_rate_degrees": 74.0,
-          "yaw_catch_up_speed": 10.0,
-          "tilt_limit_degrees": 30.0,
-          "tilt_smoothing": 12.0
-        },
-        {
-          "config_asset": "DroneModeSport",
-          "mode": "Sport",
-          "max_forward_speed": 9.5,
-          "max_lateral_speed": 7.800000190734863,
-          "forward_acceleration": 8.199999809265137,
-          "lateral_acceleration": 7.199999809265137,
-          "forward_stop_strength": 8.600000381469727,
-          "lateral_stop_strength": 7.800000190734863,
-          "max_climb_speed": 4.199999809265137,
-          "max_descent_speed": 4.900000095367432,
-          "vertical_acceleration": 7.199999809265137,
-          "max_yaw_rate_degrees": 120.0,
-          "yaw_catch_up_speed": 10.0,
-          "tilt_limit_degrees": 24.0,
-          "tilt_smoothing": 9.0
-        }
-      ]
-    },
-    "included_runs": [
-      {
-        "run_number": 1,
-        "category": "hover_hold",
-        "protocol_order": 1,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 2,
-        "category": "forward_step",
-        "protocol_order": 2,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 3,
-        "category": "lateral_right",
-        "protocol_order": 3,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 4,
-        "category": "lateral_left",
-        "protocol_order": 4,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 5,
-        "category": "climb",
-        "protocol_order": 5,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 6,
-        "category": "descent",
-        "protocol_order": 6,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 7,
-        "category": "yaw_right",
-        "protocol_order": 7,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 8,
-        "category": "yaw_left",
-        "protocol_order": 8,
-        "run_source": "full_protocol"
-      }
-    ],
-    "excluded_runs": [],
-    "all_manifest_runs": [
-      {
-        "run_number": 1,
-        "category": "hover_hold",
-        "protocol_order": 1,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 2,
-        "category": "forward_step",
-        "protocol_order": 2,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 3,
-        "category": "lateral_right",
-        "protocol_order": 3,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 4,
-        "category": "lateral_left",
-        "protocol_order": 4,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 5,
-        "category": "climb",
-        "protocol_order": 5,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 6,
-        "category": "descent",
-        "protocol_order": 6,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 7,
-        "category": "yaw_right",
-        "protocol_order": 7,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 8,
-        "category": "yaw_left",
-        "protocol_order": 8,
-        "run_source": "full_protocol"
-      }
-    ],
-    "category_metrics": {
-      "hover_hold": {
-        "path": "session_20260402_140700.zip:run_001_hover_hold_hover_hold_Normal_20260402_140715_run001.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.0,
-        "peak_rate": 0.0,
-        "settle_time_s": 0.0,
-        "max_accel": 0.0,
-        "overshoot": 0.0,
-        "residual_drift": 0.0,
-        "vertical_rms_mps": 0.0,
-        "horizontal_rms_mps": 0.0,
-        "alt_std_m": 0.0,
-        "measured_from": "sim_csv_direct",
-        "run_number": 1,
-        "protocol_order": 1,
-        "csv_name": "run_001_hover_hold_hover_hold_Normal_20260402_140715_run001.csv"
-      },
-      "forward_step": {
-        "path": "session_20260402_140700.zip:run_002_forward_step_forward_step_Normal_20260402_140719_run002.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.08000000000000007,
-        "peak_rate": 3.478386,
-        "settle_time_s": 1.060000000000001,
-        "max_accel": 8.0,
-        "overshoot": 2.8686913421052633,
-        "residual_drift": 0.000205125,
-        "measured_from": "sim_csv_direct",
-        "run_number": 2,
-        "protocol_order": 2,
-        "csv_name": "run_002_forward_step_forward_step_Normal_20260402_140719_run002.csv"
-      },
-      "lateral_right": {
-        "path": "session_20260402_140700.zip:run_003_lateral_right_lateral_right_Normal_20260402_140723_run003.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.08000000000000007,
-        "peak_rate": 2.290794,
-        "settle_time_s": 1.180000000000001,
-        "max_accel": 5.7858999999999945,
-        "overshoot": 1.9967561578947368,
-        "residual_drift": 1.575e-05,
-        "measured_from": "sim_csv_direct",
-        "run_number": 3,
-        "protocol_order": 3,
-        "csv_name": "run_003_lateral_right_lateral_right_Normal_20260402_140723_run003.csv"
-      },
-      "lateral_left": {
-        "path": "session_20260402_140700.zip:run_004_lateral_left_lateral_left_Normal_20260402_140728_run004.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.06000000000000005,
-        "peak_rate": 2.65184,
-        "settle_time_s": 1.140000000000001,
-        "max_accel": 7.839999999999993,
-        "overshoot": 2.2654131710526317,
-        "residual_drift": 0.000105625,
-        "measured_from": "sim_csv_direct",
-        "run_number": 4,
-        "protocol_order": 4,
-        "csv_name": "run_004_lateral_left_lateral_left_Normal_20260402_140728_run004.csv"
-      },
-      "climb": {
-        "path": "session_20260402_140700.zip:run_005_climb_climb_Normal_20260402_140732_run005.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.06000000000000005,
-        "peak_rate": 2.487911,
-        "settle_time_s": 1.080000000000001,
-        "max_accel": 9.999999999999991,
-        "overshoot": 2.116597144736842,
-        "residual_drift": 0.001584625,
-        "measured_from": "sim_csv_direct",
-        "run_number": 5,
-        "protocol_order": 5,
-        "csv_name": "run_005_climb_climb_Normal_20260402_140732_run005.csv"
-      },
-      "descent": {
-        "path": "session_20260402_140700.zip:run_006_descent_descent_Normal_20260402_140736_run006.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.06000000000000005,
-        "peak_rate": 3.083417,
-        "settle_time_s": 1.060000000000001,
-        "max_accel": 10.0,
-        "overshoot": 2.591270486842105,
-        "residual_drift": 0.0021685,
-        "measured_from": "sim_csv_direct",
-        "run_number": 6,
-        "protocol_order": 6,
-        "csv_name": "run_006_descent_descent_Normal_20260402_140736_run006.csv"
-      },
-      "yaw_right": {
-        "path": "session_20260402_140700.zip:run_007_yaw_right_yaw_right_Normal_20260402_140740_run007.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.040000000000000036,
-        "peak_rate": 73.99753,
-        "settle_time_s": 1.3200000000000012,
-        "max_accel": 670.6959999999993,
-        "overshoot": 68.77082068421052,
-        "residual_drift": 0.000476625,
-        "measured_from": "sim_csv_direct",
-        "run_number": 7,
-        "protocol_order": 7,
-        "csv_name": "run_007_yaw_right_yaw_right_Normal_20260402_140740_run007.csv"
-      },
-      "yaw_left": {
-        "path": "session_20260402_140700.zip:run_008_yaw_left_yaw_left_Normal_20260402_140744_run008.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.040000000000000036,
-        "peak_rate": 66.59853,
-        "settle_time_s": 1.3200000000000012,
-        "max_accel": 603.6379999999995,
-        "overshoot": 61.894805776315785,
-        "residual_drift": 0.0,
-        "measured_from": "sim_csv_direct",
-        "run_number": 8,
-        "protocol_order": 8,
-        "csv_name": "run_008_yaw_left_yaw_left_Normal_20260402_140744_run008.csv"
-      }
-    }
-  },
-  "newest_rerun_session": {
     "session_path": "BenchmarkRuns/session_20260402_151147.zip",
     "session_source_type": "zip",
     "session_id": "session_20260402_151147",
@@ -1424,11 +986,449 @@
       }
     }
   },
+  "newest_rerun_session": {
+    "session_path": "BenchmarkRuns/session_20260402_161237.zip",
+    "session_source_type": "zip",
+    "session_id": "session_20260402_161237",
+    "session_metadata": {
+      "type": "session_metadata",
+      "session_id": "session_20260402_161237",
+      "created_utc": "2026-04-02T16:12:37.3381724Z",
+      "export_directory": "C:/Users/josh_fleming/AppData/LocalLow/DefaultCompany/DJI Drone Sim\\BenchmarkRuns\\session_20260402_161237",
+      "application_version": "1.0",
+      "fixed_timestep_s": 0.019999992102384567,
+      "benchmark_area_origin": "(0.000, 2.000, 40.000)",
+      "benchmark_spawn_offset": "(0.000, 0.000, 40.000)",
+      "benchmark_dedicated_area_enabled": true,
+      "maneuver_library": "Benchmarks",
+      "benchmark_settings": {
+        "auto_load_from_resources": true,
+        "resources_folder": "Benchmarks",
+        "default_pre_roll_s": 1.5,
+        "default_settle_s": 1.5,
+        "run_protocol_in_order": true,
+        "reset_mode_between_runs": true,
+        "maneuver_count": 9,
+        "default_protocol_maneuver_count": 8,
+        "has_provisional_default_amplitudes": true,
+        "default_protocol_categories": [
+          "hover_hold",
+          "forward_step",
+          "lateral_right",
+          "lateral_left",
+          "climb",
+          "descent",
+          "yaw_right",
+          "yaw_left"
+        ],
+        "default_protocol_input_amplitudes": [
+          {
+            "maneuver_name": "hover_hold",
+            "protocol_category": "hover_hold",
+            "active_axis": "neutral",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 0.0,
+            "confidence_label": "high",
+            "provenance_classification": "designer_assumption",
+            "provisional": true,
+            "evidence_classification": "unspecified",
+            "notes": ""
+          },
+          {
+            "maneuver_name": "forward_step",
+            "protocol_category": "forward_step",
+            "active_axis": "pitch",
+            "roll": 0.0,
+            "pitch": 0.7699999809265137,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 0.7699999809265137,
+            "confidence_label": "medium",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented plateau medians; recommended +0.77 normalized pitch."
+          },
+          {
+            "maneuver_name": "lateral_right",
+            "protocol_category": "lateral_right",
+            "active_axis": "roll",
+            "roll": 1.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "high",
+            "provenance_classification": "directly_measured",
+            "provisional": false,
+            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
+          },
+          {
+            "maneuver_name": "lateral_left",
+            "protocol_category": "lateral_left",
+            "active_axis": "roll",
+            "roll": -1.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "low",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
+          },
+          {
+            "maneuver_name": "climb",
+            "protocol_category": "climb",
+            "active_axis": "throttle",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 1.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "medium",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
+          },
+          {
+            "maneuver_name": "descent",
+            "protocol_category": "descent",
+            "active_axis": "throttle",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": -1.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "medium",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
+          },
+          {
+            "maneuver_name": "yaw_right",
+            "protocol_category": "yaw_right",
+            "active_axis": "yaw",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 1.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "high",
+            "provenance_classification": "directly_measured",
+            "provisional": false,
+            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
+          },
+          {
+            "maneuver_name": "yaw_left",
+            "protocol_category": "yaw_left",
+            "active_axis": "yaw",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": -1.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "high",
+            "provenance_classification": "directly_measured",
+            "provisional": false,
+            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
+          }
+        ]
+      },
+      "controller_settings": {
+        "gravity_cancel_multiplier": 1.0,
+        "global_forward_accel_limit": 8.0,
+        "global_lateral_accel_limit": 8.0,
+        "global_vertical_accel_limit": 10.0,
+        "braking_input_deadband": 0.07999999821186066
+      },
+      "mode_configs": [
+        {
+          "config_asset": "DroneModeCine",
+          "mode": "Cine",
+          "max_forward_speed": 3.299999952316284,
+          "max_lateral_speed": 2.799999952316284,
+          "forward_acceleration": 3.5,
+          "lateral_acceleration": 3.0999999046325684,
+          "forward_stop_strength": 5.199999809265137,
+          "lateral_stop_strength": 4.599999904632568,
+          "max_climb_speed": 1.7999999523162842,
+          "max_descent_speed": 2.200000047683716,
+          "vertical_acceleration": 4.199999809265137,
+          "max_yaw_rate_degrees": 48.0,
+          "yaw_catch_up_speed": 7.0,
+          "tilt_limit_degrees": 14.0,
+          "tilt_smoothing": 7.5
+        },
+        {
+          "config_asset": "DroneModeNormal",
+          "mode": "Normal",
+          "max_forward_speed": 4.599999904632568,
+          "max_lateral_speed": 2.799999952316284,
+          "forward_acceleration": 4.0,
+          "lateral_acceleration": 2.799999952316284,
+          "forward_stop_strength": 7.199999809265137,
+          "lateral_stop_strength": 7.099999904632568,
+          "max_climb_speed": 2.5,
+          "max_descent_speed": 3.0999999046325684,
+          "vertical_acceleration": 5.0,
+          "max_yaw_rate_degrees": 74.0,
+          "yaw_catch_up_speed": 10.0,
+          "tilt_limit_degrees": 30.0,
+          "tilt_smoothing": 12.0
+        },
+        {
+          "config_asset": "DroneModeSport",
+          "mode": "Sport",
+          "max_forward_speed": 9.5,
+          "max_lateral_speed": 7.800000190734863,
+          "forward_acceleration": 8.199999809265137,
+          "lateral_acceleration": 7.199999809265137,
+          "forward_stop_strength": 8.600000381469727,
+          "lateral_stop_strength": 7.800000190734863,
+          "max_climb_speed": 4.199999809265137,
+          "max_descent_speed": 4.900000095367432,
+          "vertical_acceleration": 7.199999809265137,
+          "max_yaw_rate_degrees": 120.0,
+          "yaw_catch_up_speed": 10.0,
+          "tilt_limit_degrees": 24.0,
+          "tilt_smoothing": 9.0
+        }
+      ]
+    },
+    "included_runs": [
+      {
+        "run_number": 1,
+        "category": "hover_hold",
+        "protocol_order": 1,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 2,
+        "category": "forward_step",
+        "protocol_order": 2,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 3,
+        "category": "lateral_right",
+        "protocol_order": 3,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 4,
+        "category": "lateral_left",
+        "protocol_order": 4,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 5,
+        "category": "climb",
+        "protocol_order": 5,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 6,
+        "category": "descent",
+        "protocol_order": 6,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 7,
+        "category": "yaw_right",
+        "protocol_order": 7,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 8,
+        "category": "yaw_left",
+        "protocol_order": 8,
+        "run_source": "full_protocol"
+      }
+    ],
+    "excluded_runs": [],
+    "all_manifest_runs": [
+      {
+        "run_number": 1,
+        "category": "hover_hold",
+        "protocol_order": 1,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 2,
+        "category": "forward_step",
+        "protocol_order": 2,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 3,
+        "category": "lateral_right",
+        "protocol_order": 3,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 4,
+        "category": "lateral_left",
+        "protocol_order": 4,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 5,
+        "category": "climb",
+        "protocol_order": 5,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 6,
+        "category": "descent",
+        "protocol_order": 6,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 7,
+        "category": "yaw_right",
+        "protocol_order": 7,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 8,
+        "category": "yaw_left",
+        "protocol_order": 8,
+        "run_source": "full_protocol"
+      }
+    ],
+    "category_metrics": {
+      "hover_hold": {
+        "path": "session_20260402_161237.zip:run_001_hover_hold_hover_hold_Normal_20260402_161254_run001.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.0,
+        "peak_rate": 0.0,
+        "settle_time_s": 0.0,
+        "max_accel": 0.0,
+        "overshoot": 0.0,
+        "residual_drift": 0.0,
+        "vertical_rms_mps": 0.0,
+        "horizontal_rms_mps": 0.0,
+        "alt_std_m": 0.0,
+        "measured_from": "sim_csv_direct",
+        "run_number": 1,
+        "protocol_order": 1,
+        "csv_name": "run_001_hover_hold_hover_hold_Normal_20260402_161254_run001.csv"
+      },
+      "forward_step": {
+        "path": "session_20260402_161237.zip:run_002_forward_step_forward_step_Normal_20260402_161258_run002.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.08000000000000007,
+        "peak_rate": 3.478386,
+        "settle_time_s": 1.060000000000001,
+        "max_accel": 8.0,
+        "overshoot": 2.8686913421052633,
+        "residual_drift": 0.000205125,
+        "measured_from": "sim_csv_direct",
+        "run_number": 2,
+        "protocol_order": 2,
+        "csv_name": "run_002_forward_step_forward_step_Normal_20260402_161258_run002.csv"
+      },
+      "lateral_right": {
+        "path": "session_20260402_161237.zip:run_003_lateral_right_lateral_right_Normal_20260402_161302_run003.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.08000000000000007,
+        "peak_rate": 2.290794,
+        "settle_time_s": 1.180000000000001,
+        "max_accel": 5.7858999999999945,
+        "overshoot": 1.9967561578947368,
+        "residual_drift": 1.575e-05,
+        "measured_from": "sim_csv_direct",
+        "run_number": 3,
+        "protocol_order": 3,
+        "csv_name": "run_003_lateral_right_lateral_right_Normal_20260402_161302_run003.csv"
+      },
+      "lateral_left": {
+        "path": "session_20260402_161237.zip:run_004_lateral_left_lateral_left_Normal_20260402_161306_run004.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 2.65184,
+        "settle_time_s": 1.140000000000001,
+        "max_accel": 7.839999999999993,
+        "overshoot": 2.2654131710526317,
+        "residual_drift": 0.000105625,
+        "measured_from": "sim_csv_direct",
+        "run_number": 4,
+        "protocol_order": 4,
+        "csv_name": "run_004_lateral_left_lateral_left_Normal_20260402_161306_run004.csv"
+      },
+      "climb": {
+        "path": "session_20260402_161237.zip:run_005_climb_climb_Normal_20260402_161310_run005.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 2.487911,
+        "settle_time_s": 1.080000000000001,
+        "max_accel": 9.999999999999991,
+        "overshoot": 2.116597144736842,
+        "residual_drift": 0.001584625,
+        "measured_from": "sim_csv_direct",
+        "run_number": 5,
+        "protocol_order": 5,
+        "csv_name": "run_005_climb_climb_Normal_20260402_161310_run005.csv"
+      },
+      "descent": {
+        "path": "session_20260402_161237.zip:run_006_descent_descent_Normal_20260402_161314_run006.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 3.083417,
+        "settle_time_s": 1.060000000000001,
+        "max_accel": 10.0,
+        "overshoot": 2.591270486842105,
+        "residual_drift": 0.0021685,
+        "measured_from": "sim_csv_direct",
+        "run_number": 6,
+        "protocol_order": 6,
+        "csv_name": "run_006_descent_descent_Normal_20260402_161314_run006.csv"
+      },
+      "yaw_right": {
+        "path": "session_20260402_161237.zip:run_007_yaw_right_yaw_right_Normal_20260402_161318_run007.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.040000000000000036,
+        "peak_rate": 84.35786,
+        "settle_time_s": 1.3600000000000012,
+        "max_accel": 764.5934999999993,
+        "overshoot": 79.1066412236842,
+        "residual_drift": 0.0,
+        "measured_from": "sim_csv_direct",
+        "run_number": 7,
+        "protocol_order": 7,
+        "csv_name": "run_007_yaw_right_yaw_right_Normal_20260402_161318_run007.csv"
+      },
+      "yaw_left": {
+        "path": "session_20260402_161237.zip:run_008_yaw_left_yaw_left_Normal_20260402_161323_run008.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.040000000000000036,
+        "peak_rate": 66.59853,
+        "settle_time_s": 1.3200000000000012,
+        "max_accel": 603.6379999999995,
+        "overshoot": 61.894805776315785,
+        "residual_drift": 0.0,
+        "measured_from": "sim_csv_direct",
+        "run_number": 8,
+        "protocol_order": 8,
+        "csv_name": "run_008_yaw_left_yaw_left_Normal_20260402_161323_run008.csv"
+      }
+    }
+  },
   "missing_vs_baseline_categories": [],
   "missing_vs_baseline_runs": [],
   "baseline_manifest_run_count": 9,
-  "prior_manifest_run_count": 8,
-  "newest_manifest_run_count": 16,
+  "prior_manifest_run_count": 16,
+  "newest_manifest_run_count": 8,
   "climb_counterpart_present_in_newest": true,
   "comparison_by_category": {
     "hover_hold": {
@@ -1940,49 +1940,49 @@
           "real": 84.6,
           "old": 81.998,
           "prior": 73.998,
-          "new": 73.998,
+          "new": 84.358,
           "old_delta": -2.602,
           "prior_delta": -10.602,
-          "new_delta": -10.602,
+          "new_delta": -0.242,
           "prior_abs_delta_improvement": -8.001,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -8.001
+          "newest_abs_delta_improvement": 10.36,
+          "total_abs_delta_improvement": 2.36
         },
         "max_accel": {
           "real": 312.0,
           "old": 743.203,
           "prior": 670.696,
-          "new": 670.696,
+          "new": 764.593,
           "old_delta": 431.203,
           "prior_delta": 358.696,
-          "new_delta": 358.696,
+          "new_delta": 452.593,
           "prior_abs_delta_improvement": 72.507,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 72.507
+          "newest_abs_delta_improvement": -93.897,
+          "total_abs_delta_improvement": -21.39
         },
         "settle_time_s": {
           "real": 0.0,
           "old": 1.28,
           "prior": 1.32,
-          "new": 1.32,
+          "new": 1.36,
           "old_delta": 1.28,
           "prior_delta": 1.32,
-          "new_delta": 1.32,
+          "new_delta": 1.36,
           "prior_abs_delta_improvement": -0.04,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.04
+          "newest_abs_delta_improvement": -0.04,
+          "total_abs_delta_improvement": -0.08
         },
         "overshoot": {
           "real": 4.6,
           "old": 74.967,
           "prior": 68.771,
-          "new": 68.771,
+          "new": 79.107,
           "old_delta": 70.367,
           "prior_delta": 64.171,
-          "new_delta": 64.171,
+          "new_delta": 74.507,
           "prior_abs_delta_improvement": 6.196,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 6.196
+          "newest_abs_delta_improvement": -10.336,
+          "total_abs_delta_improvement": -4.14
         },
         "residual_drift": {
           "real": 79.225,
@@ -1993,7 +1993,7 @@
           "prior_delta": -79.225,
           "new_delta": -79.225,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
+          "newest_abs_delta_improvement": -0.0,
           "total_abs_delta_improvement": 0.0
         }
       }
@@ -2092,9 +2092,9 @@
     "yaw_right": {
       "status": "improved_but_still_off",
       "moved_correct_direction": true,
-      "metrics_with_smaller_abs_delta": 2,
+      "metrics_with_smaller_abs_delta": 1,
       "comparable_metric_count": 5,
-      "response_shape": "improved",
+      "response_shape": "not_improved",
       "note": "Status is based on absolute-delta movement against the real benchmark values."
     },
     "yaw_left": {
@@ -2142,7 +2142,7 @@
   },
   "decision_summary": {
     "is_climb_coverage_complete": true,
-    "strongest_high_confidence_divergence": "yaw_left",
+    "strongest_high_confidence_divergence": "yaw_right",
     "is_lateral_right_acceptable": false,
     "is_yaw_left_acceptable": false,
     "forward_step_status": "directionally_improved",
@@ -2151,7 +2151,7 @@
     "normal_mode_good_enough_to_move_on": false,
     "single_next_tuning_target": "yaw_right",
     "divergence_scores": {
-      "yaw_right": 434.989,
+      "yaw_right": 528.902,
       "yaw_left": 486.814,
       "lateral_right": 9.501,
       "climb/descent": 8.895,
