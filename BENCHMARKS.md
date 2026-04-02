@@ -9,7 +9,7 @@ This harness closes the loop between:
 ## Simulator benchmark export convention
 `BenchmarkRunner` writes benchmark sessions under:
 
-`<Application.persistentDataPath>/BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
+`<Application.persistentDataPath>/BenchmarkRuns/session_<yyyyMMdd_HHmmss>/` (zip this folder after capture)
 
 Each session contains:
 - `session_manifest.jsonl`
@@ -134,7 +134,7 @@ Optional scene debug:
 1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 2. Enter Play Mode.
 3. Use **F9** for one clean full-protocol capture (recommended), or **F7/F8** for manual per-maneuver runs.
-4. Exit Play Mode and copy the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/` (canonical analysis source; keep zip archives optional only).
+4. Exit Play Mode, zip the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/`, and place `session_<timestamp>.zip` directly in repo-local `BenchmarkRuns/` (canonical analysis source).
 
 ## Analysis workflow (real + sim)
 Real-only pass:
@@ -155,7 +155,7 @@ You can also provide explicit globs:
 
 ```bash
 python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
-  --sim-csv-glob "BenchmarkRuns/session_*/run_*.csv"
+  --sim-csv-glob "BenchmarkRuns/**/*.csv" --sim-csv-glob "BenchmarkRuns/*.zip"
 ```
 
 ## Supported maneuver categories for comparison

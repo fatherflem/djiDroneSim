@@ -46,11 +46,11 @@ Unity exports to:
 
 `<Application.persistentDataPath>/BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
 
-Copy that whole `session_*` folder into repo-local (canonical source for analysis):
+Zip each exported `session_*` folder and place the zip directly in repo-local `BenchmarkRuns/` (canonical source for analysis):
 
-`BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
+`BenchmarkRuns/session_<yyyyMMdd_HHmmss>.zip`
 
-Each session includes:
+Each session archive includes:
 - `session_manifest.jsonl`
 - `run_###_<category>_<maneuver>_<mode>_<label>.csv`
 
@@ -69,7 +69,7 @@ Optional explicit input control:
 
 ```bash
 python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
-  --sim-csv-glob "BenchmarkRuns/session_*/run_*.csv"
+  --sim-csv-glob "BenchmarkRuns/**/*.csv" --sim-csv-glob "BenchmarkRuns/*.zip"
 ```
 
 ## 4) Read outputs

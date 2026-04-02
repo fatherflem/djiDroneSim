@@ -81,7 +81,7 @@ Use `DroneModeCine`, `DroneModeNormal`, and `DroneModeSport` assets.
 ## Validation loop (recommended)
 
 1. Run benchmark maneuvers in Unity (F7/F8).
-2. Copy the generated `session_*` folder from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/`.
+2. Zip the generated `session_*` folder from `Application.persistentDataPath/BenchmarkRuns/` and place `session_<timestamp>.zip` directly in repo-local `BenchmarkRuns/`.
 3. Run:
 
 ```bash
