@@ -39,3 +39,37 @@ Expected directional movement in the next comparison:
 - `yaw_left`: less peak/accel and reduced overshoot tendency.
 - `yaw_right`/`yaw_left`: closer start/stop symmetry and settle consistency.
 - `forward_step`, `climb`, `descent`: only small directional shifts due to provisional confidence.
+
+---
+
+## Follow-up narrow pass: yaw_right-only refinement (April 2, 2026)
+
+### Scope lock
+- Single active target: `yaw_right` in **Normal** mode.
+- Non-target strong categories (`yaw_left`, `lateral_right`) are explicitly **not** claimed solved in this pass.
+- Provisional categories (`forward_step`, `climb`, `descent`) were not retuned in tuning intent.
+
+### Why yaw_right was still materially off
+The previous directional yaw command shaping used:
+- `shapedYawInput = Clamp(inputYaw * yawDirectionGain, -1, 1)`.
+
+For full-stick `yaw_right` (`inputYaw = +1.0`), `yawRightCommandGain > 1.0` saturated back to `+1.0`, so the right-gain had little/no effect exactly where benchmark runs spend most of the segment. This left right-yaw peak/rate buildup under-corrected.
+
+### Yaw-right-focused fix implemented
+1. **Command-path correction (shared logic, right-targeted effect)**
+   - Clamp raw input first, then apply directional gain in yaw-rate target space:
+   - `targetYawRate = Clamp(inputYaw, -1, 1) * maxYawRateDegrees * yawDirectionGain`.
+   - Result: positive yaw gain now affects full-stick right yaw as intended.
+2. **Right-only neutral braking support**
+   - Added `yawRightStopMultiplier` for neutral-input damping when current yaw-rate is rightward.
+   - Keeps release/stop behavior tighter for right turns without changing left stop authority.
+3. **Normal mode tuning update (yaw-right only intent)**
+   - Increased `yawRightCommandGain` modestly.
+   - Added `yawRightStopMultiplier` > 1.0 to counter stop/overshoot side effects from stronger right command.
+   - Left-yaw gain retained unchanged.
+
+### Expected outcome and required validation
+- Targeted improvement expected in `yaw_right`: onset/buildup/peak with controlled release and shorter settle tail.
+- `yaw_left` remains unacceptable from prior closed-loop results and remains a non-target here.
+- `lateral_right` remains unacceptable from prior closed-loop results and remains a non-target here.
+- Another full benchmark rerun + comparison regeneration is required before making any acceptance claim.

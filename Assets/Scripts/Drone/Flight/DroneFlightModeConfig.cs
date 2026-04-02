@@ -78,6 +78,9 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Directional command gain for left yaw input (negative rudder).")]
         [Min(0.1f)] public float yawLeftCommandGain = 1f;
 
+        [Tooltip("Multiplier on neutral yaw braking while current yaw rate is rightward (positive).")]
+        [Min(0.1f)] public float yawRightStopMultiplier = 1f;
+
         [Header("Visual attitude")]
         [Tooltip("Maximum visible pitch/roll tilt angle used by the visual rig.")]
         [Range(1f, 45f)] public float tiltLimitDegrees = 18f;

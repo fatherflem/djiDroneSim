@@ -30,5 +30,6 @@ MonoBehaviour:
   yawStopSpeed: 7
   yawRightCommandGain: 1
   yawLeftCommandGain: 1
+  yawRightStopMultiplier: 1
   tiltLimitDegrees: 14
   tiltSmoothing: 7.5

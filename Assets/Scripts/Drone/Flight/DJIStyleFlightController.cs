@@ -148,10 +148,14 @@ namespace DroneSim.Drone.Flight
             float verticalError = targetVerticalSpeed - physicsBody.VerticalSpeed;
             float verticalAcceleration = Mathf.Clamp(verticalError * config.verticalAcceleration, -globalVerticalAccelLimit, globalVerticalAccelLimit);
 
-            float yawDirectionGain = input.Yaw >= 0f ? config.yawRightCommandGain : config.yawLeftCommandGain;
-            float shapedYawInput = Mathf.Clamp(input.Yaw * yawDirectionGain, -1f, 1f);
-            float targetYawRate = shapedYawInput * config.maxYawRateDegrees;
-            float yawAuthority = Mathf.Abs(input.Yaw) < brakingInputDeadband ? config.yawStopSpeed : config.yawCatchUpSpeed;
+            float normalizedYawInput = Mathf.Clamp(input.Yaw, -1f, 1f);
+            float yawDirectionGain = normalizedYawInput >= 0f ? config.yawRightCommandGain : config.yawLeftCommandGain;
+            float targetYawRate = normalizedYawInput * config.maxYawRateDegrees * yawDirectionGain;
+
+            bool yawInputNeutral = Mathf.Abs(normalizedYawInput) < brakingInputDeadband;
+            bool rightwardYawRate = currentYawRate >= 0f;
+            float yawStopAuthority = config.yawStopSpeed * (rightwardYawRate ? config.yawRightStopMultiplier : 1f);
+            float yawAuthority = yawInputNeutral ? yawStopAuthority : config.yawCatchUpSpeed;
             float yawBlend = 1f - Mathf.Exp(-yawAuthority * Time.fixedDeltaTime);
             currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
 
