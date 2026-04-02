@@ -2,8 +2,8 @@
 
 - Real benchmark CSV: `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
 - Baseline simulator session: `BenchmarkRuns/session_20260402_133209.zip` (zip)
-- Prior post-tuning simulator session: `BenchmarkRuns/session_20260402_151147.zip` (zip)
-- Newest simulator rerun (climb-coverage closeout): `BenchmarkRuns/session_20260402_161237.zip` (zip)
+- Prior post-tuning simulator session: `BenchmarkRuns/session_20260402_161237.zip` (zip)
+- Newest simulator rerun (climb-coverage closeout): `BenchmarkRuns/session_20260402_163547.zip` (zip)
 - Canonical drop location for benchmark sessions: `BenchmarkRuns/`.
 - Workflow note: drop session zip files directly into `BenchmarkRuns/`; no manual per-session folder setup is required.
 - Missing run(s) in newest session (vs baseline expected runs): (none)
@@ -12,10 +12,10 @@
 ## Session coverage
 
 - Baseline manifest run count: 9
-- Prior rerun manifest run count: 16
+- Prior rerun manifest run count: 8
 - Newest rerun manifest run count: 8
 - Baseline primary protocol run count: 8
-- Prior rerun primary protocol run count: 16
+- Prior rerun primary protocol run count: 8
 - Newest rerun primary protocol run count: 8
 - Baseline excluded runs: 1
 - Prior rerun excluded runs: 0
@@ -63,11 +63,11 @@
 |  |  | overshoot | 0.687 | 2.501 | 2.591 | 2.591 | 1.814 | 1.904 | 1.904 | unchanged |
 |  |  | residual_drift | 3.233 | 0.003 | 0.002 | 0.002 | -3.23 | -3.231 | -3.231 | unchanged |
 | yaw_right | present_in_all | response_delay_s | 0.24 | 0.04 | 0.04 | 0.04 | -0.2 | -0.2 | -0.2 | unchanged |
-|  |  | peak_rate | 84.6 | 81.998 | 73.998 | 84.358 | -2.602 | -10.602 | -0.242 | improvement |
-|  |  | max_accel | 312.0 | 743.203 | 670.696 | 764.593 | 431.203 | 358.696 | 452.593 | regression |
-|  |  | settle_time_s | 0.0 | 1.28 | 1.32 | 1.36 | 1.28 | 1.32 | 1.36 | regression |
-|  |  | overshoot | 4.6 | 74.967 | 68.771 | 79.107 | 70.367 | 64.171 | 74.507 | regression |
-|  |  | residual_drift | 79.225 | 0.0 | 0.0 | 0.0 | -79.225 | -79.225 | -79.225 | unchanged |
+|  |  | peak_rate | 84.6 | 81.998 | 84.358 | 84.34 | -2.602 | -0.242 | -0.26 | unchanged |
+|  |  | max_accel | 312.0 | 743.203 | 764.593 | 638.006 | 431.203 | 452.593 | 326.006 | improvement |
+|  |  | settle_time_s | 0.0 | 1.28 | 1.36 | 1.38 | 1.28 | 1.36 | 1.38 | unchanged |
+|  |  | overshoot | 4.6 | 74.967 | 79.107 | 79.789 | 70.367 | 74.507 | 75.189 | regression |
+|  |  | residual_drift | 79.225 | 0.0 | 0.0 | 0.001 | -79.225 | -79.225 | -79.224 | unchanged |
 | yaw_left | present_in_all | response_delay_s | 0.25 | 0.04 | 0.04 | 0.04 | -0.21 | -0.21 | -0.21 | unchanged |
 |  |  | peak_rate | 70.75 | 81.999 | 66.599 | 66.599 | 11.249 | -4.151 | -4.151 | unchanged |
 |  |  | max_accel | 177.5 | 743.179 | 603.638 | 603.638 | 565.679 | 426.138 | 426.138 | unchanged |
@@ -78,7 +78,7 @@
 ## Strong-category assessment
 
 - lateral_right: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=4/5; response_shape=improved; notes=Status is based on absolute-delta movement against the real benchmark values.
-- yaw_right: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=1/5; response_shape=not_improved; notes=Status is based on absolute-delta movement against the real benchmark values.
+- yaw_right: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=2/5; response_shape=improved; notes=Status is based on absolute-delta movement against the real benchmark values.
 - yaw_left: status=improved_but_still_off; moved_correct_direction=True; abs_delta_better_metrics=3/5; response_shape=improved; notes=Status is based on absolute-delta movement against the real benchmark values.
 
 ## Provisional-category notes
@@ -91,25 +91,8 @@
 ## Decision summary
 
 - Climb coverage complete: True
-- Strongest high-confidence divergence: yaw_right
+- Strongest high-confidence divergence: yaw_left
 - Lateral right acceptable: False
 - Yaw left acceptable: False
 - Normal-mode fidelity good enough to move on: False
 - Single next tuning target: yaw_right
-
-## Historical rerun reference (session_20260402_140700)
-
-- Explicit session roles:
-  - Baseline: `BenchmarkRuns/session_20260402_133209.zip`
-  - Prior post-tuning rerun: `BenchmarkRuns/session_20260402_140700.zip`
-  - Previous coverage-closing rerun: `BenchmarkRuns/session_20260402_151147.zip`
-  - Newest rerun under validation in this pass: `BenchmarkRuns/session_20260402_161237.zip`
-- Coverage check against the full intended protocol (`hover_hold`, `forward_step`, `lateral_right`, `lateral_left`, `climb`, `descent`, `yaw_right`, `yaw_left`): complete in `session_20260402_161237.zip` with 8/8 categories present.
-- Trend note: `session_20260402_161237.zip` is effectively unchanged from `session_20260402_151147.zip` for all core categories except `yaw_right` (peak rate moved closer to real; max accel, settle time, and overshoot regressed).
-- Decision quality update:
-  - `climb` is now fully covered and no longer missing.
-  - `yaw_right` remains the strongest high-confidence divergence.
-  - `lateral_right` is improved but still not acceptable.
-  - `yaw_left` is improved but still not acceptable.
-  - `forward_step`, `climb`, and `descent` remain directional/provisional (no additional confidence upgrade in this rerun).
-- Single highest-priority next tuning target: **`yaw_right`**.
