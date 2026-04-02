@@ -40,6 +40,15 @@ namespace DroneSim.Drone.Flight
         [Tooltip("How strongly the drone brakes in lateral axis when sticks return near center.")]
         [Min(0.1f)] public float lateralStopStrength = 10f;
 
+        [Tooltip("Multiplier applied only when commanding right lateral motion; <1 reduces rightward aggressiveness without affecting left.")]
+        [Min(0.1f)] public float lateralRightSpeedMultiplier = 1f;
+
+        [Tooltip("Multiplier applied only to rightward lateral acceleration authority while roll input is active.")]
+        [Min(0.1f)] public float lateralRightAccelerationMultiplier = 1f;
+
+        [Tooltip("Multiplier applied to lateral stop strength when neutralizing from rightward motion.")]
+        [Min(0.1f)] public float lateralRightStopMultiplier = 1f;
+
         [Header("Vertical translation")]
         [Tooltip("Maximum climb speed in meters per second.")]
         [FormerlySerializedAs("maxVerticalSpeed")]
@@ -59,6 +68,15 @@ namespace DroneSim.Drone.Flight
         [FormerlySerializedAs("yawResponse")]
         [Tooltip("How quickly yaw rate catches up to stick command. Higher = snappier.")]
         [Min(0.1f)] public float yawCatchUpSpeed = 8f;
+
+        [Tooltip("How quickly yaw rate damps toward zero when yaw input is near neutral.")]
+        [Min(0.1f)] public float yawStopSpeed = 10f;
+
+        [Tooltip("Directional command gain for right yaw input (positive rudder).")]
+        [Min(0.1f)] public float yawRightCommandGain = 1f;
+
+        [Tooltip("Directional command gain for left yaw input (negative rudder).")]
+        [Min(0.1f)] public float yawLeftCommandGain = 1f;
 
         [Header("Visual attitude")]
         [Tooltip("Maximum visible pitch/roll tilt angle used by the visual rig.")]

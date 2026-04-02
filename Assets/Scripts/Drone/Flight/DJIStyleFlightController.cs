@@ -122,15 +122,18 @@ namespace DroneSim.Drone.Flight
             Vector3 currentHorizontalVelocity = physicsBody.HorizontalVelocity;
             Vector3 currentLocalHorizontal = Quaternion.Inverse(transform.rotation) * currentHorizontalVelocity;
 
-            float targetLateralSpeed = input.Roll * config.maxLateralSpeed;
+            float rightLateralSpeedScale = input.Roll >= 0f ? config.lateralRightSpeedMultiplier : 1f;
+            float targetLateralSpeed = input.Roll * config.maxLateralSpeed * rightLateralSpeedScale;
             float targetForwardSpeed = input.Pitch * config.maxForwardSpeed;
 
             float lateralVelocityError = targetLateralSpeed - currentLocalHorizontal.x;
             float forwardVelocityError = targetForwardSpeed - currentLocalHorizontal.z;
 
-            float lateralAuthority = Mathf.Abs(input.Roll) < brakingInputDeadband
-                ? config.lateralStopStrength
-                : config.lateralAcceleration;
+            bool lateralNeutral = Mathf.Abs(input.Roll) < brakingInputDeadband;
+            bool movingRightLaterally = currentLocalHorizontal.x >= 0f;
+            float lateralAuthority = lateralNeutral
+                ? config.lateralStopStrength * (movingRightLaterally ? config.lateralRightStopMultiplier : 1f)
+                : config.lateralAcceleration * (input.Roll > 0f ? config.lateralRightAccelerationMultiplier : 1f);
             float forwardAuthority = Mathf.Abs(input.Pitch) < brakingInputDeadband
                 ? config.forwardStopStrength
                 : config.forwardAcceleration;
@@ -145,8 +148,11 @@ namespace DroneSim.Drone.Flight
             float verticalError = targetVerticalSpeed - physicsBody.VerticalSpeed;
             float verticalAcceleration = Mathf.Clamp(verticalError * config.verticalAcceleration, -globalVerticalAccelLimit, globalVerticalAccelLimit);
 
-            float targetYawRate = input.Yaw * config.maxYawRateDegrees;
-            float yawBlend = 1f - Mathf.Exp(-config.yawCatchUpSpeed * Time.fixedDeltaTime);
+            float yawDirectionGain = input.Yaw >= 0f ? config.yawRightCommandGain : config.yawLeftCommandGain;
+            float shapedYawInput = Mathf.Clamp(input.Yaw * yawDirectionGain, -1f, 1f);
+            float targetYawRate = shapedYawInput * config.maxYawRateDegrees;
+            float yawAuthority = Mathf.Abs(input.Yaw) < brakingInputDeadband ? config.yawStopSpeed : config.yawCatchUpSpeed;
+            float yawBlend = 1f - Mathf.Exp(-yawAuthority * Time.fixedDeltaTime);
             currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
 
             Vector3 gravityAssist = Vector3.up * (-UnityEngine.Physics.gravity.y * gravityCancelMultiplier);

@@ -15,14 +15,20 @@ MonoBehaviour:
   mode: 1
   maxForwardSpeed: 4.6
   maxLateralSpeed: 2.8
-  forwardAcceleration: 4.2
+  forwardAcceleration: 4
   lateralAcceleration: 2.8
   forwardStopStrength: 7.2
   lateralStopStrength: 7.1
-  maxClimbSpeed: 2.4
-  maxDescentSpeed: 3
-  verticalAcceleration: 4.8
+  lateralRightSpeedMultiplier: 0.9
+  lateralRightAccelerationMultiplier: 0.82
+  lateralRightStopMultiplier: 1.15
+  maxClimbSpeed: 2.5
+  maxDescentSpeed: 3.1
+  verticalAcceleration: 5
   maxYawRateDegrees: 74
   yawCatchUpSpeed: 10
+  yawStopSpeed: 13
+  yawRightCommandGain: 1.08
+  yawLeftCommandGain: 0.9
   tiltLimitDegrees: 30
   tiltSmoothing: 12
