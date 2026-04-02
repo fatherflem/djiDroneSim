@@ -28,7 +28,8 @@ MonoBehaviour:
   maxYawRateDegrees: 74
   yawCatchUpSpeed: 10
   yawStopSpeed: 13
-  yawRightCommandGain: 1.08
+  yawRightCommandGain: 1.14
   yawLeftCommandGain: 0.9
+  yawRightStopMultiplier: 1.2
   tiltLimitDegrees: 30
   tiltSmoothing: 12
