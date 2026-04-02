@@ -453,444 +453,6 @@
     }
   },
   "prior_post_tuning_session": {
-    "session_path": "BenchmarkRuns/session_20260402_161237.zip",
-    "session_source_type": "zip",
-    "session_id": "session_20260402_161237",
-    "session_metadata": {
-      "type": "session_metadata",
-      "session_id": "session_20260402_161237",
-      "created_utc": "2026-04-02T16:12:37.3381724Z",
-      "export_directory": "C:/Users/josh_fleming/AppData/LocalLow/DefaultCompany/DJI Drone Sim\\BenchmarkRuns\\session_20260402_161237",
-      "application_version": "1.0",
-      "fixed_timestep_s": 0.019999992102384567,
-      "benchmark_area_origin": "(0.000, 2.000, 40.000)",
-      "benchmark_spawn_offset": "(0.000, 0.000, 40.000)",
-      "benchmark_dedicated_area_enabled": true,
-      "maneuver_library": "Benchmarks",
-      "benchmark_settings": {
-        "auto_load_from_resources": true,
-        "resources_folder": "Benchmarks",
-        "default_pre_roll_s": 1.5,
-        "default_settle_s": 1.5,
-        "run_protocol_in_order": true,
-        "reset_mode_between_runs": true,
-        "maneuver_count": 9,
-        "default_protocol_maneuver_count": 8,
-        "has_provisional_default_amplitudes": true,
-        "default_protocol_categories": [
-          "hover_hold",
-          "forward_step",
-          "lateral_right",
-          "lateral_left",
-          "climb",
-          "descent",
-          "yaw_right",
-          "yaw_left"
-        ],
-        "default_protocol_input_amplitudes": [
-          {
-            "maneuver_name": "hover_hold",
-            "protocol_category": "hover_hold",
-            "active_axis": "neutral",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 0.0,
-            "confidence_label": "high",
-            "provenance_classification": "designer_assumption",
-            "provisional": true,
-            "evidence_classification": "unspecified",
-            "notes": ""
-          },
-          {
-            "maneuver_name": "forward_step",
-            "protocol_category": "forward_step",
-            "active_axis": "pitch",
-            "roll": 0.0,
-            "pitch": 0.7699999809265137,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 0.7699999809265137,
-            "confidence_label": "medium",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented plateau medians; recommended +0.77 normalized pitch."
-          },
-          {
-            "maneuver_name": "lateral_right",
-            "protocol_category": "lateral_right",
-            "active_axis": "roll",
-            "roll": 1.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "high",
-            "provenance_classification": "directly_measured",
-            "provisional": false,
-            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
-          },
-          {
-            "maneuver_name": "lateral_left",
-            "protocol_category": "lateral_left",
-            "active_axis": "roll",
-            "roll": -1.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "low",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
-          },
-          {
-            "maneuver_name": "climb",
-            "protocol_category": "climb",
-            "active_axis": "throttle",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 1.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "medium",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
-          },
-          {
-            "maneuver_name": "descent",
-            "protocol_category": "descent",
-            "active_axis": "throttle",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": -1.0,
-            "yaw": 0.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "medium",
-            "provenance_classification": "estimated_from_limited_segments",
-            "provisional": true,
-            "evidence_classification": "estimated_from_noisy_or_limited_segments",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
-          },
-          {
-            "maneuver_name": "yaw_right",
-            "protocol_category": "yaw_right",
-            "active_axis": "yaw",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": 1.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "high",
-            "provenance_classification": "directly_measured",
-            "provisional": false,
-            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
-          },
-          {
-            "maneuver_name": "yaw_left",
-            "protocol_category": "yaw_left",
-            "active_axis": "yaw",
-            "roll": 0.0,
-            "pitch": 0.0,
-            "throttle": 0.0,
-            "yaw": -1.0,
-            "active_axis_magnitude": 1.0,
-            "confidence_label": "high",
-            "provenance_classification": "directly_measured",
-            "provisional": false,
-            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
-            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
-          }
-        ]
-      },
-      "controller_settings": {
-        "gravity_cancel_multiplier": 1.0,
-        "global_forward_accel_limit": 8.0,
-        "global_lateral_accel_limit": 8.0,
-        "global_vertical_accel_limit": 10.0,
-        "braking_input_deadband": 0.07999999821186066
-      },
-      "mode_configs": [
-        {
-          "config_asset": "DroneModeCine",
-          "mode": "Cine",
-          "max_forward_speed": 3.299999952316284,
-          "max_lateral_speed": 2.799999952316284,
-          "forward_acceleration": 3.5,
-          "lateral_acceleration": 3.0999999046325684,
-          "forward_stop_strength": 5.199999809265137,
-          "lateral_stop_strength": 4.599999904632568,
-          "max_climb_speed": 1.7999999523162842,
-          "max_descent_speed": 2.200000047683716,
-          "vertical_acceleration": 4.199999809265137,
-          "max_yaw_rate_degrees": 48.0,
-          "yaw_catch_up_speed": 7.0,
-          "tilt_limit_degrees": 14.0,
-          "tilt_smoothing": 7.5
-        },
-        {
-          "config_asset": "DroneModeNormal",
-          "mode": "Normal",
-          "max_forward_speed": 4.599999904632568,
-          "max_lateral_speed": 2.799999952316284,
-          "forward_acceleration": 4.0,
-          "lateral_acceleration": 2.799999952316284,
-          "forward_stop_strength": 7.199999809265137,
-          "lateral_stop_strength": 7.099999904632568,
-          "max_climb_speed": 2.5,
-          "max_descent_speed": 3.0999999046325684,
-          "vertical_acceleration": 5.0,
-          "max_yaw_rate_degrees": 74.0,
-          "yaw_catch_up_speed": 10.0,
-          "tilt_limit_degrees": 30.0,
-          "tilt_smoothing": 12.0
-        },
-        {
-          "config_asset": "DroneModeSport",
-          "mode": "Sport",
-          "max_forward_speed": 9.5,
-          "max_lateral_speed": 7.800000190734863,
-          "forward_acceleration": 8.199999809265137,
-          "lateral_acceleration": 7.199999809265137,
-          "forward_stop_strength": 8.600000381469727,
-          "lateral_stop_strength": 7.800000190734863,
-          "max_climb_speed": 4.199999809265137,
-          "max_descent_speed": 4.900000095367432,
-          "vertical_acceleration": 7.199999809265137,
-          "max_yaw_rate_degrees": 120.0,
-          "yaw_catch_up_speed": 10.0,
-          "tilt_limit_degrees": 24.0,
-          "tilt_smoothing": 9.0
-        }
-      ]
-    },
-    "included_runs": [
-      {
-        "run_number": 1,
-        "category": "hover_hold",
-        "protocol_order": 1,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 2,
-        "category": "forward_step",
-        "protocol_order": 2,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 3,
-        "category": "lateral_right",
-        "protocol_order": 3,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 4,
-        "category": "lateral_left",
-        "protocol_order": 4,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 5,
-        "category": "climb",
-        "protocol_order": 5,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 6,
-        "category": "descent",
-        "protocol_order": 6,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 7,
-        "category": "yaw_right",
-        "protocol_order": 7,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 8,
-        "category": "yaw_left",
-        "protocol_order": 8,
-        "run_source": "full_protocol"
-      }
-    ],
-    "excluded_runs": [],
-    "all_manifest_runs": [
-      {
-        "run_number": 1,
-        "category": "hover_hold",
-        "protocol_order": 1,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 2,
-        "category": "forward_step",
-        "protocol_order": 2,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 3,
-        "category": "lateral_right",
-        "protocol_order": 3,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 4,
-        "category": "lateral_left",
-        "protocol_order": 4,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 5,
-        "category": "climb",
-        "protocol_order": 5,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 6,
-        "category": "descent",
-        "protocol_order": 6,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 7,
-        "category": "yaw_right",
-        "protocol_order": 7,
-        "run_source": "full_protocol"
-      },
-      {
-        "run_number": 8,
-        "category": "yaw_left",
-        "protocol_order": 8,
-        "run_source": "full_protocol"
-      }
-    ],
-    "category_metrics": {
-      "hover_hold": {
-        "path": "session_20260402_161237.zip:run_001_hover_hold_hover_hold_Normal_20260402_161254_run001.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.0,
-        "peak_rate": 0.0,
-        "settle_time_s": 0.0,
-        "max_accel": 0.0,
-        "overshoot": 0.0,
-        "residual_drift": 0.0,
-        "vertical_rms_mps": 0.0,
-        "horizontal_rms_mps": 0.0,
-        "alt_std_m": 0.0,
-        "measured_from": "sim_csv_direct",
-        "run_number": 1,
-        "protocol_order": 1,
-        "csv_name": "run_001_hover_hold_hover_hold_Normal_20260402_161254_run001.csv"
-      },
-      "forward_step": {
-        "path": "session_20260402_161237.zip:run_002_forward_step_forward_step_Normal_20260402_161258_run002.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.08000000000000007,
-        "peak_rate": 3.478386,
-        "settle_time_s": 1.060000000000001,
-        "max_accel": 8.0,
-        "overshoot": 2.8686913421052633,
-        "residual_drift": 0.000205125,
-        "measured_from": "sim_csv_direct",
-        "run_number": 2,
-        "protocol_order": 2,
-        "csv_name": "run_002_forward_step_forward_step_Normal_20260402_161258_run002.csv"
-      },
-      "lateral_right": {
-        "path": "session_20260402_161237.zip:run_003_lateral_right_lateral_right_Normal_20260402_161302_run003.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.08000000000000007,
-        "peak_rate": 2.290794,
-        "settle_time_s": 1.180000000000001,
-        "max_accel": 5.7858999999999945,
-        "overshoot": 1.9967561578947368,
-        "residual_drift": 1.575e-05,
-        "measured_from": "sim_csv_direct",
-        "run_number": 3,
-        "protocol_order": 3,
-        "csv_name": "run_003_lateral_right_lateral_right_Normal_20260402_161302_run003.csv"
-      },
-      "lateral_left": {
-        "path": "session_20260402_161237.zip:run_004_lateral_left_lateral_left_Normal_20260402_161306_run004.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.06000000000000005,
-        "peak_rate": 2.65184,
-        "settle_time_s": 1.140000000000001,
-        "max_accel": 7.839999999999993,
-        "overshoot": 2.2654131710526317,
-        "residual_drift": 0.000105625,
-        "measured_from": "sim_csv_direct",
-        "run_number": 4,
-        "protocol_order": 4,
-        "csv_name": "run_004_lateral_left_lateral_left_Normal_20260402_161306_run004.csv"
-      },
-      "climb": {
-        "path": "session_20260402_161237.zip:run_005_climb_climb_Normal_20260402_161310_run005.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.06000000000000005,
-        "peak_rate": 2.487911,
-        "settle_time_s": 1.080000000000001,
-        "max_accel": 9.999999999999991,
-        "overshoot": 2.116597144736842,
-        "residual_drift": 0.001584625,
-        "measured_from": "sim_csv_direct",
-        "run_number": 5,
-        "protocol_order": 5,
-        "csv_name": "run_005_climb_climb_Normal_20260402_161310_run005.csv"
-      },
-      "descent": {
-        "path": "session_20260402_161237.zip:run_006_descent_descent_Normal_20260402_161314_run006.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.06000000000000005,
-        "peak_rate": 3.083417,
-        "settle_time_s": 1.060000000000001,
-        "max_accel": 10.0,
-        "overshoot": 2.591270486842105,
-        "residual_drift": 0.0021685,
-        "measured_from": "sim_csv_direct",
-        "run_number": 6,
-        "protocol_order": 6,
-        "csv_name": "run_006_descent_descent_Normal_20260402_161314_run006.csv"
-      },
-      "yaw_right": {
-        "path": "session_20260402_161237.zip:run_007_yaw_right_yaw_right_Normal_20260402_161318_run007.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.040000000000000036,
-        "peak_rate": 84.35786,
-        "settle_time_s": 1.3600000000000012,
-        "max_accel": 764.5934999999993,
-        "overshoot": 79.1066412236842,
-        "residual_drift": 0.0,
-        "measured_from": "sim_csv_direct",
-        "run_number": 7,
-        "protocol_order": 7,
-        "csv_name": "run_007_yaw_right_yaw_right_Normal_20260402_161318_run007.csv"
-      },
-      "yaw_left": {
-        "path": "session_20260402_161237.zip:run_008_yaw_left_yaw_left_Normal_20260402_161323_run008.csv",
-        "mode": "Normal",
-        "response_delay_s": 0.040000000000000036,
-        "peak_rate": 66.59853,
-        "settle_time_s": 1.3200000000000012,
-        "max_accel": 603.6379999999995,
-        "overshoot": 61.894805776315785,
-        "residual_drift": 0.0,
-        "measured_from": "sim_csv_direct",
-        "run_number": 8,
-        "protocol_order": 8,
-        "csv_name": "run_008_yaw_left_yaw_left_Normal_20260402_161323_run008.csv"
-      }
-    }
-  },
-  "newest_rerun_session": {
     "session_path": "BenchmarkRuns/session_20260402_163547.zip",
     "session_source_type": "zip",
     "session_id": "session_20260402_163547",
@@ -1328,6 +890,444 @@
       }
     }
   },
+  "newest_rerun_session": {
+    "session_path": "BenchmarkRuns/session_20260402_171257.zip",
+    "session_source_type": "zip",
+    "session_id": "session_20260402_171257",
+    "session_metadata": {
+      "type": "session_metadata",
+      "session_id": "session_20260402_171257",
+      "created_utc": "2026-04-02T17:12:57.9828617Z",
+      "export_directory": "C:/Users/josh_fleming/AppData/LocalLow/DefaultCompany/DJI Drone Sim\\BenchmarkRuns\\session_20260402_171257",
+      "application_version": "1.0",
+      "fixed_timestep_s": 0.019999992102384567,
+      "benchmark_area_origin": "(0.000, 2.000, 40.000)",
+      "benchmark_spawn_offset": "(0.000, 0.000, 40.000)",
+      "benchmark_dedicated_area_enabled": true,
+      "maneuver_library": "Benchmarks",
+      "benchmark_settings": {
+        "auto_load_from_resources": true,
+        "resources_folder": "Benchmarks",
+        "default_pre_roll_s": 1.5,
+        "default_settle_s": 1.5,
+        "run_protocol_in_order": true,
+        "reset_mode_between_runs": true,
+        "maneuver_count": 9,
+        "default_protocol_maneuver_count": 8,
+        "has_provisional_default_amplitudes": true,
+        "default_protocol_categories": [
+          "hover_hold",
+          "forward_step",
+          "lateral_right",
+          "lateral_left",
+          "climb",
+          "descent",
+          "yaw_right",
+          "yaw_left"
+        ],
+        "default_protocol_input_amplitudes": [
+          {
+            "maneuver_name": "hover_hold",
+            "protocol_category": "hover_hold",
+            "active_axis": "neutral",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 0.0,
+            "confidence_label": "high",
+            "provenance_classification": "designer_assumption",
+            "provisional": true,
+            "evidence_classification": "unspecified",
+            "notes": ""
+          },
+          {
+            "maneuver_name": "forward_step",
+            "protocol_category": "forward_step",
+            "active_axis": "pitch",
+            "roll": 0.0,
+            "pitch": 0.7699999809265137,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 0.7699999809265137,
+            "confidence_label": "medium",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented plateau medians; recommended +0.77 normalized pitch."
+          },
+          {
+            "maneuver_name": "lateral_right",
+            "protocol_category": "lateral_right",
+            "active_axis": "roll",
+            "roll": 1.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "high",
+            "provenance_classification": "directly_measured",
+            "provisional": false,
+            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
+          },
+          {
+            "maneuver_name": "lateral_left",
+            "protocol_category": "lateral_left",
+            "active_axis": "roll",
+            "roll": -1.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "low",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
+          },
+          {
+            "maneuver_name": "climb",
+            "protocol_category": "climb",
+            "active_axis": "throttle",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 1.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "medium",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
+          },
+          {
+            "maneuver_name": "descent",
+            "protocol_category": "descent",
+            "active_axis": "throttle",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": -1.0,
+            "yaw": 0.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "medium",
+            "provenance_classification": "estimated_from_limited_segments",
+            "provisional": true,
+            "evidence_classification": "estimated_from_noisy_or_limited_segments",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
+          },
+          {
+            "maneuver_name": "yaw_right",
+            "protocol_category": "yaw_right",
+            "active_axis": "yaw",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": 1.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "high",
+            "provenance_classification": "directly_measured",
+            "provisional": false,
+            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
+          },
+          {
+            "maneuver_name": "yaw_left",
+            "protocol_category": "yaw_left",
+            "active_axis": "yaw",
+            "roll": 0.0,
+            "pitch": 0.0,
+            "throttle": 0.0,
+            "yaw": -1.0,
+            "active_axis_magnitude": 1.0,
+            "confidence_label": "high",
+            "provenance_classification": "directly_measured",
+            "provisional": false,
+            "evidence_classification": "directly_measured_from_clean_rc_plateaus",
+            "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
+          }
+        ]
+      },
+      "controller_settings": {
+        "gravity_cancel_multiplier": 1.0,
+        "global_forward_accel_limit": 8.0,
+        "global_lateral_accel_limit": 8.0,
+        "global_vertical_accel_limit": 10.0,
+        "braking_input_deadband": 0.07999999821186066
+      },
+      "mode_configs": [
+        {
+          "config_asset": "DroneModeCine",
+          "mode": "Cine",
+          "max_forward_speed": 3.299999952316284,
+          "max_lateral_speed": 2.799999952316284,
+          "forward_acceleration": 3.5,
+          "lateral_acceleration": 3.0999999046325684,
+          "forward_stop_strength": 5.199999809265137,
+          "lateral_stop_strength": 4.599999904632568,
+          "max_climb_speed": 1.7999999523162842,
+          "max_descent_speed": 2.200000047683716,
+          "vertical_acceleration": 4.199999809265137,
+          "max_yaw_rate_degrees": 48.0,
+          "yaw_catch_up_speed": 7.0,
+          "tilt_limit_degrees": 14.0,
+          "tilt_smoothing": 7.5
+        },
+        {
+          "config_asset": "DroneModeNormal",
+          "mode": "Normal",
+          "max_forward_speed": 3.5,
+          "max_lateral_speed": 2.799999952316284,
+          "forward_acceleration": 2.799999952316284,
+          "lateral_acceleration": 2.799999952316284,
+          "forward_stop_strength": 6.5,
+          "lateral_stop_strength": 7.099999904632568,
+          "max_climb_speed": 3.799999952316284,
+          "max_descent_speed": 4.300000190734863,
+          "vertical_acceleration": 3.5,
+          "max_yaw_rate_degrees": 74.0,
+          "yaw_catch_up_speed": 4.5,
+          "tilt_limit_degrees": 30.0,
+          "tilt_smoothing": 12.0
+        },
+        {
+          "config_asset": "DroneModeSport",
+          "mode": "Sport",
+          "max_forward_speed": 9.5,
+          "max_lateral_speed": 7.800000190734863,
+          "forward_acceleration": 8.199999809265137,
+          "lateral_acceleration": 7.199999809265137,
+          "forward_stop_strength": 8.600000381469727,
+          "lateral_stop_strength": 7.800000190734863,
+          "max_climb_speed": 4.199999809265137,
+          "max_descent_speed": 4.900000095367432,
+          "vertical_acceleration": 7.199999809265137,
+          "max_yaw_rate_degrees": 120.0,
+          "yaw_catch_up_speed": 10.0,
+          "tilt_limit_degrees": 24.0,
+          "tilt_smoothing": 9.0
+        }
+      ]
+    },
+    "included_runs": [
+      {
+        "run_number": 1,
+        "category": "hover_hold",
+        "protocol_order": 1,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 2,
+        "category": "forward_step",
+        "protocol_order": 2,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 3,
+        "category": "lateral_right",
+        "protocol_order": 3,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 4,
+        "category": "lateral_left",
+        "protocol_order": 4,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 5,
+        "category": "climb",
+        "protocol_order": 5,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 6,
+        "category": "descent",
+        "protocol_order": 6,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 7,
+        "category": "yaw_right",
+        "protocol_order": 7,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 8,
+        "category": "yaw_left",
+        "protocol_order": 8,
+        "run_source": "full_protocol"
+      }
+    ],
+    "excluded_runs": [],
+    "all_manifest_runs": [
+      {
+        "run_number": 1,
+        "category": "hover_hold",
+        "protocol_order": 1,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 2,
+        "category": "forward_step",
+        "protocol_order": 2,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 3,
+        "category": "lateral_right",
+        "protocol_order": 3,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 4,
+        "category": "lateral_left",
+        "protocol_order": 4,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 5,
+        "category": "climb",
+        "protocol_order": 5,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 6,
+        "category": "descent",
+        "protocol_order": 6,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 7,
+        "category": "yaw_right",
+        "protocol_order": 7,
+        "run_source": "full_protocol"
+      },
+      {
+        "run_number": 8,
+        "category": "yaw_left",
+        "protocol_order": 8,
+        "run_source": "full_protocol"
+      }
+    ],
+    "category_metrics": {
+      "hover_hold": {
+        "path": "session_20260402_171257.zip:run_001_hover_hold_hover_hold_Normal_20260402_171311_run001.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.0,
+        "peak_rate": 0.0,
+        "settle_time_s": 0.0,
+        "max_accel": 0.0,
+        "overshoot": 0.0,
+        "residual_drift": 0.0,
+        "vertical_rms_mps": 0.0,
+        "horizontal_rms_mps": 0.0,
+        "alt_std_m": 0.0,
+        "measured_from": "sim_csv_direct",
+        "run_number": 1,
+        "protocol_order": 1,
+        "csv_name": "run_001_hover_hold_hover_hold_Normal_20260402_171311_run001.csv"
+      },
+      "forward_step": {
+        "path": "session_20260402_171257.zip:run_002_forward_step_forward_step_Normal_20260402_171315_run002.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 2.552396,
+        "settle_time_s": 1.120000000000001,
+        "max_accel": 7.545999999999993,
+        "overshoot": 2.17987575,
+        "residual_drift": 0.000223,
+        "measured_from": "sim_csv_direct",
+        "run_number": 2,
+        "protocol_order": 2,
+        "csv_name": "run_002_forward_step_forward_step_Normal_20260402_171315_run002.csv"
+      },
+      "lateral_right": {
+        "path": "session_20260402_171257.zip:run_003_lateral_right_lateral_right_Normal_20260402_171319_run003.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.1200000000000001,
+        "peak_rate": 0.117475,
+        "settle_time_s": 1.2800000000000011,
+        "max_accel": 0.14109999999999986,
+        "overshoot": 0.10758028947368421,
+        "residual_drift": 0.0,
+        "measured_from": "sim_csv_direct",
+        "run_number": 3,
+        "protocol_order": 3,
+        "csv_name": "run_003_lateral_right_lateral_right_Normal_20260402_171319_run003.csv"
+      },
+      "lateral_left": {
+        "path": "session_20260402_171257.zip:run_004_lateral_left_lateral_left_Normal_20260402_171323_run004.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 2.65184,
+        "settle_time_s": 1.140000000000001,
+        "max_accel": 7.839999999999993,
+        "overshoot": 2.2654131710526317,
+        "residual_drift": 0.000105625,
+        "measured_from": "sim_csv_direct",
+        "run_number": 4,
+        "protocol_order": 4,
+        "csv_name": "run_004_lateral_left_lateral_left_Normal_20260402_171323_run004.csv"
+      },
+      "climb": {
+        "path": "session_20260402_171257.zip:run_005_climb_climb_Normal_20260402_171327_run005.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 3.700577,
+        "settle_time_s": 0.9000000000000008,
+        "max_accel": 9.999999999999995,
+        "overshoot": 2.9303700131578947,
+        "residual_drift": 0.023608999999999998,
+        "measured_from": "sim_csv_direct",
+        "run_number": 5,
+        "protocol_order": 5,
+        "csv_name": "run_005_climb_climb_Normal_20260402_171327_run005.csv"
+      },
+      "descent": {
+        "path": "session_20260402_171257.zip:run_006_descent_descent_Normal_20260402_171331_run006.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.08000000000000007,
+        "peak_rate": 4.180873,
+        "settle_time_s": 0.8800000000000008,
+        "max_accel": 10.0,
+        "overshoot": 3.2772010921052632,
+        "residual_drift": 0.028108374999999998,
+        "measured_from": "sim_csv_direct",
+        "run_number": 6,
+        "protocol_order": 6,
+        "csv_name": "run_006_descent_descent_Normal_20260402_171331_run006.csv"
+      },
+      "yaw_right": {
+        "path": "session_20260402_171257.zip:run_007_yaw_right_yaw_right_Normal_20260402_171335_run007.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 83.50299,
+        "settle_time_s": 1.4000000000000012,
+        "max_accel": 363.0383499999997,
+        "overshoot": 79.24710634210525,
+        "residual_drift": 0.00133525,
+        "measured_from": "sim_csv_direct",
+        "run_number": 7,
+        "protocol_order": 7,
+        "csv_name": "run_007_yaw_right_yaw_right_Normal_20260402_171335_run007.csv"
+      },
+      "yaw_left": {
+        "path": "session_20260402_171257.zip:run_008_yaw_left_yaw_left_Normal_20260402_171339_run008.csv",
+        "mode": "Normal",
+        "response_delay_s": 0.06000000000000005,
+        "peak_rate": 65.9241,
+        "settle_time_s": 1.4200000000000013,
+        "max_accel": 286.63644999999974,
+        "overshoot": 62.66777282894736,
+        "residual_drift": 0.0,
+        "measured_from": "sim_csv_direct",
+        "run_number": 8,
+        "protocol_order": 8,
+        "csv_name": "run_008_yaw_left_yaw_left_Normal_20260402_171339_run008.csv"
+      }
+    }
+  },
   "missing_vs_baseline_categories": [],
   "missing_vs_baseline_runs": [],
   "baseline_manifest_run_count": 9,
@@ -1427,61 +1427,61 @@
           "real": 0.0,
           "old": 0.08,
           "prior": 0.08,
-          "new": 0.08,
+          "new": 0.06,
           "old_delta": 0.08,
           "prior_delta": 0.08,
-          "new_delta": 0.08,
+          "new_delta": 0.06,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": 0.02,
+          "total_abs_delta_improvement": 0.02
         },
         "peak_rate": {
           "real": 1.067,
           "old": 3.954,
           "prior": 3.478,
-          "new": 3.478,
+          "new": 2.552,
           "old_delta": 2.887,
           "prior_delta": 2.411,
-          "new_delta": 2.411,
+          "new_delta": 1.485,
           "prior_abs_delta_improvement": 0.476,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.476
+          "newest_abs_delta_improvement": 0.926,
+          "total_abs_delta_improvement": 1.402
         },
         "max_accel": {
           "real": 0.667,
           "old": 8.0,
           "prior": 8.0,
-          "new": 8.0,
+          "new": 7.546,
           "old_delta": 7.333,
           "prior_delta": 7.333,
-          "new_delta": 7.333,
+          "new_delta": 6.879,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": 0.454,
+          "total_abs_delta_improvement": 0.454
         },
         "settle_time_s": {
           "real": 0.55,
           "old": 1.02,
           "prior": 1.06,
-          "new": 1.06,
+          "new": 1.12,
           "old_delta": 0.47,
           "prior_delta": 0.51,
-          "new_delta": 0.51,
+          "new_delta": 0.57,
           "prior_abs_delta_improvement": -0.04,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.04
+          "newest_abs_delta_improvement": -0.06,
+          "total_abs_delta_improvement": -0.1
         },
         "overshoot": {
           "real": 0.142,
           "old": 3.184,
           "prior": 2.869,
-          "new": 2.869,
+          "new": 2.18,
           "old_delta": 3.042,
           "prior_delta": 2.727,
-          "new_delta": 2.727,
+          "new_delta": 2.038,
           "prior_abs_delta_improvement": 0.315,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.315
+          "newest_abs_delta_improvement": 0.689,
+          "total_abs_delta_improvement": 1.004
         },
         "residual_drift": {
           "real": 0.913,
@@ -1508,61 +1508,61 @@
           "real": 0.0,
           "old": 0.08,
           "prior": 0.08,
-          "new": 0.08,
+          "new": 0.12,
           "old_delta": 0.08,
           "prior_delta": 0.08,
-          "new_delta": 0.08,
+          "new_delta": 0.12,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": -0.04,
+          "total_abs_delta_improvement": -0.04
         },
         "peak_rate": {
           "real": 0.2,
           "old": 4.11,
           "prior": 2.291,
-          "new": 2.291,
+          "new": 0.117,
           "old_delta": 3.91,
           "prior_delta": 2.091,
-          "new_delta": 2.091,
+          "new_delta": -0.083,
           "prior_abs_delta_improvement": 1.82,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 1.82
+          "newest_abs_delta_improvement": 2.008,
+          "total_abs_delta_improvement": 3.828
         },
         "max_accel": {
           "real": 0.333,
           "old": 8.0,
           "prior": 5.786,
-          "new": 5.786,
+          "new": 0.141,
           "old_delta": 7.667,
           "prior_delta": 5.453,
-          "new_delta": 5.453,
+          "new_delta": -0.192,
           "prior_abs_delta_improvement": 2.214,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 2.214
+          "newest_abs_delta_improvement": 5.261,
+          "total_abs_delta_improvement": 7.475
         },
         "settle_time_s": {
           "real": 1.1,
           "old": 0.98,
           "prior": 1.18,
-          "new": 1.18,
+          "new": 1.28,
           "old_delta": -0.12,
           "prior_delta": 0.08,
-          "new_delta": 0.08,
+          "new_delta": 0.18,
           "prior_abs_delta_improvement": 0.04,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.04
+          "newest_abs_delta_improvement": -0.1,
+          "total_abs_delta_improvement": -0.06
         },
         "overshoot": {
           "real": 0.2,
           "old": 3.268,
           "prior": 1.997,
-          "new": 1.997,
+          "new": 0.108,
           "old_delta": 3.068,
           "prior_delta": 1.797,
-          "new_delta": 1.797,
+          "new_delta": -0.092,
           "prior_abs_delta_improvement": 1.271,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 1.271
+          "newest_abs_delta_improvement": 1.704,
+          "total_abs_delta_improvement": 2.975
         },
         "residual_drift": {
           "real": 0.0,
@@ -1682,13 +1682,13 @@
           "real": 3.625,
           "old": 2.386,
           "prior": 2.488,
-          "new": 2.488,
+          "new": 3.701,
           "old_delta": -1.239,
           "prior_delta": -1.137,
-          "new_delta": -1.137,
+          "new_delta": 0.076,
           "prior_abs_delta_improvement": 0.102,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.102
+          "newest_abs_delta_improvement": 1.062,
+          "total_abs_delta_improvement": 1.164
         },
         "max_accel": {
           "real": 5.75,
@@ -1699,44 +1699,44 @@
           "prior_delta": 4.25,
           "new_delta": 4.25,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": -0.0,
+          "total_abs_delta_improvement": -0.0
         },
         "settle_time_s": {
           "real": 0.0,
           "old": 1.06,
           "prior": 1.08,
-          "new": 1.08,
+          "new": 0.9,
           "old_delta": 1.06,
           "prior_delta": 1.08,
-          "new_delta": 1.08,
+          "new_delta": 0.9,
           "prior_abs_delta_improvement": -0.02,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.02
+          "newest_abs_delta_improvement": 0.18,
+          "total_abs_delta_improvement": 0.16
         },
         "overshoot": {
           "real": 1.04,
           "old": 2.022,
           "prior": 2.117,
-          "new": 2.117,
+          "new": 2.93,
           "old_delta": 0.982,
           "prior_delta": 1.077,
-          "new_delta": 1.077,
+          "new_delta": 1.89,
           "prior_abs_delta_improvement": -0.094,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.094
+          "newest_abs_delta_improvement": -0.814,
+          "total_abs_delta_improvement": -0.908
         },
         "residual_drift": {
           "real": 1.847,
           "old": 0.002,
           "prior": 0.002,
-          "new": 0.002,
+          "new": 0.024,
           "old_delta": -1.845,
           "prior_delta": -1.845,
-          "new_delta": -1.845,
+          "new_delta": -1.823,
           "prior_abs_delta_improvement": -0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.0
+          "newest_abs_delta_improvement": 0.022,
+          "total_abs_delta_improvement": 0.022
         }
       }
     },
@@ -1751,25 +1751,25 @@
           "real": 0.167,
           "old": 0.06,
           "prior": 0.06,
-          "new": 0.06,
+          "new": 0.08,
           "old_delta": -0.107,
           "prior_delta": -0.107,
-          "new_delta": -0.107,
+          "new_delta": -0.087,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": 0.02,
+          "total_abs_delta_improvement": 0.02
         },
         "peak_rate": {
           "real": 4.067,
           "old": 2.981,
           "prior": 3.083,
-          "new": 3.083,
+          "new": 4.181,
           "old_delta": -1.086,
           "prior_delta": -0.984,
-          "new_delta": -0.984,
+          "new_delta": 0.114,
           "prior_abs_delta_improvement": 0.103,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.103
+          "newest_abs_delta_improvement": 0.87,
+          "total_abs_delta_improvement": 0.972
         },
         "max_accel": {
           "real": 4.0,
@@ -1787,37 +1787,37 @@
           "real": 0.0,
           "old": 1.06,
           "prior": 1.06,
-          "new": 1.06,
+          "new": 0.88,
           "old_delta": 1.06,
           "prior_delta": 1.06,
-          "new_delta": 1.06,
+          "new_delta": 0.88,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": 0.18,
+          "total_abs_delta_improvement": 0.18
         },
         "overshoot": {
           "real": 0.687,
           "old": 2.501,
           "prior": 2.591,
-          "new": 2.591,
+          "new": 3.277,
           "old_delta": 1.814,
           "prior_delta": 1.904,
-          "new_delta": 1.904,
+          "new_delta": 2.59,
           "prior_abs_delta_improvement": -0.091,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.091
+          "newest_abs_delta_improvement": -0.686,
+          "total_abs_delta_improvement": -0.777
         },
         "residual_drift": {
           "real": 3.233,
           "old": 0.003,
           "prior": 0.002,
-          "new": 0.002,
+          "new": 0.028,
           "old_delta": -3.23,
           "prior_delta": -3.231,
-          "new_delta": -3.231,
+          "new_delta": -3.205,
           "prior_abs_delta_improvement": -0.001,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.001
+          "newest_abs_delta_improvement": 0.026,
+          "total_abs_delta_improvement": 0.025
         }
       }
     },
@@ -1832,71 +1832,71 @@
           "real": 0.24,
           "old": 0.04,
           "prior": 0.04,
-          "new": 0.04,
+          "new": 0.06,
           "old_delta": -0.2,
           "prior_delta": -0.2,
-          "new_delta": -0.2,
+          "new_delta": -0.18,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": 0.02,
+          "total_abs_delta_improvement": 0.02
         },
         "peak_rate": {
           "real": 84.6,
           "old": 81.998,
-          "prior": 84.358,
-          "new": 84.34,
+          "prior": 84.34,
+          "new": 83.503,
           "old_delta": -2.602,
-          "prior_delta": -0.242,
-          "new_delta": -0.26,
-          "prior_abs_delta_improvement": 2.36,
-          "newest_abs_delta_improvement": -0.018,
-          "total_abs_delta_improvement": 2.342
+          "prior_delta": -0.26,
+          "new_delta": -1.097,
+          "prior_abs_delta_improvement": 2.342,
+          "newest_abs_delta_improvement": -0.837,
+          "total_abs_delta_improvement": 1.505
         },
         "max_accel": {
           "real": 312.0,
           "old": 743.203,
-          "prior": 764.593,
-          "new": 638.006,
+          "prior": 638.006,
+          "new": 363.038,
           "old_delta": 431.203,
-          "prior_delta": 452.593,
-          "new_delta": 326.006,
-          "prior_abs_delta_improvement": -21.39,
-          "newest_abs_delta_improvement": 126.587,
-          "total_abs_delta_improvement": 105.197
+          "prior_delta": 326.006,
+          "new_delta": 51.038,
+          "prior_abs_delta_improvement": 105.197,
+          "newest_abs_delta_improvement": 274.968,
+          "total_abs_delta_improvement": 380.165
         },
         "settle_time_s": {
           "real": 0.0,
           "old": 1.28,
-          "prior": 1.36,
-          "new": 1.38,
+          "prior": 1.38,
+          "new": 1.4,
           "old_delta": 1.28,
-          "prior_delta": 1.36,
-          "new_delta": 1.38,
-          "prior_abs_delta_improvement": -0.08,
+          "prior_delta": 1.38,
+          "new_delta": 1.4,
+          "prior_abs_delta_improvement": -0.1,
           "newest_abs_delta_improvement": -0.02,
-          "total_abs_delta_improvement": -0.1
+          "total_abs_delta_improvement": -0.12
         },
         "overshoot": {
           "real": 4.6,
           "old": 74.967,
-          "prior": 79.107,
-          "new": 79.789,
+          "prior": 79.789,
+          "new": 79.247,
           "old_delta": 70.367,
-          "prior_delta": 74.507,
-          "new_delta": 75.189,
-          "prior_abs_delta_improvement": -4.14,
-          "newest_abs_delta_improvement": -0.683,
-          "total_abs_delta_improvement": -4.822
+          "prior_delta": 75.189,
+          "new_delta": 74.647,
+          "prior_abs_delta_improvement": -4.822,
+          "newest_abs_delta_improvement": 0.542,
+          "total_abs_delta_improvement": -4.28
         },
         "residual_drift": {
           "real": 79.225,
           "old": 0.0,
-          "prior": 0.0,
+          "prior": 0.001,
           "new": 0.001,
           "old_delta": -79.225,
-          "prior_delta": -79.225,
+          "prior_delta": -79.224,
           "new_delta": -79.224,
-          "prior_abs_delta_improvement": 0.0,
+          "prior_abs_delta_improvement": 0.001,
           "newest_abs_delta_improvement": 0.001,
           "total_abs_delta_improvement": 0.001
         }
@@ -1913,61 +1913,61 @@
           "real": 0.25,
           "old": 0.04,
           "prior": 0.04,
-          "new": 0.04,
+          "new": 0.06,
           "old_delta": -0.21,
           "prior_delta": -0.21,
-          "new_delta": -0.21,
+          "new_delta": -0.19,
           "prior_abs_delta_improvement": 0.0,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 0.0
+          "newest_abs_delta_improvement": 0.02,
+          "total_abs_delta_improvement": 0.02
         },
         "peak_rate": {
           "real": 70.75,
           "old": 81.999,
           "prior": 66.599,
-          "new": 66.599,
+          "new": 65.924,
           "old_delta": 11.249,
           "prior_delta": -4.151,
-          "new_delta": -4.151,
+          "new_delta": -4.826,
           "prior_abs_delta_improvement": 7.098,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 7.098
+          "newest_abs_delta_improvement": -0.674,
+          "total_abs_delta_improvement": 6.423
         },
         "max_accel": {
           "real": 177.5,
           "old": 743.179,
           "prior": 603.638,
-          "new": 603.638,
+          "new": 286.636,
           "old_delta": 565.679,
           "prior_delta": 426.138,
-          "new_delta": 426.138,
+          "new_delta": 109.136,
           "prior_abs_delta_improvement": 139.541,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 139.541
+          "newest_abs_delta_improvement": 317.002,
+          "total_abs_delta_improvement": 456.543
         },
         "settle_time_s": {
           "real": 0.0,
           "old": 1.28,
           "prior": 1.32,
-          "new": 1.32,
+          "new": 1.42,
           "old_delta": 1.28,
           "prior_delta": 1.32,
-          "new_delta": 1.32,
+          "new_delta": 1.42,
           "prior_abs_delta_improvement": -0.04,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": -0.04
+          "newest_abs_delta_improvement": -0.1,
+          "total_abs_delta_improvement": -0.14
         },
         "overshoot": {
           "real": 6.9,
           "old": 74.968,
           "prior": 61.895,
-          "new": 61.895,
+          "new": 62.668,
           "old_delta": 68.068,
           "prior_delta": 54.995,
-          "new_delta": 54.995,
+          "new_delta": 55.768,
           "prior_abs_delta_improvement": 13.073,
-          "newest_abs_delta_improvement": 0.0,
-          "total_abs_delta_improvement": 13.073
+          "newest_abs_delta_improvement": -0.773,
+          "total_abs_delta_improvement": 12.301
         },
         "residual_drift": {
           "real": 63.312,
@@ -1988,7 +1988,7 @@
     "lateral_right": {
       "status": "improved_but_still_off",
       "moved_correct_direction": true,
-      "metrics_with_smaller_abs_delta": 4,
+      "metrics_with_smaller_abs_delta": 3,
       "comparable_metric_count": 5,
       "response_shape": "improved",
       "note": "Status is based on absolute-delta movement against the real benchmark values."
@@ -1996,7 +1996,7 @@
     "yaw_right": {
       "status": "improved_but_still_off",
       "moved_correct_direction": true,
-      "metrics_with_smaller_abs_delta": 2,
+      "metrics_with_smaller_abs_delta": 3,
       "comparable_metric_count": 5,
       "response_shape": "improved",
       "note": "Status is based on absolute-delta movement against the real benchmark values."
@@ -2004,7 +2004,7 @@
     "yaw_left": {
       "status": "improved_but_still_off",
       "moved_correct_direction": true,
-      "metrics_with_smaller_abs_delta": 3,
+      "metrics_with_smaller_abs_delta": 4,
       "comparable_metric_count": 5,
       "response_shape": "improved",
       "note": "Status is based on absolute-delta movement against the real benchmark values."
@@ -2055,11 +2055,11 @@
     "normal_mode_good_enough_to_move_on": false,
     "single_next_tuning_target": "yaw_right",
     "divergence_scores": {
-      "yaw_right": 403.035,
-      "yaw_left": 486.814,
-      "lateral_right": 9.501,
-      "climb/descent": 8.895,
-      "forward_step": 13.061
+      "yaw_right": 128.362,
+      "yaw_left": 171.34,
+      "lateral_right": 0.667,
+      "climb/descent": 8.489,
+      "forward_step": 11.032
     }
   },
   "confidence_notes": {
