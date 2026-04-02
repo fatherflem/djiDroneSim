@@ -52,6 +52,9 @@ namespace DroneSim.Drone.Flight
         [SerializeField] private float brakingInputDeadband = 0.08f;
 
         private float currentYawRate;
+        private float rightYawReleaseStopTimer;
+        private bool wasYawInputNeutral = true;
+        private bool wasRightYawInputActive;
         private DroneMode activeMode = DroneMode.Normal;
         private Vector3 lastCommandedAcceleration;
 
@@ -88,6 +91,9 @@ namespace DroneSim.Drone.Flight
         public void ResetForBenchmark(DroneMode mode)
         {
             currentYawRate = 0f;
+            rightYawReleaseStopTimer = 0f;
+            wasYawInputNeutral = true;
+            wasRightYawInputActive = false;
             lastCommandedAcceleration = Vector3.zero;
             activeMode = mode;
 
@@ -153,11 +159,28 @@ namespace DroneSim.Drone.Flight
             float targetYawRate = normalizedYawInput * config.maxYawRateDegrees * yawDirectionGain;
 
             bool yawInputNeutral = Mathf.Abs(normalizedYawInput) < brakingInputDeadband;
+            bool rightYawInputActive = normalizedYawInput > brakingInputDeadband;
+            bool releasedRightYawToNeutral = yawInputNeutral && wasRightYawInputActive && !wasYawInputNeutral;
+            if (releasedRightYawToNeutral)
+            {
+                rightYawReleaseStopTimer = config.yawRightReleaseStopDuration;
+            }
+
+            rightYawReleaseStopTimer = Mathf.Max(0f, rightYawReleaseStopTimer - Time.fixedDeltaTime);
             bool rightwardYawRate = currentYawRate >= 0f;
             float yawStopAuthority = config.yawStopSpeed * (rightwardYawRate ? config.yawRightStopMultiplier : 1f);
-            float yawAuthority = yawInputNeutral ? yawStopAuthority : config.yawCatchUpSpeed;
+            if (yawInputNeutral && rightwardYawRate && rightYawReleaseStopTimer > 0f && config.yawRightReleaseStopDuration > 0f)
+            {
+                float releaseBlend = rightYawReleaseStopTimer / config.yawRightReleaseStopDuration;
+                yawStopAuthority *= Mathf.Lerp(1f, config.yawRightReleaseStopMultiplier, releaseBlend);
+            }
+
+            float yawCatchUpAuthority = config.yawCatchUpSpeed * (rightYawInputActive ? config.yawRightCatchUpMultiplier : 1f);
+            float yawAuthority = yawInputNeutral ? yawStopAuthority : yawCatchUpAuthority;
             float yawBlend = 1f - Mathf.Exp(-yawAuthority * Time.fixedDeltaTime);
             currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
+            wasYawInputNeutral = yawInputNeutral;
+            wasRightYawInputActive = rightYawInputActive;
 
             Vector3 gravityAssist = Vector3.up * (-UnityEngine.Physics.gravity.y * gravityCancelMultiplier);
             lastCommandedAcceleration = worldAcceleration + gravityAssist + Vector3.up * verticalAcceleration;
