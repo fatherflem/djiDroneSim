@@ -2,8 +2,8 @@
 
 - Real benchmark CSV: `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
 - Baseline simulator session: `BenchmarkRuns/session_20260402_133209.zip` (zip)
-- Prior post-tuning simulator session: `BenchmarkRuns/session_20260402_171257.zip` (zip)
-- Newest simulator rerun (climb-coverage closeout): `BenchmarkRuns/session_20260402_175500.zip` (zip)
+- Prior post-tuning simulator session: `BenchmarkRuns/session_20260402_175500.zip` (zip)
+- Newest simulator rerun (climb-coverage closeout): `BenchmarkRuns/session_20260402_182438.zip` (zip)
 - Canonical drop location for benchmark sessions: `BenchmarkRuns/`.
 - Workflow note: drop session zip files directly into `BenchmarkRuns/`; no manual per-session folder setup is required.
 - Missing run(s) in newest session (vs baseline expected runs): (none)
