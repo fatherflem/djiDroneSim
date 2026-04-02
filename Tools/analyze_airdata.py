@@ -890,14 +890,21 @@ def summarize_sim_run(run: dict, category: str) -> dict:
     input_only_rows = [r for r in analysis_rows if (r.get("benchmark_phase") or "").strip().lower() == "input"]
     settle_only_rows = [r for r in analysis_rows if (r.get("benchmark_phase") or "").strip().lower() == "settle"]
 
-    if category in ("forward_step", "lateral_right", "lateral_left"):
+    # For yaw categories, restrict to input-phase only so the sim signal window
+    # matches what real Airdata captures (active-stick period only, no settle).
+    # Real segments are extracted from continuous flight where the pilot holds
+    # the stick, so including the sim's settle phase creates an apples-to-oranges
+    # comparison for overshoot and settle metrics.
+    if category in ("yaw_right", "yaw_left"):
+        yaw_rows = input_only_rows if input_only_rows else analysis_rows
+        signal = [abs(_safe_float(r, "yaw_rate_degps")) for r in yaw_rows]
+        times = _get_times(yaw_rows)
+    elif category in ("forward_step", "lateral_right", "lateral_left"):
         signal = [abs(_safe_float(r, "forward_speed_mps")) for r in analysis_rows] if category == "forward_step" else [
             abs(_safe_float(r, "lateral_speed_mps")) for r in analysis_rows
         ]
     elif category in ("climb", "descent"):
         signal = [abs(_safe_float(r, "vertical_speed_mps")) for r in analysis_rows]
-    elif category in ("yaw_right", "yaw_left"):
-        signal = [abs(_safe_float(r, "yaw_rate_degps")) for r in analysis_rows]
     else:
         hs = [_safe_float(r, "horizontal_speed_mps") for r in analysis_rows]
         vs = [_safe_float(r, "vertical_speed_mps") for r in analysis_rows]
@@ -930,15 +937,19 @@ def summarize_sim_run(run: dict, category: str) -> dict:
         dt = 0.02
 
     accel = max(((signal[i + 1] - signal[i]) / dt) for i in range(len(signal) - 1)) if len(signal) > 1 else 0.0
-    steady_source = settle_only_rows if settle_only_rows else analysis_rows[-min(8, len(analysis_rows)) :]
-    if category == "forward_step":
-        steady_values = [abs(_safe_float(r, "forward_speed_mps")) for r in steady_source]
-    elif category in ("lateral_right", "lateral_left"):
-        steady_values = [abs(_safe_float(r, "lateral_speed_mps")) for r in steady_source]
-    elif category in ("climb", "descent"):
-        steady_values = [abs(_safe_float(r, "vertical_speed_mps")) for r in steady_source]
+    if category in ("yaw_right", "yaw_left"):
+        # Use tail of input-phase signal for steady (matches real Airdata window)
+        steady_values = signal[-min(5, len(signal)):]
     else:
-        steady_values = [abs(_safe_float(r, "yaw_rate_degps")) for r in steady_source]
+        steady_source = settle_only_rows if settle_only_rows else analysis_rows[-min(8, len(analysis_rows)):]
+        if category == "forward_step":
+            steady_values = [abs(_safe_float(r, "forward_speed_mps")) for r in steady_source]
+        elif category in ("lateral_right", "lateral_left"):
+            steady_values = [abs(_safe_float(r, "lateral_speed_mps")) for r in steady_source]
+        elif category in ("climb", "descent"):
+            steady_values = [abs(_safe_float(r, "vertical_speed_mps")) for r in steady_source]
+        else:
+            steady_values = [abs(_safe_float(r, "yaw_rate_degps")) for r in steady_source]
     steady = statistics.fmean(steady_values) if steady_values else statistics.fmean(signal[-min(5, len(signal)) :])
     return {
         "path": run["path"],
