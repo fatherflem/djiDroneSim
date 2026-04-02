@@ -14,8 +14,10 @@ import json
 import math
 import os
 import statistics
+import zipfile
 from collections import defaultdict
 from dataclasses import asdict, dataclass
+from io import StringIO
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -784,22 +786,14 @@ def read_sim_runs(patterns: List[str]) -> List[dict]:
     session_meta_cache: Dict[str, dict] = {}
     amp_cache: Dict[str, Dict[str, dict]] = {}
     protocol_cache: Dict[str, dict] = {}
-    for pattern in patterns:
-        for path in sorted(glob.glob(pattern, recursive=True)):
-            if not path.endswith(".csv"):
-                continue
+    def _ingest_run(path: str, rows: List[dict], manifest_path: Path):
             full = str(Path(path).resolve())
             if full in seen:
-                continue
+                return
             seen.add(full)
-            with open(path, newline="", encoding="utf-8") as fp:
-                reader = csv.DictReader(fp)
-                rows = list(reader)
             if not rows:
-                continue
+                return
             category = infer_category_from_row(rows[0])
-            parent = Path(path).resolve().parent
-            manifest_path = parent / "session_manifest.jsonl"
             amplitude_meta = None
             run_manifest_entry = None
             in_primary_protocol = None
@@ -845,6 +839,38 @@ def read_sim_runs(patterns: List[str]) -> List[dict]:
                     "exclusion_reason": exclusion_reason,
                 }
             )
+
+    for pattern in patterns:
+        for path in sorted(glob.glob(pattern, recursive=True)):
+            if path.endswith(".csv"):
+                with open(path, newline="", encoding="utf-8") as fp:
+                    reader = csv.DictReader(fp)
+                    rows = list(reader)
+                parent = Path(path).resolve().parent
+                _ingest_run(path, rows, parent / "session_manifest.jsonl")
+                continue
+
+            if not path.endswith(".zip"):
+                continue
+
+            with zipfile.ZipFile(path, "r") as zf:
+                names = zf.namelist()
+                manifest_name = next((name for name in names if name.endswith("session_manifest.jsonl")), None)
+                manifest_tmp = None
+                if manifest_name:
+                    manifest_tmp = Path(Path(path).resolve().parent / f".tmp_manifest_{Path(path).stem}.jsonl")
+                    manifest_tmp.write_text(zf.read(manifest_name).decode("utf-8"), encoding="utf-8")
+
+                csv_names = [name for name in names if name.endswith(".csv")]
+                for csv_name in csv_names:
+                    csv_text = zf.read(csv_name).decode("utf-8-sig")
+                    reader = csv.DictReader(StringIO(csv_text))
+                    rows = list(reader)
+                    synthetic_path = str(Path(path).resolve()) + f":{Path(csv_name).name}"
+                    _ingest_run(synthetic_path, rows, manifest_tmp or Path("__missing_manifest__"))
+
+                if manifest_tmp and manifest_tmp.exists():
+                    manifest_tmp.unlink()
     return runs
 
 
@@ -1037,6 +1063,7 @@ def discover_sim_inputs(explicit_globs: List[str], sim_root: Optional[str]) -> L
     patterns = list(explicit_globs)
     if sim_root:
         patterns.append(os.path.join(sim_root, "**", "*.csv"))
+        patterns.append(os.path.join(sim_root, "*.zip"))
     return patterns
 
 
