@@ -14,11 +14,13 @@ Tune these first (in this order):
 6. `lateralAcceleration` (mode config)
 7. `forwardStopStrength` (mode config)
 8. `lateralStopStrength` (mode config)
-9. `maxClimbSpeed` / `maxDescentSpeed` (mode config)
-10. `verticalAcceleration` (mode config)
-11. `maxYawRateDegrees` (mode config)
-12. `yawCatchUpSpeed` (mode config)
-13. `gravityCancelMultiplier` (DJIStyleFlightController)
+9. `lateralRightSpeedMultiplier` / `lateralRightAccelerationMultiplier` / `lateralRightStopMultiplier` (mode config, directional-only)
+10. `maxClimbSpeed` / `maxDescentSpeed` (mode config)
+11. `verticalAcceleration` (mode config)
+12. `maxYawRateDegrees` (mode config)
+13. `yawCatchUpSpeed` / `yawStopSpeed` (mode config)
+14. `yawRightCommandGain` / `yawLeftCommandGain` (mode config, directional-only)
+15. `gravityCancelMultiplier` (DJIStyleFlightController)
 
 ## What each parameter changes
 
@@ -26,10 +28,14 @@ Tune these first (in this order):
 - **maxLateralSpeed**: Top side-slip speed.
 - **forwardAcceleration / lateralAcceleration**: How quickly each horizontal axis builds velocity.
 - **forwardStopStrength / lateralStopStrength**: Axis-specific braking feel near neutral sticks.
+- **lateralRightSpeedMultiplier / lateralRightAccelerationMultiplier / lateralRightStopMultiplier**:
+  Right-only lateral shaping knobs for high-confidence one-sided mismatch corrections.
 - **maxClimbSpeed / maxDescentSpeed**: Independent vertical limits for up/down behavior.
 - **verticalAcceleration**: How quickly vertical velocity catches commanded target.
 - **maxYawRateDegrees**: Maximum turn rate.
-- **yawCatchUpSpeed**: How quickly yaw reaches commanded rate (higher = snappier).
+- **yawCatchUpSpeed**: How quickly yaw reaches commanded rate during active yaw input (higher = snappier).
+- **yawStopSpeed**: How quickly yaw rate damps toward zero around neutral yaw input.
+- **yawRightCommandGain / yawLeftCommandGain**: Directional yaw command scaling for measured right-vs-left mismatch correction.
 - **gravityCancelMultiplier**: Baseline upward assist against gravity; affects hover feel.
 
 ## CSV benchmark workflow (Airdata)
