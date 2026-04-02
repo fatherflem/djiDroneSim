@@ -1059,11 +1059,19 @@ def compare_real_vs_sim(real_metrics: Dict[str, dict], sim_runs: List[dict]) -> 
     return out
 
 
-def discover_sim_inputs(explicit_globs: List[str], sim_root: Optional[str]) -> List[str]:
+def discover_sim_inputs(explicit_globs: List[str], sim_root: Optional[str],
+                         session_filter: Optional[List[str]] = None) -> List[str]:
     patterns = list(explicit_globs)
     if sim_root:
-        patterns.append(os.path.join(sim_root, "**", "*.csv"))
-        patterns.append(os.path.join(sim_root, "*.zip"))
+        if session_filter:
+            for sid in session_filter:
+                # Support both "session_20260402_185504" and bare "20260402_185504"
+                name = sid if sid.startswith("session_") else f"session_{sid}"
+                patterns.append(os.path.join(sim_root, f"{name}.zip"))
+                patterns.append(os.path.join(sim_root, name, "**", "*.csv"))
+        else:
+            patterns.append(os.path.join(sim_root, "**", "*.csv"))
+            patterns.append(os.path.join(sim_root, "*.zip"))
     return patterns
 
 
@@ -1214,9 +1222,13 @@ def main():
     ap.add_argument("--summary-out", default="Docs/Airdata_Mar30_2026_Benchmark_Summary.md")
     ap.add_argument("--sim-csv-glob", action="append", default=[])
     ap.add_argument("--sim-root", default="BenchmarkRuns")
+    ap.add_argument("--session", action="append", default=[],
+                    help="Restrict to specific session(s), e.g. --session session_20260402_185504. "
+                         "Can be repeated. Omit to include all sessions.")
     args = ap.parse_args()
 
-    sim_patterns = discover_sim_inputs(args.sim_csv_glob, args.sim_root)
+    sim_patterns = discover_sim_inputs(args.sim_csv_glob, args.sim_root,
+                                       args.session or None)
 
     rows = load_airdata(args.csv)
     usable, segments, neutral_windows = segment_maneuvers(rows)

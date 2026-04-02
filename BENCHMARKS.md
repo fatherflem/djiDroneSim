@@ -153,6 +153,22 @@ python Tools/analyze_airdata.py \
   --sim-root BenchmarkRuns
 ```
 
+Single-session comparison (recommended during tuning iterations):
+
+```bash
+python Tools/analyze_airdata.py \
+  Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+  --session session_20260402_185504
+```
+
+Multiple specific sessions:
+
+```bash
+python Tools/analyze_airdata.py \
+  Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+  --session session_20260402_182438 --session session_20260402_185504
+```
+
 You can also provide explicit globs:
 
 ```bash
