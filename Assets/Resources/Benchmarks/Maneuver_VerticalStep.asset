@@ -12,24 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e57e519972452a8bca4bf9a0ce1002, type: 3}
   m_Name: Maneuver_VerticalStep
   m_EditorClassIdentifier: 
-  maneuverName: Vertical Step Response
-  description: Neutral, then positive throttle step, then release for climb and settling analysis.
+  maneuverName: climb
+  description: Input-only climb throttle step for protocol comparison.
   flightMode: 1
+  protocolCategory: climb
+  protocolOrder: 5
+  includeInDefaultProtocol: 1
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
+  overridePreRollDuration: 0
+  preRollDuration: 1.5
+  overrideSettleDuration: 0
+  settleDuration: 1.5
   segments:
   - duration: 2
     roll: 0
     pitch: 0
-    throttle: 0
-    yaw: 0
-  - duration: 3
-    roll: 0
-    pitch: 0
     throttle: 1
-    yaw: 0
-  - duration: 5
-    roll: 0
-    pitch: 0
-    throttle: 0
     yaw: 0

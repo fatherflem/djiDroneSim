@@ -53,6 +53,8 @@ namespace DroneSim.Drone.Benchmark
             public bool run_protocol_in_order;
             public bool reset_mode_between_runs;
             public int maneuver_count;
+            public int default_protocol_maneuver_count;
+            public List<string> default_protocol_categories;
         }
 
         [Serializable]
@@ -134,6 +136,7 @@ namespace DroneSim.Drone.Benchmark
         private string sessionDirectoryPath;
         private float activePreRollDuration;
         private float activeSettleDuration;
+        private string activeRunSource = "manual";
 
         public bool IsRunning => isRunning;
         public string CurrentManeuverName => GetSelectedManeuver() != null ? GetSelectedManeuver().maneuverName : "None";
@@ -303,14 +306,14 @@ namespace DroneSim.Drone.Benchmark
 
         public void StartFullProtocol()
         {
-            if (maneuvers.Count == 0)
+            List<int> indices = BuildProtocolOrder();
+            if (indices.Count == 0)
             {
-                Debug.LogWarning("BenchmarkRunner cannot start protocol because no maneuvers are configured.");
+                Debug.LogWarning("BenchmarkRunner cannot start protocol because no protocol maneuvers are configured.");
                 return;
             }
 
             queuedProtocolIndices.Clear();
-            List<int> indices = BuildProtocolOrder();
             for (int i = 0; i < indices.Count; i++)
             {
                 queuedProtocolIndices.Enqueue(indices[i]);
@@ -385,6 +388,7 @@ namespace DroneSim.Drone.Benchmark
             inputReader.SetExternalInputEnabled(true);
             BenchmarkInputFrame neutralFrame = BenchmarkInputFrame.Neutral(activeManeuver.flightMode);
             inputReader.SetExternalInputFrame(neutralFrame.ToDroneInputFrame());
+            activeRunSource = fromProtocolQueue ? "full_protocol" : "manual";
 
             string launchKind = fromProtocolQueue ? "protocol" : "manual";
             Debug.Log($"BenchmarkRunner started '{activeManeuver.maneuverName}' ({launchKind}) with pre-roll {activePreRollDuration:F2}s, input {activeManeuver.Duration:F2}s, settle {activeSettleDuration:F2}s in {activeManeuver.flightMode} mode.");
@@ -461,7 +465,10 @@ namespace DroneSim.Drone.Benchmark
             {
                 if (maneuvers[i] != null)
                 {
-                    indices.Add(i);
+                    if (maneuvers[i].IsIncludedInDefaultProtocol)
+                    {
+                        indices.Add(i);
+                    }
                 }
             }
 
@@ -530,7 +537,9 @@ namespace DroneSim.Drone.Benchmark
                     default_settle_s = defaultSettleDuration,
                     run_protocol_in_order = runProtocolInOrder,
                     reset_mode_between_runs = resetRequestedModeToManeuver,
-                    maneuver_count = maneuvers.Count
+                    maneuver_count = maneuvers.Count,
+                    default_protocol_maneuver_count = GetDefaultProtocolManeuvers().Count,
+                    default_protocol_categories = BuildDefaultProtocolCategoryList()
                 },
                 controller_settings = new ControllerSettingsSnapshot
                 {
@@ -610,11 +619,40 @@ namespace DroneSim.Drone.Benchmark
                 .Append("\"protocol_category\":\"").Append(maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown").Append("\",")
                 .Append("\"protocol_order\":").Append(maneuver != null ? maneuver.protocolOrder : -1).Append(',')
                 .Append("\"mode\":\"").Append(maneuver != null ? maneuver.flightMode.ToString() : "Unknown").Append("\",")
+                .Append("\"run_source\":\"").Append(activeRunSource).Append("\",")
                 .Append("\"pre_roll_s\":").Append(GetManeuverPreRollDuration(maneuver).ToString("0.###", CultureInfo.InvariantCulture)).Append(',')
                 .Append("\"input_duration_s\":").Append(maneuver != null ? maneuver.Duration.ToString("0.###", CultureInfo.InvariantCulture) : "0").Append(',')
                 .Append("\"settle_duration_s\":").Append(GetManeuverSettleDuration(maneuver).ToString("0.###", CultureInfo.InvariantCulture))
                 .Append('}');
             File.AppendAllText(manifestPath, sb.ToString() + "\n");
+        }
+
+        private List<ManeuverDefinition> GetDefaultProtocolManeuvers()
+        {
+            List<ManeuverDefinition> protocol = new List<ManeuverDefinition>();
+            List<int> protocolIndices = BuildProtocolOrder();
+            for (int i = 0; i < protocolIndices.Count; i++)
+            {
+                ManeuverDefinition maneuver = maneuvers[protocolIndices[i]];
+                if (maneuver != null)
+                {
+                    protocol.Add(maneuver);
+                }
+            }
+
+            return protocol;
+        }
+
+        private List<string> BuildDefaultProtocolCategoryList()
+        {
+            List<ManeuverDefinition> protocol = GetDefaultProtocolManeuvers();
+            List<string> categories = new List<string>(protocol.Count);
+            for (int i = 0; i < protocol.Count; i++)
+            {
+                categories.Add(protocol[i].EffectiveProtocolCategory);
+            }
+
+            return categories;
         }
 
         public void SelectNextManeuver()

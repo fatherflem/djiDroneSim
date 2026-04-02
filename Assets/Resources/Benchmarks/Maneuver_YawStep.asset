@@ -12,24 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e57e519972452a8bca4bf9a0ce1002, type: 3}
   m_Name: Maneuver_YawStep
   m_EditorClassIdentifier: 
-  maneuverName: Yaw Step Response
-  description: Neutral, then yaw input pulse, then release for yaw acceleration and settling analysis.
+  maneuverName: yaw_right
+  description: Input-only yaw-right step for protocol comparison.
   flightMode: 1
+  protocolCategory: yaw_right
+  protocolOrder: 7
+  includeInDefaultProtocol: 1
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
+  overridePreRollDuration: 0
+  preRollDuration: 1.5
+  overrideSettleDuration: 0
+  settleDuration: 1.5
   segments:
   - duration: 2
     roll: 0
     pitch: 0
     throttle: 0
-    yaw: 0
-  - duration: 3
-    roll: 0
-    pitch: 0
-    throttle: 0
     yaw: 1
-  - duration: 3
-    roll: 0
-    pitch: 0
-    throttle: 0
-    yaw: 0

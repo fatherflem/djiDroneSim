@@ -12,13 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4e57e519972452a8bca4bf9a0ce1002, type: 3}
   m_Name: Maneuver_HoverHold
   m_EditorClassIdentifier: 
-  maneuverName: Hover Hold
-  description: Neutral stick hold for hover drift and altitude stability validation.
+  maneuverName: hover_hold
+  description: Neutral hold maneuver used for hover stability benchmark capture.
   flightMode: 1
+  protocolCategory: hover_hold
+  protocolOrder: 1
+  includeInDefaultProtocol: 1
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
+  overridePreRollDuration: 0
+  preRollDuration: 1.5
+  overrideSettleDuration: 0
+  settleDuration: 1.5
   segments:
-  - duration: 8
+  - duration: 6
     roll: 0
     pitch: 0
     throttle: 0

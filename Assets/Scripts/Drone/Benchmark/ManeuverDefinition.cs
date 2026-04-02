@@ -26,6 +26,8 @@ namespace DroneSim.Drone.Benchmark
         public string protocolCategory = "";
         [Tooltip("Optional protocol order index for human-readable benchmark sequencing.")]
         public int protocolOrder = -1;
+        [Tooltip("If enabled, this maneuver is included when running the default full benchmark protocol.")]
+        public bool includeInDefaultProtocol = true;
 
         [Header("Initial state")]
         [Tooltip("World-space starting position before maneuver playback.")]
@@ -75,6 +77,7 @@ namespace DroneSim.Drone.Benchmark
 
         public bool HasCustomPreRollDuration => overridePreRollDuration;
         public bool HasCustomSettleDuration => overrideSettleDuration;
+        public bool IsIncludedInDefaultProtocol => includeInDefaultProtocol;
 
         public float Duration
         {
