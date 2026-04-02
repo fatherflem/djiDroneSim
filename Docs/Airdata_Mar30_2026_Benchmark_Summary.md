@@ -2,7 +2,28 @@
 
 Source CSV (used directly):
 - `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
-- Sim CSV patterns: `(none)`
+- Sim CSV patterns: `BenchmarkRuns/**/*.csv`
+
+## Simulator session selection
+
+- Primary protocol runs included: 8
+- Runs excluded from primary protocol comparison: 1
+
+| Included run # | Category | Protocol order | Run source | File |
+|---:|---|---:|---|---|
+| 2 | hover_hold | 1 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_002_hover_hold_hover_hold_Normal_20260402_133237_run002.csv` |
+| 3 | forward_step | 2 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_003_forward_step_forward_step_Normal_20260402_133241_run003.csv` |
+| 4 | lateral_right | 3 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_004_lateral_right_lateral_right_Normal_20260402_133245_run004.csv` |
+| 5 | lateral_left | 4 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_005_lateral_left_lateral_left_Normal_20260402_133249_run005.csv` |
+| 6 | climb | 5 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_006_climb_climb_Normal_20260402_133253_run006.csv` |
+| 7 | descent | 6 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_007_descent_descent_Normal_20260402_133257_run007.csv` |
+| 8 | yaw_right | 7 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_008_yaw_right_yaw_right_Normal_20260402_133301_run008.csv` |
+| 9 | yaw_left | 8 | full_protocol | `BenchmarkRuns/session_20260402_133209/run_009_yaw_left_yaw_left_Normal_20260402_133305_run009.csv` |
+
+| Excluded run # | Category | Reason | File |
+|---:|---|---|---|
+| 1 | climb | run_source_manual_not_full_protocol | `BenchmarkRuns/session_20260402_133209/run_001_climb_climb_Normal_20260402_133222_run001.csv` |
+
 
 ## Segmentation confidence overview (real flight)
 
@@ -41,14 +62,14 @@ Source CSV (used directly):
 
 | Category | Status | Sim input confidence | Sim input provenance | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |
 |---|---|---|---|---:|---:|---:|---:|---:|---|
-| hover_hold | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| forward_step | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| lateral_right | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| hover_hold | compared | high | designer_assumption | - | - | - | - | - | insufficient_data |
+| forward_step | compared | medium | estimated_from_limited_segments | 0.08 | 2.887 | 7.333 | 0.47 | 3.042 | too_aggressive_provisional_input_amplitude |
+| lateral_right | compared | high | directly_measured | 0.08 | 3.91 | 7.667 | -0.12 | 3.068 | too_aggressive |
 | lateral_left | no_real_data | - | - | - | - | - | - | - | insufficient data |
-| climb | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| descent | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| yaw_right | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
-| yaw_left | real_only | - | - | - | - | - | - | - | no simulator benchmark CSVs supplied for this category |
+| climb | compared | medium | estimated_from_limited_segments | -0.19 | -1.239 | 4.25 | 1.06 | 0.982 | too_sluggish_provisional_input_amplitude |
+| descent | compared | medium | estimated_from_limited_segments | -0.107 | -1.086 | 6.0 | 1.06 | 1.814 | too_sluggish_provisional_input_amplitude |
+| yaw_right | compared | high | directly_measured | -0.2 | -2.602 | 431.203 | 1.28 | 70.367 | too_sluggish |
+| yaw_left | compared | high | directly_measured | -0.21 | 11.249 | 565.679 | 1.28 | 68.068 | too_aggressive |
 
 ## Recommended default protocol stick amplitudes (from Airdata RC)
 

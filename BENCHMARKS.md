@@ -134,7 +134,7 @@ Optional scene debug:
 1. Open `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 2. Enter Play Mode.
 3. Use **F9** for one clean full-protocol capture (recommended), or **F7/F8** for manual per-maneuver runs.
-4. Exit Play Mode and copy the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/` (recommended for analysis history).
+4. Exit Play Mode and copy the new `session_*` directory from `Application.persistentDataPath/BenchmarkRuns/` into repo-local `BenchmarkRuns/` (canonical analysis source; keep zip archives optional only).
 
 ## Analysis workflow (real + sim)
 Real-only pass:
@@ -184,6 +184,7 @@ Use these protocol categories to align with Airdata analysis:
   - real maneuver segmentation and confidence labels
   - measured vs inferred classification
   - indexed simulator run inputs
+  - `sim_primary_protocol_runs` and `sim_excluded_runs` (manifest-driven inclusion/exclusion traceability)
   - `sim_vs_real_comparison` with category-level deltas
 - `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
   - concise comparison table and verdicts

@@ -46,7 +46,7 @@ Unity exports to:
 
 `<Application.persistentDataPath>/BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
 
-Copy that whole `session_*` folder into repo-local:
+Copy that whole `session_*` folder into repo-local (canonical source for analysis):
 
 `BenchmarkRuns/session_<yyyyMMdd_HHmmss>/`
 
@@ -56,6 +56,7 @@ Each session includes:
 
 Run manifest entries include `maneuver_name`, `protocol_category`, `protocol_order`, timing, and `run_source` (`manual` or `full_protocol`).
 They now also include `amplitude_confidence_label`, `amplitude_provenance`, and `amplitude_provisional`.
+The analyzer uses these manifest fields to build the **primary protocol comparison set** (full protocol, expected order, core categories) and emits excluded runs with reasons.
 
 ## 3) Run analysis
 From repo root:
@@ -75,6 +76,7 @@ python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
 - `Docs/airdata_mar30_analysis.json`
   - `metrics`: real-flight segmented metrics
   - `sim_runs_index`: discovered simulator runs
+  - `sim_primary_protocol_runs` + `sim_excluded_runs`: explicit provenance for included/excluded sim runs
   - `sim_vs_real_comparison`: delta per category and metric
 - `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
   - comparison table with simulator amplitude confidence/provenance columns

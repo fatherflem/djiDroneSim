@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: DroneModeNormal
   m_EditorClassIdentifier: 
   mode: 1
-  maxForwardSpeed: 5.2
-  maxLateralSpeed: 4.2
-  forwardAcceleration: 4.6
-  lateralAcceleration: 4
-  forwardStopStrength: 6.8
-  lateralStopStrength: 5.9
+  maxForwardSpeed: 4.6
+  maxLateralSpeed: 2.8
+  forwardAcceleration: 4.2
+  lateralAcceleration: 2.8
+  forwardStopStrength: 7.2
+  lateralStopStrength: 7.1
   maxClimbSpeed: 2.4
   maxDescentSpeed: 3
   verticalAcceleration: 4.8
-  maxYawRateDegrees: 82
+  maxYawRateDegrees: 74
   yawCatchUpSpeed: 10
   tiltLimitDegrees: 30
   tiltSmoothing: 12
