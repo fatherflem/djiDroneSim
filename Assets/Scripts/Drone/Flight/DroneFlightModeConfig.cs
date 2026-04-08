@@ -72,6 +72,9 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Multiplier on active yaw catch-up authority for right yaw input (positive rudder); <1 softens right-yaw onset accel without changing left.")]
         [Min(0.1f)] public float yawRightCatchUpMultiplier = 1f;
 
+        [Tooltip("Multiplier on active yaw catch-up authority for left yaw input (negative rudder); <1 softens left-yaw onset accel without changing right.")]
+        [Min(0.1f)] public float yawLeftCatchUpMultiplier = 1f;
+
         [Tooltip("How quickly yaw rate damps toward zero when yaw input is near neutral.")]
         [Min(0.1f)] public float yawStopSpeed = 10f;
 
