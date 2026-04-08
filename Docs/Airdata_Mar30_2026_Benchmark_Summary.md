@@ -2,7 +2,7 @@
 
 Source CSV (used directly):
 - `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
-- Sim CSV patterns: `BenchmarkRuns/session_20260408_142758.zip, BenchmarkRuns/session_20260408_142758/**/*.csv`
+- Sim CSV patterns: `BenchmarkRuns/session_20260408_150858.zip, BenchmarkRuns/session_20260408_150858/**/*.csv`
 
 ## Simulator session selection
 
@@ -11,14 +11,14 @@ Source CSV (used directly):
 
 | Included run # | Category | Protocol order | Run source | File |
 |---:|---|---:|---|---|
-| 1 | hover_hold | 1 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_001_hover_hold_hover_hold_Normal_20260408_142830_run001.csv` |
-| 2 | forward_step | 2 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_002_forward_step_forward_step_Normal_20260408_142834_run002.csv` |
-| 3 | lateral_right | 3 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_003_lateral_right_lateral_right_Normal_20260408_142838_run003.csv` |
-| 4 | lateral_left | 4 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_004_lateral_left_lateral_left_Normal_20260408_142843_run004.csv` |
-| 5 | climb | 5 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_005_climb_climb_Normal_20260408_142847_run005.csv` |
-| 6 | descent | 6 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_006_descent_descent_Normal_20260408_142851_run006.csv` |
-| 7 | yaw_right | 7 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_007_yaw_right_yaw_right_Normal_20260408_142855_run007.csv` |
-| 8 | yaw_left | 8 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_142758.zip:run_008_yaw_left_yaw_left_Normal_20260408_142859_run008.csv` |
+| 1 | hover_hold | 1 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_001_hover_hold_hover_hold_Normal_20260408_150912_run001.csv` |
+| 2 | forward_step | 2 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_002_forward_step_forward_step_Normal_20260408_150916_run002.csv` |
+| 3 | lateral_right | 3 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_003_lateral_right_lateral_right_Normal_20260408_150920_run003.csv` |
+| 4 | lateral_left | 4 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_004_lateral_left_lateral_left_Normal_20260408_150924_run004.csv` |
+| 5 | climb | 5 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_005_climb_climb_Normal_20260408_150928_run005.csv` |
+| 6 | descent | 6 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_006_descent_descent_Normal_20260408_150932_run006.csv` |
+| 7 | yaw_right | 7 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_007_yaw_right_yaw_right_Normal_20260408_150936_run007.csv` |
+| 8 | yaw_left | 8 | full_protocol | `/home/user/djiDroneSim/BenchmarkRuns/session_20260408_150858.zip:run_008_yaw_left_yaw_left_Normal_20260408_150940_run008.csv` |
 
 
 ## Segmentation confidence overview (real flight)
@@ -61,13 +61,13 @@ Source CSV (used directly):
 | Category | Status | Sim input confidence | Sim input provenance | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |
 |---|---|---|---|---:|---:|---:|---:|---:|---|
 | hover_hold | compared | high | designer_assumption | - | - | - | - | - | insufficient_data |
-| forward_step | compared | medium | estimated_from_limited_segments | -0.18 | -0.208 | 0.028 | 0.627 | 1.279 | too_sluggish_provisional_input_amplitude |
-| lateral_right | compared | high | directly_measured | -0.31 | -2.34 | 0.324 | 0.6 | 3.088 | too_sluggish |
-| lateral_left | compared | low | estimated_from_limited_segments | -0.51 | -4.942 | 0.527 | 0.6 | 3.047 | too_sluggish_provisional_input_amplitude |
-| climb | compared | medium | estimated_from_limited_segments | -0.2 | -0.722 | 0.25 | 0.295 | 1.273 | too_sluggish_provisional_input_amplitude |
-| descent | compared | medium | estimated_from_limited_segments | -0.155 | 0.342 | 0.75 | 0.68 | 1.444 | too_aggressive_provisional_input_amplitude |
-| yaw_right | compared | high | directly_measured | -0.24 | -8.9 | 38.455 | 0.0 | -1.514 | too_sluggish |
-| yaw_left | compared | high | directly_measured | -0.24 | -8.9 | -1.549 | 0.0 | -2.614 | too_sluggish |
+| forward_step | compared | medium | estimated_from_limited_segments | -0.04 | -0.289 | 0.028 | 0.327 | 0.73 | too_sluggish_provisional_input_amplitude |
+| lateral_right | compared | high | directly_measured | -0.07 | -2.34 | 0.324 | 0.0 | 0.635 | too_sluggish |
+| lateral_left | compared | low | estimated_from_limited_segments | -0.27 | -4.942 | 0.527 | 0.0 | 0.594 | too_sluggish_provisional_input_amplitude |
+| climb | compared | medium | estimated_from_limited_segments | 0.04 | -0.361 | 0.25 | -0.365 | -0.161 | too_sluggish_provisional_input_amplitude |
+| descent | compared | medium | estimated_from_limited_segments | 0.085 | 0.791 | 0.75 | 0.0 | -0.359 | too_aggressive_provisional_input_amplitude |
+| yaw_right | compared | high | directly_measured | -0.24 | -1.002 | 72.882 | 0.0 | -1.497 | too_sluggish |
+| yaw_left | compared | high | directly_measured | -0.24 | -1.002 | 32.86 | 0.0 | -2.597 | too_sluggish |
 
 ## Recommended default protocol stick amplitudes (from Airdata RC)
 
