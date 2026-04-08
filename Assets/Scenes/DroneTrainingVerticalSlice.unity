@@ -320,8 +320,9 @@ MonoBehaviour:
   normalConfig: {fileID: 11400000, guid: c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3c3, type: 2}
   sportConfig: {fileID: 11400000, guid: c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4c4, type: 2}
   gravityCancelMultiplier: 1
-  globalHorizontalAccelLimit: 12
-  globalVerticalAccelLimit: 10
+  globalForwardAccelLimit: 3
+  globalLateralAccelLimit: 5
+  globalVerticalAccelLimit: 5
   brakingInputDeadband: 0.08
 --- !u!114 &110008
 MonoBehaviour:
