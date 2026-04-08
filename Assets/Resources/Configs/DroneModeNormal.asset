@@ -25,11 +25,11 @@ MonoBehaviour:
   maxClimbSpeed: 3.8
   maxDescentSpeed: 4.3
   verticalAcceleration: 3.5
-  maxYawRateDegrees: 74
+  maxYawRateDegrees: 82
   yawCatchUpSpeed: 4.5
   yawRightCatchUpMultiplier: 1
   yawLeftCatchUpMultiplier: 1
-  yawStopSpeed: 10
+  yawStopSpeed: 4
   yawRightCommandGain: 1
   yawLeftCommandGain: 1
   yawRightStopMultiplier: 1

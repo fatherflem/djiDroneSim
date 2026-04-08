@@ -51,9 +51,13 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Stick magnitude below this is treated as neutral for active horizontal braking.")]
         [SerializeField] private float brakingInputDeadband = 0.08f;
 
+        [Tooltip("Jerk limit in m/s^3 on pilot-commanded acceleration. Caps how fast the commanded accel vector can change between FixedUpdate ticks, modelling real-drone onset delay and smoother brake ramps.")]
+        [SerializeField] private float accelerationSlewRate = 8f;
+
         private float currentYawRate;
         private DroneMode activeMode = DroneMode.Normal;
         private Vector3 lastCommandedAcceleration;
+        private Vector3 slewedPilotAcceleration;
 
         public DroneMode ActiveMode => activeMode;
         public DroneFlightModeConfig ActiveConfig => GetActiveConfig();
@@ -89,6 +93,7 @@ namespace DroneSim.Drone.Flight
         {
             currentYawRate = 0f;
             lastCommandedAcceleration = Vector3.zero;
+            slewedPilotAcceleration = Vector3.zero;
             activeMode = mode;
 
             if (visualTiltRoot != null)
@@ -173,11 +178,14 @@ namespace DroneSim.Drone.Flight
                 currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
             }
             Vector3 gravityAssist = Vector3.up * (-UnityEngine.Physics.gravity.y * gravityCancelMultiplier);
-            lastCommandedAcceleration = worldAcceleration + gravityAssist + Vector3.up * verticalAcceleration;
+            Vector3 desiredPilotAcceleration = worldAcceleration + Vector3.up * verticalAcceleration;
+            float maxPilotAccelDelta = accelerationSlewRate * Time.fixedDeltaTime;
+            slewedPilotAcceleration = Vector3.MoveTowards(slewedPilotAcceleration, desiredPilotAcceleration, maxPilotAccelDelta);
+            lastCommandedAcceleration = slewedPilotAcceleration + gravityAssist;
             physicsBody.ApplyWorldAcceleration(lastCommandedAcceleration);
             physicsBody.ApplyYawStep(currentYawRate * Time.fixedDeltaTime);
 
-            UpdateVisualTilt(config, worldAcceleration);
+            UpdateVisualTilt(config, slewedPilotAcceleration);
         }
 
         private void UpdateVisualTilt(DroneFlightModeConfig config, Vector3 commandedWorldAcceleration)
