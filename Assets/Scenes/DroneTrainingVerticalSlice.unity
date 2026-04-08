@@ -322,7 +322,7 @@ MonoBehaviour:
   gravityCancelMultiplier: 1
   globalForwardAccelLimit: 3
   globalLateralAccelLimit: 5
-  globalVerticalAccelLimit: 5
+  globalVerticalAccelLimit: 4
   brakingInputDeadband: 0.08
 --- !u!114 &110008
 MonoBehaviour:
