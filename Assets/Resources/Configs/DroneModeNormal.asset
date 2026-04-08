@@ -22,11 +22,11 @@ MonoBehaviour:
   lateralRightSpeedMultiplier: 1
   lateralRightAccelerationMultiplier: 1
   lateralRightStopMultiplier: 1
-  maxClimbSpeed: 3.8
-  maxDescentSpeed: 4.3
+  maxClimbSpeed: 4.35
+  maxDescentSpeed: 3.7
   verticalAcceleration: 3.5
   maxYawRateDegrees: 82
-  yawCatchUpSpeed: 4.5
+  yawCatchUpSpeed: 3.6
   yawRightCatchUpMultiplier: 1
   yawLeftCatchUpMultiplier: 1
   yawStopSpeed: 4

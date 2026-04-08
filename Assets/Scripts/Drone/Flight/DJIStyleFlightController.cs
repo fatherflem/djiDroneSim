@@ -52,7 +52,7 @@ namespace DroneSim.Drone.Flight
         [SerializeField] private float brakingInputDeadband = 0.08f;
 
         [Tooltip("Jerk limit in m/s^3 on pilot-commanded acceleration. Caps how fast the commanded accel vector can change between FixedUpdate ticks, modelling real-drone onset delay and smoother brake ramps.")]
-        [SerializeField] private float accelerationSlewRate = 8f;
+        [SerializeField] private float accelerationSlewRate = 6f;
 
         private float currentYawRate;
         private DroneMode activeMode = DroneMode.Normal;
