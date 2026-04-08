@@ -308,11 +308,25 @@ def segment_maneuvers(rows: List[dict], active_th: float = 16.0, cross_th: float
     return usable, segments, neutral_windows
 
 
+def _body_frame_velocity(row: dict) -> Tuple[float, float]:
+    """Project world-frame xSpeed (North) and ySpeed (East) onto drone heading.
+
+    Returns (forward_mps, right_mps) in the drone's body frame.
+    Airdata convention: xSpeed=North, ySpeed=East, heading measured clockwise from North.
+    """
+    theta = math.radians(row.get("heading_deg", 0.0))
+    vN = row["vx_mph"] * MPS_PER_MPH
+    vE = row["vy_mph"] * MPS_PER_MPH
+    forward = vE * math.sin(theta) + vN * math.cos(theta)
+    right = vE * math.cos(theta) - vN * math.sin(theta)
+    return forward, right
+
+
 def _extract_signal(window: List[dict], axis: str, sign: int) -> List[float]:
     if axis == "forward":
-        values = [sign * r["vx_mph"] * MPS_PER_MPH for r in window]
+        values = [sign * _body_frame_velocity(r)[0] for r in window]
     elif axis == "lateral":
-        values = [sign * r["vy_mph"] * MPS_PER_MPH for r in window]
+        values = [sign * _body_frame_velocity(r)[1] for r in window]
     elif axis == "vertical":
         values = [abs(r["vz_mph"]) * MPS_PER_MPH for r in window]
     else:
