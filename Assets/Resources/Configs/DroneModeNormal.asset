@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mode: 1
   maxForwardSpeed: 3.5
-  maxLateralSpeed: 2.8
+  maxLateralSpeed: 10
   forwardAcceleration: 2.8
   lateralAcceleration: 2.8
   forwardStopStrength: 6.5
   lateralStopStrength: 7.1
-  lateralRightSpeedMultiplier: 0.12
-  lateralRightAccelerationMultiplier: 0.15
-  lateralRightStopMultiplier: 1.3
+  lateralRightSpeedMultiplier: 1
+  lateralRightAccelerationMultiplier: 1
+  lateralRightStopMultiplier: 1
   maxClimbSpeed: 3.8
   maxDescentSpeed: 4.3
   verticalAcceleration: 3.5
@@ -30,8 +30,8 @@ MonoBehaviour:
   yawRightCatchUpMultiplier: 1
   yawLeftCatchUpMultiplier: 1
   yawStopSpeed: 10
-  yawRightCommandGain: 1.1
+  yawRightCommandGain: 1
   yawLeftCommandGain: 1
-  yawRightStopMultiplier: 1.1
+  yawRightStopMultiplier: 1
   tiltLimitDegrees: 30
   tiltSmoothing: 12
