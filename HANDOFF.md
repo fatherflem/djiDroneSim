@@ -32,7 +32,7 @@ DroneInputReader (stick input)
 | `Assets/Scripts/Drone/Input/DroneInputReader.cs` | Reads stick input (live or benchmark-injected). |
 | `Assets/Resources/Configs/DroneModeNormal.asset` | **Primary tuning file.** ScriptableObject with per-mode speed/accel/yaw parameters. |
 | `Assets/Resources/Configs/DroneModeCine.asset` | Cine mode tuning (not actively tuned yet). |
-| `Assets/Resources/Configs/DroneModeNormal.asset` | Sport mode tuning (not actively tuned yet). |
+| `Assets/Resources/Configs/DroneModeSport.asset` | Sport mode tuning (not actively tuned yet). |
 | `Assets/Scenes/DroneTrainingVerticalSlice.unity` | Main scene. **Scene-serialized globals** on the controller live here. |
 | `Assets/Resources/Benchmarks/*.asset` | Benchmark protocol ScriptableObjects (maneuver definitions). |
 | `Tools/analyze_airdata.py` | Comparison tool: real Airdata CSV vs sim benchmark CSV. |
@@ -129,8 +129,8 @@ python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --sessi
 `Apr-8th-2026-08-15AM-Flight-Airdata.csv` is the authoritative real-flight benchmark reference for this tuning pass. The Mar 30 log remains useful for stick-amplitude calibration history but is not the primary benchmark baseline.
 
 This produces:
-- `Docs/airdata_mar30_analysis.json` — full structured comparison
-- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` — human-readable summary table
+- `Docs/airdata_mar30_analysis.json` — full structured comparison (**legacy default filename; content reflects whichever CSV you pass**)
+- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` — human-readable summary table (**legacy default filename; content reflects whichever CSV you pass**)
 
 ---
 

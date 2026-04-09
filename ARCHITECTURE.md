@@ -89,22 +89,30 @@ Tune in **DroneInputConfig**:
 
 ### 2) Flight feel per mode (Cine / Normal / Sport)
 Tune in each **DroneFlightModeConfig** asset:
-- `maxHorizontalSpeed`
-- `horizontalAcceleration`
-- `horizontalStopStrength`
-- `maxVerticalSpeed`
+- `maxForwardSpeed` / `maxLateralSpeed`
+- `forwardAcceleration` / `lateralAcceleration`
+- `forwardStopStrength` / `lateralStopStrength`
+- `lateralRightSpeedMultiplier` / `lateralRightAccelerationMultiplier` / `lateralRightStopMultiplier`
+- `maxClimbSpeed` / `maxDescentSpeed`
 - `verticalAcceleration`
 - `maxYawRateDegrees`
-- `yawCatchUpSpeed`
+- `yawCatchUpSpeed` / `yawStopSpeed`
+- `yawRightCommandGain` / `yawLeftCommandGain`
+- `yawRightCatchUpMultiplier` / `yawLeftCatchUpMultiplier`
+- `yawRightStopMultiplier`
 - `tiltLimitDegrees`
 - `tiltSmoothing`
 
 ### 3) Global assist feel
 Tune in **DJIStyleFlightController**:
 - `gravityCancelMultiplier`
-- `globalHorizontalAccelLimit`
+- `globalForwardAccelLimit`
+- `globalLateralAccelLimit`
 - `globalVerticalAccelLimit`
 - `brakingInputDeadband`
+- `accelerationSlewRate`
+- `yawOvershootHeadroom`
+- `yawAccelerationLimitMultiplier`
 
 ### 4) Training drill behavior
 Tune in **SimpleTrainingScenario**:
