@@ -1,27 +1,27 @@
 # DJI Mini 4 Pro Flight Simulator — Project Handoff
 
-> Last updated: 2026-04-09 after auditing benchmark `session_20260409_180413` (forward amplitude rerun + carryover diagnosis).
+> Last updated: 2026-04-09 after auditing benchmark `session_20260409_183817` (forward brake-slew validation pass).
 
 ---
 
 ## 1. Current truth snapshot
 
-- **Latest decisive sim session:** `BenchmarkRuns/session_20260409_180413.zip`.
+- **Latest decisive sim session:** `BenchmarkRuns/session_20260409_183817.zip`.
 - Comparison anchors: `BenchmarkRuns/session_20260409_125031.zip` (pre-regression reference), `BenchmarkRuns/session_20260409_145236.zip` (yaw-regressed).
 - Real reference log: `Apr-8th-2026-08-15AM-Flight-Airdata.csv`.
 
 Observed protocol peaks across key sessions (forward includes both input-phase and full-run values to expose carryover):
 
-| Category | 164309 | 170224 | 180413 | Net story |
-|---|---:|---:|---:|---|
-| forward_step input-phase peak | 2.112 m/s | 2.112 m/s | 2.220 m/s | modest gain from pitch=1.0 input |
-| forward_step full-run peak | 2.400 m/s | 2.400 m/s | 3.060 m/s | **large post-release carryover increase** |
-| lateral_right input peak | 8.925 m/s | 8.925 m/s | 8.925 m/s | unchanged |
-| lateral_left input peak | 9.812 m/s | 9.812 m/s | 9.812 m/s | unchanged |
-| climb input peak | 2.940 m/s | 2.940 m/s | 2.940 m/s | unchanged |
-| descent input peak | 2.925 m/s | 2.925 m/s | 2.925 m/s | unchanged |
-| yaw_right input peak | 79.893 °/s | 79.893 °/s | 79.893 °/s | unchanged (done for now) |
-| yaw_left input peak | 79.892 °/s | 79.892 °/s | 79.892 °/s | unchanged (done for now) |
+| Category | 164309 | 170224 | 180413 | 183817 | Net story |
+|---|---:|---:|---:|---:|---|
+| forward_step input-phase peak | 2.112 m/s | 2.112 m/s | 2.220 m/s | 2.220 m/s | onset gain from pitch=1.0 held |
+| forward_step full-run peak | 2.400 m/s | 2.400 m/s | 3.060 m/s | 2.720 m/s | brake-slew patch reduced release carryover materially |
+| lateral_right input peak | 8.925 m/s | 8.925 m/s | 8.925 m/s | 8.925 m/s | unchanged |
+| lateral_left input peak | 9.812 m/s | 9.812 m/s | 9.812 m/s | 9.812 m/s | unchanged |
+| climb input peak | 2.940 m/s | 2.940 m/s | 2.940 m/s | 2.940 m/s | unchanged |
+| descent input peak | 2.925 m/s | 2.925 m/s | 2.925 m/s | 2.925 m/s | unchanged |
+| yaw_right input peak | 79.893 °/s | 79.893 °/s | 79.893 °/s | 79.893 °/s | unchanged (done for now) |
+| yaw_left input peak | 79.892 °/s | 79.892 °/s | 79.892 °/s | 79.894 °/s | unchanged (done for now) |
 
 Yaw release behavior (from yaw-run settle windows):
 - `125031`: `|yaw_rate| < 5°/s` in `0.26s`, `<1°/s` in `0.28s`
@@ -30,9 +30,9 @@ Yaw release behavior (from yaw-run settle windows):
 
 Interpretation:
 1. The forward protocol input update (`forward_step` pitch `1.0`) worked: input-phase forward rose from ~2.112 to ~2.220 m/s.
-2. The dominant forward mismatch is now post-release carryover (`+0.84 m/s` extra after input phase in `180413`).
-3. Yaw behavior remains stable and can stay frozen for now.
-4. Lateral and vertical traces are effectively unchanged in this rerun, so this pass should stay forward-only.
+2. Forward-specific brake slew improved release shape: carryover dropped from `0.84 m/s` (`180413`) to `0.50 m/s` (`183817`), while preserving onset.
+3. Yaw behavior remains stable and should stay frozen.
+4. Lateral and vertical traces are unchanged; remaining gap is primarily forward residual carryover and vertical protocol/slew interpretation.
 
 ---
 
@@ -126,7 +126,7 @@ This mixed 2.5s lateral vs 1.0s forward/vertical/yaw structure matters for inter
 Single latest session (recommended quick check):
 
 ```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_180413
+python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_183817
 ```
 
 Three-session comparison sweep:
@@ -148,15 +148,14 @@ Forward protocol provenance update (Apr 9 follow-up):
 - `Assets/Resources/Benchmarks/Maneuver_ForwardStep.asset` now uses `pitch: 1.0`; old sessions with `0.77` should be treated as legacy-protocol evidence.
 
 
-Forward slew patch now in code/config (post-180413 corrective pass):
+Forward slew patch now in code/config (validated in 183817):
 - `DroneFlightModeConfig` now exposes `forwardAccelerationSlewRate` and `forwardBrakeSlewRate` (<=0 falls back to global slew).
 - `DJIStyleFlightController` now applies a forward-axis local-Z slew using those fields while preserving global slew behavior for lateral/vertical coupling.
-- `DroneModeNormal.asset` sets `forwardAccelerationSlewRate: 6` and `forwardBrakeSlewRate: 11` for the first forward carryover reduction test.
+- `DroneModeNormal.asset` sets `forwardAccelerationSlewRate: 6` and `forwardBrakeSlewRate: 11`; `session_20260409_183817` is the validating run that reduced carryover.
 
 ## 8. Open issues / uncertainties
 
-1. `session_20260409_180413` confirmed the protocol input correction (`forward_step` pitch `1.0`) and shifted diagnosis from amplitude deficit to forward slew/carryover shape.
-2. Active tuning target is now forward release behavior: keep forward onset similar, but cut post-release coast-up by adding forward-axis braking slew control.
-3. Yaw is done for now; do not reopen yaw tuning unless new evidence appears.
-4. Lateral asymmetry in real data may include environment/mechanical effects; sim right-only trim is currently pragmatic, not “proven physics truth.”
-5. Vertical mismatch remains likely onset-slew/protocol-limited under current 1.0s windows; needs protocol-aware diagnosis before raw-gain changes.
+1. `session_20260409_183817` validated the forward brake-slew patch and is a reasonable **done-for-now** stopping point.
+2. Yaw is done for now; do not reopen yaw tuning unless new evidence appears.
+3. Lateral asymmetry in real data may include environment/mechanical effects; sim right-only trim remains pragmatic.
+4. Vertical mismatch remains likely onset-slew/protocol-limited under current 1.0s windows; needs protocol-aware diagnosis before raw-gain changes.

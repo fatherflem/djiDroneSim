@@ -8,25 +8,26 @@
   - `BenchmarkRuns/session_20260409_145236.zip` (yaw-regressed)
   - `BenchmarkRuns/session_20260409_164309.zip` (post-yaw-fix validation)
   - `BenchmarkRuns/session_20260409_170224.zip` (same tuning as 164309; forward baseline repeat)
-  - `BenchmarkRuns/session_20260409_180413.zip` (**forward-step amplitude updated to pitch=1.0; latest decisive evidence**)
+  - `BenchmarkRuns/session_20260409_180413.zip` (forward-step amplitude updated to pitch=1.0; exposed carryover)
+  - `BenchmarkRuns/session_20260409_183817.zip` (**forward brake-slew validation; latest decisive evidence**)
 
-The newest decisive evidence is `session_20260409_180413`.
+The newest decisive evidence is `session_20260409_183817`.
 
-## Forward-focused Apr 9 comparison (`164309`/`170224` vs `180413`)
+## Forward-focused Apr 9 comparison (`164309`/`170224`/`180413`/`183817`)
 
 Values are from protocol run CSVs in each session zip (forward run #2 input phase vs full run):
 
-| Category | `164309` | `170224` | `180413` | Story |
-|---|---:|---:|---:|---|
-| forward_step input-phase peak | 2.112 m/s | 2.112 m/s | 2.220 m/s | modest expected gain from `pitch=1.0` |
-| forward_step full-run peak | 2.400 m/s | 2.400 m/s | 3.060 m/s | large post-release overshoot/carryover increase |
-| forward extra after release (full - input) | 0.288 m/s | 0.288 m/s | 0.840 m/s | carryover became the dominant mismatch |
-| lateral_right input peak | 8.925 m/s | 8.925 m/s | 8.925 m/s | unchanged |
-| lateral_left input peak | 9.812 m/s | 9.812 m/s | 9.812 m/s | unchanged |
-| climb input peak | 2.940 m/s | 2.940 m/s | 2.940 m/s | unchanged |
-| descent input peak | 2.925 m/s | 2.925 m/s | 2.925 m/s | unchanged |
-| yaw_right input peak | 79.893 °/s | 79.893 °/s | 79.893 °/s | unchanged |
-| yaw_left input peak | 79.892 °/s | 79.892 °/s | 79.892 °/s | unchanged |
+| Category | `164309` | `170224` | `180413` | `183817` | Story |
+|---|---:|---:|---:|---:|---|
+| forward_step input-phase peak | 2.112 m/s | 2.112 m/s | 2.220 m/s | 2.220 m/s | onset gain from `pitch=1.0` preserved |
+| forward_step full-run peak | 2.400 m/s | 2.400 m/s | 3.060 m/s | 2.720 m/s | brake-slew cut post-release overshoot materially |
+| forward extra after release (full - input) | 0.288 m/s | 0.288 m/s | 0.840 m/s | 0.500 m/s | carryover reduced by 0.340 m/s (~40.5%) |
+| lateral_right input peak | 8.925 m/s | 8.925 m/s | 8.925 m/s | 8.925 m/s | unchanged |
+| lateral_left input peak | 9.812 m/s | 9.812 m/s | 9.812 m/s | 9.812 m/s | unchanged |
+| climb input peak | 2.940 m/s | 2.940 m/s | 2.940 m/s | 2.940 m/s | unchanged |
+| descent input peak | 2.925 m/s | 2.925 m/s | 2.925 m/s | 2.925 m/s | unchanged |
+| yaw_right input peak | 79.893 °/s | 79.893 °/s | 79.893 °/s | 79.893 °/s | unchanged |
+| yaw_left input peak | 79.892 °/s | 79.892 °/s | 79.892 °/s | 79.894 °/s | unchanged within noise |
 
 ## Yaw regression diagnosis (code + math + behavior)
 
@@ -90,7 +91,7 @@ Vertical remains essentially flat despite authority increases (`~2.94` climb / `
 
 So this is still not strong evidence for a simple raw-gain deficit.
 
-## Forward architecture diagnosis from `180413`
+## Forward architecture diagnosis from `180413` + `183817`
 
 Current forward math in `DJIStyleFlightController` is effectively:
 - target speed from `input.Pitch * maxForwardSpeed`
@@ -101,7 +102,12 @@ With Normal tuning in `180413` (`maxForwardSpeed=3.5`, `forwardAcceleration=2.8`
 - Onset reaches +3.0 m/s² in ~0.5 s and predicts ~2.25 m/s gain in a 1.0 s input window, close to observed 2.22 m/s.
 - If release starts near +3.0 m/s² and slews to zero at 6.0 m/s³, expected extra speed after release is ~0.75 m/s; observed extra is ~0.84 m/s.
 
-Conclusion: forward mismatch is now primarily a **slew-release carryover** issue, not a stick-amplitude issue.
+`183817` validated the targeted fix direction:
+- input-phase peak stayed at `2.220 m/s` (same as `180413`)
+- full-run peak dropped from `3.060` to `2.720 m/s`
+- post-release carryover dropped from `0.840` to `0.500 m/s` (`-40.5%`)
+
+Conclusion: forward mismatch is now mostly a manageable residual carryover gap; architecture change worked as intended.
 
 ## Implemented forward-only corrective patch (this iteration)
 
@@ -115,10 +121,10 @@ Math target for release carryover with `A=3.0 m/s²` and `brake_slew=11 m/s³`:
 - extra carryover ≈ `A² / (2*brake_slew) = 9/22 = 0.41 m/s`
 - prior symmetric slew (`6`) predicted ≈ `0.75 m/s`, so this pass targets roughly `0.34 m/s` less coast-up while keeping onset behavior aligned to current `6` slew.
 
-## Decision summary (post-180413 audit)
+## Decision summary (post-183817 audit)
 
 1. Yaw held-input behavior remains fixed and **done for now**.
 2. Keep right-lateral trim (`0.88` speed multiplier, `0.92` acceleration multiplier).
-3. Forward is now the active target: add forward-axis-specific slew control so onset and release are not forced to share one global slew rate.
-4. First pass should preserve onset (`forwardAccelerationSlewRate ~= 6`) and increase release/brake slew (`forwardBrakeSlewRate ~= 10-12`) to cut extra post-release carryover.
+3. Forward-specific slew separation worked (onset preserved, release carryover reduced); current `183817` state is close enough to freeze for now.
+4. No further micro-retune is strongly justified without new real-evidence goals; if resumed later, keep it forward-only and tiny.
 5. Vertical remains a protocol/onset-shape investigation, not immediate gain inflation.
