@@ -44,6 +44,12 @@ Default protocol timing for direct real-world comparison:
 - runner neutral settle: `1.5s` (`BenchmarkRunner.defaultSettleDuration`)
 - hover neutral total hold: `10.0s` via `1.5s` pre-roll + `7.0s` hover maneuver segment + `1.5s` settle
 
+Interpretation guardrail for vertical tuning:
+- `climb`/`descent` input windows are currently `1.0s`.
+- Controller acceleration uses a global slew limiter (`accelerationSlewRate`, default `6 m/s^3`) before physics application.
+- In a 1.0s step, acceleration can spend much of the window ramping, so peak vertical speed can remain slew/protocol-limited even after increasing vertical gain/limits.
+- Do not treat flat climb/descent peak deltas as automatic evidence that `verticalAcceleration` or `globalVerticalAccelLimit` are too low.
+
 Default protocol stick amplitude:
 - benchmark maneuver segment channels are normalized stick commands in `[-1, 1]`
 - default protocol step amplitudes were originally calibrated from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` RC channels using segmented active windows + median plateau magnitude per maneuver family
@@ -165,7 +171,7 @@ Single-session comparison (recommended during tuning iterations):
 ```bash
 python Tools/analyze_airdata.py \
   Apr-8th-2026-08-15AM-Flight-Airdata.csv \
-  --session session_20260409_125031
+  --session session_20260409_145236
 ```
 
 Multiple specific sessions:
@@ -173,7 +179,7 @@ Multiple specific sessions:
 ```bash
 python Tools/analyze_airdata.py \
   Apr-8th-2026-08-15AM-Flight-Airdata.csv \
-  --session session_20260409_122756 --session session_20260409_125031
+  --session session_20260409_125031 --session session_20260409_145236
 ```
 
 You can also provide explicit globs:

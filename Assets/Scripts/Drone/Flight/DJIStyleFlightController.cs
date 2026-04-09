@@ -160,6 +160,9 @@ namespace DroneSim.Drone.Flight
                 ? input.Throttle * config.maxClimbSpeed
                 : input.Throttle * config.maxDescentSpeed;
             float verticalError = targetVerticalSpeed - physicsBody.VerticalSpeed;
+            // Note: this is a speed-error P term, then globally accel-clamped.
+            // Final applied pilot acceleration is additionally slew-limited below (slewedPilotAcceleration),
+            // so short benchmark windows can look ramp-limited even after raising verticalAcceleration/caps.
             float verticalAcceleration = Mathf.Clamp(verticalError * config.verticalAcceleration, -globalVerticalAccelLimit, globalVerticalAccelLimit);
 
             float normalizedYawInput = Mathf.Clamp(input.Yaw, -1f, 1f);
@@ -182,12 +185,14 @@ namespace DroneSim.Drone.Flight
             }
             else
             {
-                // PD-on-rate model while stick is held.
-                // P term chases target yaw rate; D term damps by opposing current angular rate.
-                // This allows controlled overshoot unlike first-order exponential catch-up.
+                // Active-stick yaw should converge to commanded yaw rate.
+                // Do NOT apply full-rate damping here: subtracting yawStopAuthority * currentYawRate
+                // under active input creates a biased steady-state:
+                //   target * catchUp / (catchUp + stop)
+                // which capped ±82 deg/s commands to ~±38.8 deg/s in Apr 9 session_20260409_145236.
+                // Keep damping for neutral-stick braking only (above), and use rate-error catch-up here.
                 float yawError = targetYawRate - currentYawRate;
-                float yawDamping = currentYawRate * yawStopAuthority;
-                float rawYawAcceleration = yawError * yawCatchUpAuthority - yawDamping;
+                float rawYawAcceleration = yawError * yawCatchUpAuthority;
                 float yawAccelLimit = config.maxYawRateDegrees * yawCatchUpAuthority * yawAccelerationLimitMultiplier;
                 float clampedYawAcceleration = Mathf.Clamp(rawYawAcceleration, -yawAccelLimit, yawAccelLimit);
                 currentYawRate += clampedYawAcceleration * Time.fixedDeltaTime;
