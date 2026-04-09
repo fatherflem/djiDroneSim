@@ -90,5 +90,6 @@ So this is still not strong evidence for a simple raw-gain deficit.
 
 1. Yaw held-input regression is fixed and can be considered **done for now**.
 2. Keep right-lateral trim (`0.88` speed multiplier, `0.92` acceleration multiplier).
-3. Prioritize **forward** as next tuning target.
-4. Treat vertical as a protocol/onset-shape investigation next, not immediate gain inflation.
+3. Before any forward controller retune, rerun the benchmark with `forward_step` protocol input updated to `pitch = 1.0` (legacy `0.77` was Mar 30-era calibration).
+4. After that rerun, reassess forward mismatch using the corrected input definition.
+5. Treat vertical as a protocol/onset-shape investigation next, not immediate gain inflation.

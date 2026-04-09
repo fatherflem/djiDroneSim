@@ -20,9 +20,8 @@ MonoBehaviour:
   includeInDefaultProtocol: 1
   amplitudeConfidence: 1
   amplitudeProvenance: 1
-  inputAmplitudeEvidence: estimated_from_noisy_or_limited_segments
-  inputAmplitudeNotes: 'Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented
-    plateau medians; recommended +0.77 normalized pitch.'
+  inputAmplitudeEvidence: directly_measured_from_clean_rc_plateaus
+  inputAmplitudeNotes: 'Legacy Mar-30th-2026 segmented estimate used +0.77 pitch; Apr-8th-2026 analyzer recommendation is +1.00 normalized and now adopted for protocol runs.'
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
   overridePreRollDuration: 0
@@ -32,6 +31,6 @@ MonoBehaviour:
   segments:
   - duration: 1
     roll: 0
-    pitch: 0.77
+    pitch: 1.0
     throttle: 0
     yaw: 0

@@ -53,8 +53,9 @@ Interpretation guardrail for vertical tuning:
 Default protocol stick amplitude:
 - benchmark maneuver segment channels are normalized stick commands in `[-1, 1]`
 - default protocol step amplitudes were originally calibrated from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` RC channels using segmented active windows + median plateau magnitude per maneuver family
+- legacy note: `forward_step` previously used `+0.77` from Mar 30 segmented plateaus; Apr 8 analyzer outputs now recommend `+1.00` normalized and the maneuver asset has been updated to match this newer recommendation
 - current default protocol amplitudes:
-  - `forward_step`: `pitch = +0.77` (**confidence: medium**, **provenance: estimated_from_limited_segments**)
+  - `forward_step`: `pitch = +1.00` (**confidence: medium**, **provenance: estimated_from_limited_segments**)
   - `lateral_right`: `roll = +1.00` (**confidence: high**, **provenance: directly_measured**)
   - `lateral_left`: `roll = -1.00` (**confidence: low**, **provenance: estimated_from_limited_segments**, mirrored from right due missing clean left segment in this log)
   - `climb`: `throttle = +1.00` (**confidence: medium**, **provenance: estimated_from_limited_segments**)

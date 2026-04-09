@@ -2,39 +2,23 @@
 
 Source CSV (used directly):
 - `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
-- Sim CSV patterns: `BenchmarkRuns/session_20260409_125031.zip, BenchmarkRuns/session_20260409_125031/**/*.csv, BenchmarkRuns/session_20260409_145236.zip, BenchmarkRuns/session_20260409_145236/**/*.csv, BenchmarkRuns/session_20260409_164309.zip, BenchmarkRuns/session_20260409_164309/**/*.csv`
+- Sim CSV patterns: `BenchmarkRuns/session_20260409_170224.zip, BenchmarkRuns/session_20260409_170224/**/*.csv`
 
 ## Simulator session selection
 
-- Primary protocol runs included: 24
+- Primary protocol runs included: 8
 - Runs excluded from primary protocol comparison: 0
 
 | Included run # | Category | Protocol order | Run source | File |
 |---:|---|---:|---|---|
-| 1 | hover_hold | 1 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_001_hover_hold_hover_hold_Normal_20260409_125051_run001.csv` |
-| 1 | hover_hold | 1 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_001_hover_hold_hover_hold_Normal_20260409_145254_run001.csv` |
-| 1 | hover_hold | 1 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_001_hover_hold_hover_hold_Normal_20260409_164322_run001.csv` |
-| 2 | forward_step | 2 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_002_forward_step_forward_step_Normal_20260409_125055_run002.csv` |
-| 2 | forward_step | 2 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_002_forward_step_forward_step_Normal_20260409_145258_run002.csv` |
-| 2 | forward_step | 2 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_002_forward_step_forward_step_Normal_20260409_164326_run002.csv` |
-| 3 | lateral_right | 3 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_003_lateral_right_lateral_right_Normal_20260409_125101_run003.csv` |
-| 3 | lateral_right | 3 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_003_lateral_right_lateral_right_Normal_20260409_145303_run003.csv` |
-| 3 | lateral_right | 3 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_003_lateral_right_lateral_right_Normal_20260409_164331_run003.csv` |
-| 4 | lateral_left | 4 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_004_lateral_left_lateral_left_Normal_20260409_125106_run004.csv` |
-| 4 | lateral_left | 4 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_004_lateral_left_lateral_left_Normal_20260409_145309_run004.csv` |
-| 4 | lateral_left | 4 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_004_lateral_left_lateral_left_Normal_20260409_164337_run004.csv` |
-| 5 | climb | 5 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_005_climb_climb_Normal_20260409_125111_run005.csv` |
-| 5 | climb | 5 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_005_climb_climb_Normal_20260409_145313_run005.csv` |
-| 5 | climb | 5 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_005_climb_climb_Normal_20260409_164341_run005.csv` |
-| 6 | descent | 6 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_006_descent_descent_Normal_20260409_125115_run006.csv` |
-| 6 | descent | 6 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_006_descent_descent_Normal_20260409_145317_run006.csv` |
-| 6 | descent | 6 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_006_descent_descent_Normal_20260409_164345_run006.csv` |
-| 7 | yaw_right | 7 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_007_yaw_right_yaw_right_Normal_20260409_125119_run007.csv` |
-| 7 | yaw_right | 7 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_007_yaw_right_yaw_right_Normal_20260409_145321_run007.csv` |
-| 7 | yaw_right | 7 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_007_yaw_right_yaw_right_Normal_20260409_164349_run007.csv` |
-| 8 | yaw_left | 8 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_125031.zip:run_008_yaw_left_yaw_left_Normal_20260409_125123_run008.csv` |
-| 8 | yaw_left | 8 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_008_yaw_left_yaw_left_Normal_20260409_145325_run008.csv` |
-| 8 | yaw_left | 8 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_008_yaw_left_yaw_left_Normal_20260409_164353_run008.csv` |
+| 1 | hover_hold | 1 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_001_hover_hold_hover_hold_Normal_20260409_170238_run001.csv` |
+| 2 | forward_step | 2 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_002_forward_step_forward_step_Normal_20260409_170242_run002.csv` |
+| 3 | lateral_right | 3 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_003_lateral_right_lateral_right_Normal_20260409_170247_run003.csv` |
+| 4 | lateral_left | 4 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_004_lateral_left_lateral_left_Normal_20260409_170253_run004.csv` |
+| 5 | climb | 5 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_005_climb_climb_Normal_20260409_170257_run005.csv` |
+| 6 | descent | 6 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_006_descent_descent_Normal_20260409_170301_run006.csv` |
+| 7 | yaw_right | 7 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_007_yaw_right_yaw_right_Normal_20260409_170305_run007.csv` |
+| 8 | yaw_left | 8 | full_protocol | `/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_008_yaw_left_yaw_left_Normal_20260409_170309_run008.csv` |
 
 
 ## Segmentation confidence overview (real flight)
@@ -78,12 +62,12 @@ Source CSV (used directly):
 |---|---|---|---|---:|---:|---:|---:|---:|---|
 | hover_hold | compared | high | designer_assumption | - | - | - | - | - | insufficient_data |
 | forward_step | compared | medium | estimated_from_limited_segments | -0.02 | -0.521 | 0.028 | -0.133 | -0.351 | too_sluggish_provisional_input_amplitude |
-| lateral_right | compared | high | directly_measured | 0.123 | 1.781 | 0.324 | 0.0 | -0.112 | too_aggressive |
+| lateral_right | compared | high | directly_measured | 0.11 | 1.485 | 0.324 | 0.0 | -0.133 | too_aggressive |
 | lateral_left | compared | low | estimated_from_limited_segments | -0.05 | -0.23 | 0.527 | 0.0 | -0.111 | too_sluggish_provisional_input_amplitude |
 | climb | compared | medium | estimated_from_limited_segments | 0.04 | -1.385 | 1.13 | -0.425 | -1.055 | too_sluggish_provisional_input_amplitude |
-| descent | compared | medium | estimated_from_limited_segments | 0.065 | -0.755 | 1.35 | 0.0 | -1.098 | too_sluggish_provisional_input_amplitude |
-| yaw_right | compared | high | directly_measured | -0.247 | -15.894 | 11.741 | 0.0 | -1.449 | too_sluggish |
-| yaw_left | compared | high | directly_measured | -0.247 | -15.894 | -28.277 | 0.0 | -2.549 | too_sluggish |
+| descent | compared | medium | estimated_from_limited_segments | 0.065 | -0.75 | 1.39 | 0.0 | -1.095 | too_sluggish_provisional_input_amplitude |
+| yaw_right | compared | high | directly_measured | -0.24 | -2.107 | 15.2 | 0.0 | -1.346 | too_sluggish |
+| yaw_left | compared | high | directly_measured | -0.24 | -2.108 | -24.819 | 0.0 | -2.448 | too_sluggish |
 
 ## Recommended default protocol stick amplitudes (from Airdata RC)
 
