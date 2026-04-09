@@ -54,6 +54,12 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Jerk limit in m/s^3 on pilot-commanded acceleration. Caps how fast the commanded accel vector can change between FixedUpdate ticks, modelling real-drone onset delay and smoother brake ramps.")]
         [SerializeField] private float accelerationSlewRate = 6f;
 
+        [Tooltip("Maximum yaw-rate overshoot headroom while stick is held. 1.0 disables overshoot allowance.")]
+        [SerializeField, Min(1f)] private float yawOvershootHeadroom = 1.15f;
+
+        [Tooltip("Scales yaw acceleration clamp derived from mode max yaw rate and catch-up authority.")]
+        [SerializeField, Min(0.1f)] private float yawAccelerationLimitMultiplier = 2.25f;
+
         private float currentYawRate;
         private DroneMode activeMode = DroneMode.Normal;
         private Vector3 lastCommandedAcceleration;
@@ -173,9 +179,18 @@ namespace DroneSim.Drone.Flight
             }
             else
             {
-                // Exponential catch-up for onset (preserves existing smooth ramp-up behavior).
-                float yawBlend = 1f - Mathf.Exp(-yawCatchUpAuthority * Time.fixedDeltaTime);
-                currentYawRate = Mathf.Lerp(currentYawRate, targetYawRate, yawBlend);
+                // PD-on-rate model while stick is held.
+                // P term chases target yaw rate; D term damps by opposing current angular rate.
+                // This allows controlled overshoot unlike first-order exponential catch-up.
+                float yawError = targetYawRate - currentYawRate;
+                float yawDamping = currentYawRate * yawStopAuthority;
+                float rawYawAcceleration = yawError * yawCatchUpAuthority - yawDamping;
+                float yawAccelLimit = config.maxYawRateDegrees * yawCatchUpAuthority * yawAccelerationLimitMultiplier;
+                float clampedYawAcceleration = Mathf.Clamp(rawYawAcceleration, -yawAccelLimit, yawAccelLimit);
+                currentYawRate += clampedYawAcceleration * Time.fixedDeltaTime;
+
+                float yawRateLimit = config.maxYawRateDegrees * yawOvershootHeadroom;
+                currentYawRate = Mathf.Clamp(currentYawRate, -yawRateLimit, yawRateLimit);
             }
             Vector3 gravityAssist = Vector3.up * (-UnityEngine.Physics.gravity.y * gravityCancelMultiplier);
             Vector3 desiredPilotAcceleration = worldAcceleration + Vector3.up * verticalAcceleration;

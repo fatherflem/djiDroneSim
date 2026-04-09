@@ -1,6 +1,6 @@
 # DJI Mini 4 Pro Flight Simulator — Project Handoff
 
-> Last updated: 2026-04-09, retargeted Unity to `6000.0.26f1` and reviewed benchmark `session_20260409_122756` (vertical climb/descent improved).
+> Last updated: 2026-04-09, reviewed benchmark `session_20260409_125031` (no additional gain vs `122756`) and queued a yaw PD + vertical/lateral refinement pass.
 > Written by Claude (Opus) for continuity with ChatGPT Codex or any future agent.
 
 ---
@@ -49,7 +49,7 @@ The `DroneFlightModeConfig` fields named `forwardAcceleration`, `lateralAccelera
 |---|---|---|
 | `globalForwardAccelLimit` | **3** m/s² | Scene line 323 |
 | `globalLateralAccelLimit` | **5** m/s² | Scene line 324 |
-| `globalVerticalAccelLimit` | **4** m/s² | Scene line 325 |
+| `globalVerticalAccelLimit` | **7** m/s² | Scene line 325 |
 | `gravityCancelMultiplier` | 1.0 | Scene line 322 |
 | `brakingInputDeadband` | 0.08 | Scene line 326 |
 | `accelerationSlewRate` | **6** m/s³ (code default) | `DJIStyleFlightController.cs:55` |
@@ -68,7 +68,7 @@ The `accelerationSlewRate` is a **jerk limit** — it caps how fast the commande
 7. Apply to Rigidbody
 ```
 
-For yaw, it uses exponential catch-up: `Mathf.Lerp(currentYawRate, targetYawRate, blend)` where `blend = 1 - exp(-yawCatchUpSpeed * dt)`. This is first-order and **cannot overshoot by construction**.
+Yaw command is now a **PD-on-rate loop during active yaw input** (P chases target yaw rate, D damps with current yaw rate), with capped overshoot headroom. Neutral stick still uses hard-stop `MoveTowards` braking.
 
 ---
 
@@ -79,14 +79,14 @@ maxForwardSpeed: 3.5        # m/s target at full stick
 maxLateralSpeed: 10         # m/s target at full stick
 forwardAcceleration: 2.8    # P-gain (not a cap!)
 lateralAcceleration: 2.8    # P-gain (not a cap!)
-forwardStopStrength: 6.5    # braking P-gain
+forwardStopStrength: 4      # braking P-gain
 lateralStopStrength: 7.1    # braking P-gain
-lateralRightSpeedMultiplier: 1      # was 0.12 (hack, removed)
-lateralRightAccelerationMultiplier: 1  # was 0.15 (hack, removed)
+lateralRightSpeedMultiplier: 0.88   # targeted right-lateral trim from Apr 9 rerun deltas
+lateralRightAccelerationMultiplier: 0.92  # targeted right-lateral onset trim
 lateralRightStopMultiplier: 1       # was 1.3 (hack, removed)
 maxClimbSpeed: 4.35
 maxDescentSpeed: 3.7
-verticalAcceleration: 3.5   # P-gain
+verticalAcceleration: 5.4   # P-gain
 maxYawRateDegrees: 82
 yawCatchUpSpeed: 3.6
 yawLeftCatchUpMultiplier: 1  # was 0.55 (hack, reverted)
@@ -99,7 +99,7 @@ tiltLimitDegrees: 30
 tiltSmoothing: 12
 ```
 
-All the "hack" multipliers were left/right asymmetry compensations from when the flight controller had a bug projecting velocities in world-frame instead of body-frame. That bug was fixed in commit `a3d9243`. The multipliers are now all 1.0.
+The original asymmetry "hack" multipliers were removed after the body-frame bug fix (`a3d9243`). Current right-lateral multipliers are intentional, benchmark-driven trims from the April 9 rerun and should be validated with the next F9 session before further adjustment.
 
 ---
 
@@ -123,7 +123,7 @@ Benchmark maneuver assets live in `Assets/Resources/Benchmarks/`. The segment `d
 ### Running the Analyzer
 
 ```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_122756
+python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_125031
 ```
 
 This produces:
@@ -132,7 +132,7 @@ This produces:
 
 ---
 
-## 5. Where We Are Now — Latest Deltas (session_20260409_122756)
+## 5. Where We Are Now — Latest Deltas (session_20260409_125031)
 
 | Category | Real Peak | Sim Peak | Peak Δ | Overshoot Δ | Delay Δ | Verdict |
 |---|---|---|---|---|---|---|
@@ -146,9 +146,9 @@ This produces:
 
 ### Key observations:
 1. **Lateral is close!** Left is nearly matched. Right overshoots by 2.37 — may need `maxLateralSpeed` reduced from 10 or lateral P-gain (`lateralAcceleration`) tweaked. The real asymmetry (right=7.4, left=10.0) may be wind or mechanical; the sim gives symmetric 9.8.
-2. **Climb/descent improved in the latest benchmark, but remain the biggest gaps.** Sim peaks improved to 2.94/2.91 vs previous 2.63/2.63, while real remains 4.33/3.68. The `globalVerticalAccelLimit: 4` and `verticalAcceleration: 3.5` are still likely constraining vertical onset.
-3. **Yaw undershoot is structural.** The first-order `Mathf.Lerp` catch-up can never overshoot. Real yaw overshoots by 1.7-2.8 °/s. Fix requires a PD-on-rate rewrite (see Section 7).
-4. **Forward is close.** 0.52 m/s gap is small and may narrow with a `forwardStopStrength` reduction (6.5 → ~4.0) to allow mild overshoot.
+2. **Climb/descent remain the biggest gaps.** Newest session remained at 2.94/2.91 vs real 4.33/3.68. Vertical authority was increased after this run (`globalVerticalAccelLimit: 7`, `verticalAcceleration: 5.4`) and now needs benchmark confirmation.
+3. **Yaw undershoot was structural in prior runs.** The active-yaw path has now been rewritten to PD-on-rate to permit realistic overshoot; next benchmark should verify overshoot and settle shape improvements.
+4. **Forward is close but still under target.** The 0.52 m/s peak gap is now the smallest non-yaw translational miss after climb/descent.
 
 ---
 
@@ -178,32 +178,20 @@ Fixed `Tools/analyze_airdata.py` — the sim side was computing "steady" from se
 
 ## 7. What Needs To Be Done Next
 
-### Priority 1: Close the vertical gap (climb/descent)
-- **Problem**: Sim peaks at 2.94 m/s (climb) and 2.91 m/s (descent), still below real 4.33 / 3.68 m/s.
-- **Root cause**: `globalVerticalAccelLimit: 4` + jerk limit of 6 m/s³ mean the sim takes ~0.67s just to reach full vertical accel, then has limited time to build speed.
-- **Options**:
-  - Raise `globalVerticalAccelLimit` to 5-6 (allows faster vertical onset)
-  - Raise `verticalAcceleration` P-gain (currently 3.5; higher = faster error correction)
-  - Lower jerk limit for vertical specifically (would require per-axis slew, currently global)
-  - Accept that the real drone may have a non-linear or bang-bang vertical controller that our P-control can't match
+### Priority 1: Validate vertical authority increase (climb/descent)
+- **Problem**: Sim peaks were 2.94 m/s (climb) and 2.91 m/s (descent), below real 4.33 / 3.68 m/s.
+- **Change already applied**: `globalVerticalAccelLimit` raised to 7 and `verticalAcceleration` raised to 5.4.
+- **Next action**: run full F9 benchmark and confirm climb/descent peak and overshoot movement is in the correct direction.
 
-### Priority 2: Fix lateral right asymmetry
-- **Problem**: Sim gives symmetric 9.81 m/s for both left and right. Real gives 7.44 right, 10.04 left.
-- **Diagnosis**: The real asymmetry is likely wind or sensor bias in the reference flight. The sim's symmetric response is arguably correct. Consider:
-  - Accepting the right-side overshoot as an artifact of the reference flight conditions
-  - OR reducing `maxLateralSpeed` to ~8 to split the difference
-  - The `lateralRightSpeedMultiplier` exists for this if you want asymmetric tuning, but we intentionally removed those hacks
+### Priority 2: Validate right-lateral trim
+- **Problem**: `lateral_right` overshoots by +2.37 m/s while `lateral_left` is already near target.
+- **Change already applied**: `lateralRightSpeedMultiplier` set to 0.88 and `lateralRightAccelerationMultiplier` set to 0.92.
+- **Next action**: rerun benchmark and check whether right peak drops without materially degrading left lateral fidelity.
 
-### Priority 3: Yaw PD-on-rate rewrite (structural)
-- **Problem**: `Mathf.Lerp` catch-up is first-order and cannot produce overshoot. Real yaw overshoots by 1.7-2.8 °/s.
-- **Solution**: Replace the exponential catch-up with a PD controller on yaw rate:
-  ```
-  float yawError = targetYawRate - currentYawRate;
-  float yawAccel = yawError * kP - currentYawRate * kD;  // kD damps, allows overshoot
-  currentYawRate += yawAccel * Time.fixedDeltaTime;
-  ```
-  Use existing `yawCatchUpSpeed` as kP and `yawStopSpeed` as kD. This would let yaw overshoot naturally and then damp.
-- **Risk**: Moderate — yaw feel will change, needs careful testing.
+### Priority 3: Validate new yaw PD behavior
+- **Problem**: Yaw was undershooting with insufficient overshoot/settle shape match.
+- **Change already applied**: active-yaw dynamics now use PD-on-rate with acceleration clamp and overshoot headroom.
+- **Next action**: benchmark yaw-left/yaw-right and retune `yawCatchUpSpeed`, `yawStopSpeed`, `yawOvershootHeadroom`, and `yawAccelerationLimitMultiplier` from measured deltas.
 
 ### Priority 4: Forward overshoot
 - **Problem**: Sim undershoots real by 0.52 m/s peak and 0.35 overshoot.
@@ -220,8 +208,9 @@ Fixed `Tools/analyze_airdata.py` — the sim side was computing "steady" from se
 ## 8. Conventions and Workflow
 
 ### Latest handoff update (2026-04-09)
-- Updated `ProjectSettings/ProjectVersion.txt` to target Unity `6000.0.26f1` (was `6000.0.0f1`).
-- Logged new benchmark session artifact: `BenchmarkRuns/session_20260409_122756.zip`.
+- Logged new benchmark session artifact: `BenchmarkRuns/session_20260409_125031.zip`.
+- Confirmed `session_20260409_125031` is numerically unchanged vs `session_20260409_122756` on all primary maneuver deltas.
+- Started a new refinement pass: yaw PD-on-rate control while stick-held, higher vertical authority (`globalVerticalAccelLimit: 7`, `verticalAcceleration: 5.4`), and moderated right-lateral multipliers (`0.88` speed, `0.92` acceleration).
 
 - **Work on `main` branch** directly (no feature branches unless asked).
 - **Don't create PRs** unless the user explicitly asks.
