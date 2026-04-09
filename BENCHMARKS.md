@@ -108,6 +108,7 @@ The first `session_manifest.jsonl` line now records capture context including:
 - each run manifest line also includes `amplitude_confidence_label`, `amplitude_provenance`, `amplitude_provisional`
 - controller global limits
 - active mode config values (Cine/Normal/Sport tuning snapshots)
+  - includes forward-axis slew settings when configured (`forward_acceleration_slew_rate`, `forward_brake_slew_rate`)
 
 ## Benchmark-safe environment isolation
 `BenchmarkRunner` coordinates `BenchmarkEnvironmentController` so benchmark maneuvers run in a sterile area:
@@ -172,7 +173,7 @@ Single-session comparison (recommended during tuning iterations):
 ```bash
 python Tools/analyze_airdata.py \
   Apr-8th-2026-08-15AM-Flight-Airdata.csv \
-  --session session_20260409_145236
+  --session session_20260409_183817
 ```
 
 Multiple specific sessions:

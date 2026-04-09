@@ -100,6 +100,8 @@ namespace DroneSim.Drone.Benchmark
             public float forward_acceleration;
             public float lateral_acceleration;
             public float forward_stop_strength;
+            public float forward_acceleration_slew_rate;
+            public float forward_brake_slew_rate;
             public float lateral_stop_strength;
             public float lateral_right_speed_multiplier;
             public float lateral_right_acceleration_multiplier;
@@ -641,6 +643,8 @@ namespace DroneSim.Drone.Benchmark
                 forward_acceleration = config.forwardAcceleration,
                 lateral_acceleration = config.lateralAcceleration,
                 forward_stop_strength = config.forwardStopStrength,
+                forward_acceleration_slew_rate = config.forwardAccelerationSlewRate,
+                forward_brake_slew_rate = config.forwardBrakeSlewRate,
                 lateral_stop_strength = config.lateralStopStrength,
                 lateral_right_speed_multiplier = config.lateralRightSpeedMultiplier,
                 lateral_right_acceleration_multiplier = config.lateralRightAccelerationMultiplier,
