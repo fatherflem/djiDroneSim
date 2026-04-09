@@ -1,6 +1,6 @@
 # DJI Mini 4 Pro Flight Simulator — Project Handoff
 
-> Last updated: 2026-04-09, commit `792ae5b` + new benchmark `session_20260409_115951`
+> Last updated: 2026-04-09, retargeted Unity to `6000.0.26f1` and reviewed benchmark `session_20260409_122756` (vertical climb/descent improved).
 > Written by Claude (Opus) for continuity with ChatGPT Codex or any future agent.
 
 ---
@@ -123,7 +123,7 @@ Benchmark maneuver assets live in `Assets/Resources/Benchmarks/`. The segment `d
 ### Running the Analyzer
 
 ```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_115951
+python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_122756
 ```
 
 This produces:
@@ -132,21 +132,21 @@ This produces:
 
 ---
 
-## 5. Where We Are Now — Latest Deltas (session_20260409_115951)
+## 5. Where We Are Now — Latest Deltas (session_20260409_122756)
 
 | Category | Real Peak | Sim Peak | Peak Δ | Overshoot Δ | Delay Δ | Verdict |
 |---|---|---|---|---|---|---|
 | forward_step | 2.63 m/s | 2.11 m/s | **−0.52** | −0.35 | −0.02 | Sluggish (small gap) |
 | lateral_right | 7.44 m/s | 9.81 m/s | **+2.37** | −0.07 | +0.15 | **Too aggressive** |
 | lateral_left | 10.04 m/s | 9.81 m/s | **−0.23** | −0.11 | −0.05 | Nearly matched |
-| climb | 4.33 m/s | 2.63 m/s | **−1.70** | −1.13 | +0.02 | Sluggish |
-| descent | 3.68 m/s | 2.63 m/s | **−1.05** | −1.16 | +0.05 | Sluggish |
+| climb | 4.33 m/s | 2.94 m/s | **−1.39** | −1.06 | +0.04 | Improved but still sluggish |
+| descent | 3.68 m/s | 2.91 m/s | **−0.76** | −1.10 | +0.07 | Improved but still sluggish |
 | yaw_right | 82.0 °/s | 79.6 °/s | **−2.40** | −1.31 | −0.24 | Sluggish (structural) |
 | yaw_left | 82.0 °/s | 79.6 °/s | **−2.40** | −2.41 | −0.24 | Sluggish (structural) |
 
 ### Key observations:
 1. **Lateral is close!** Left is nearly matched. Right overshoots by 2.37 — may need `maxLateralSpeed` reduced from 10 or lateral P-gain (`lateralAcceleration`) tweaked. The real asymmetry (right=7.4, left=10.0) may be wind or mechanical; the sim gives symmetric 9.8.
-2. **Climb/descent are the biggest remaining gaps.** Sim peaks at 2.63 vs real 4.33/3.68. The `globalVerticalAccelLimit: 4` and `verticalAcceleration: 3.5` are constraining vertical onset. `maxClimbSpeed: 4.35` is high enough but the sim can't reach it fast enough in 2.5s with current gains + jerk limit.
+2. **Climb/descent improved in the latest benchmark, but remain the biggest gaps.** Sim peaks improved to 2.94/2.91 vs previous 2.63/2.63, while real remains 4.33/3.68. The `globalVerticalAccelLimit: 4` and `verticalAcceleration: 3.5` are still likely constraining vertical onset.
 3. **Yaw undershoot is structural.** The first-order `Mathf.Lerp` catch-up can never overshoot. Real yaw overshoots by 1.7-2.8 °/s. Fix requires a PD-on-rate rewrite (see Section 7).
 4. **Forward is close.** 0.52 m/s gap is small and may narrow with a `forwardStopStrength` reduction (6.5 → ~4.0) to allow mild overshoot.
 
@@ -179,7 +179,7 @@ Fixed `Tools/analyze_airdata.py` — the sim side was computing "steady" from se
 ## 7. What Needs To Be Done Next
 
 ### Priority 1: Close the vertical gap (climb/descent)
-- **Problem**: Sim peaks at 2.63 m/s, real peaks at 4.33 (climb) / 3.68 (descent).
+- **Problem**: Sim peaks at 2.94 m/s (climb) and 2.91 m/s (descent), still below real 4.33 / 3.68 m/s.
 - **Root cause**: `globalVerticalAccelLimit: 4` + jerk limit of 6 m/s³ mean the sim takes ~0.67s just to reach full vertical accel, then has limited time to build speed.
 - **Options**:
   - Raise `globalVerticalAccelLimit` to 5-6 (allows faster vertical onset)
@@ -218,6 +218,10 @@ Fixed `Tools/analyze_airdata.py` — the sim side was computing "steady" from se
 ---
 
 ## 8. Conventions and Workflow
+
+### Latest handoff update (2026-04-09)
+- Updated `ProjectSettings/ProjectVersion.txt` to target Unity `6000.0.26f1` (was `6000.0.0f1`).
+- Logged new benchmark session artifact: `BenchmarkRuns/session_20260409_122756.zip`.
 
 - **Work on `main` branch** directly (no feature branches unless asked).
 - **Don't create PRs** unless the user explicitly asks.
