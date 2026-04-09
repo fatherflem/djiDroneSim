@@ -3,57 +3,92 @@
 ## Scope and latest evidence
 
 - Real benchmark CSV: `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
-- Baseline simulator session: `BenchmarkRuns/session_20260409_115951.zip`
-- Prior rerun (pre-refinement): `BenchmarkRuns/session_20260409_125031.zip`
-- **Latest key rerun (post-refinement): `BenchmarkRuns/session_20260409_145236.zip`**
+- Session anchors:
+  - `BenchmarkRuns/session_20260409_125031.zip` (pre-regression reference)
+  - `BenchmarkRuns/session_20260409_145236.zip` (yaw-regressed)
+  - `BenchmarkRuns/session_20260409_164309.zip` (**post-patch validation, latest decisive evidence**)
 
-The newest decisive evidence is `session_20260409_145236`.
+The newest decisive evidence is `session_20260409_164309`.
 
-## What changed from `125031` -> `145236`
+## Key three-session comparison (`125031` vs `145236` vs `164309`)
 
-Values below are from the analyzer (`Tools/analyze_airdata.py`) against the Apr 8 real benchmark log.
+Values are from `Tools/analyze_airdata.py` against the Apr 8 real benchmark log.
 
-| Category | `125031` sim peak | `145236` sim peak | Change | Interpretation |
+| Category | `125031` sim peak | `145236` sim peak | `164309` sim peak | Story |
 |---|---:|---:|---:|---|
-| forward_step | 2.112 m/s | 2.112 m/s | 0.000 | unchanged |
-| lateral_right | 9.812 m/s | 8.925 m/s | -0.887 | **improved toward real 7.44** |
-| lateral_left | 9.812 m/s | 9.812 m/s | 0.000 | unchanged (still close to real 10.04) |
-| climb | 2.940 m/s | 2.940 m/s | 0.000 | unchanged |
-| descent | 2.911 m/s | 2.925 m/s | +0.014 | effectively unchanged |
-| yaw_right | 79.597 °/s | 38.829 °/s | -40.768 | **major regression** |
-| yaw_left | 79.596 °/s | 38.831 °/s | -40.765 | **major regression** |
+| forward_step | 2.112 m/s | 2.112 m/s | 2.112 m/s | unchanged (still unresolved) |
+| lateral_right | 9.812 m/s | 8.925 m/s | 8.925 m/s | right-side improvement preserved |
+| lateral_left | 9.812 m/s | 9.812 m/s | 9.812 m/s | unchanged |
+| climb | 2.940 m/s | 2.940 m/s | 2.940 m/s | unchanged |
+| descent | 2.911 m/s | 2.925 m/s | 2.925 m/s | effectively unchanged |
+| yaw_right | 79.597 °/s | 38.829 °/s | 79.893 °/s | fixed back to expected range |
+| yaw_left | 79.596 °/s | 38.831 °/s | 79.892 °/s | fixed back to expected range |
 
-## Yaw regression diagnosis (confirmed in controller code)
+## Yaw regression diagnosis (code + math + behavior)
 
-In `DJIStyleFlightController`, the active-stick yaw path used:
+### Regressed active-input law
+
+In `DJIStyleFlightController`, the regressed active-stick branch used:
 
 - `yawError = targetYawRate - currentYawRate`
 - `yawDamping = currentYawRate * yawStopAuthority`
 - `rawYawAcceleration = yawError * yawCatchUpAuthority - yawDamping`
 
-That structure gives a non-zero-input equilibrium at:
+That produces held-input equilibrium:
 
 `equilibriumYawRate = targetYawRate * yawCatchUpAuthority / (yawCatchUpAuthority + yawStopAuthority)`
 
-With Normal mode values from the run snapshot (`maxYawRateDegrees=82`, `yawCatchUpSpeed=3.6`, `yawStopSpeed=4`):
+Using Normal values (`maxYawRateDegrees=82`, `yawCatchUpSpeed=3.6`, `yawStopSpeed=4.0`):
 
 `82 * 3.6 / (3.6 + 4.0) = 38.84 °/s`
 
-This matches the observed collapse to ~38.8 °/s in `session_20260409_145236` and confirms a structural controller bias, not random noise.
+This matches `145236` (~38.83 °/s right/left), proving a structural bias.
+
+### Patched law
+
+Active-stick branch now uses catch-up only:
+
+- `rawYawAcceleration = (targetYawRate - currentYawRate) * yawCatchUpAuthority`
+
+Neutral stick still uses hard-stop braking (`MoveTowards`) with `yawStopAuthority`.
+
+### Behavioral validation in `164309`
+
+- **Held input restored:**
+  - yaw_right peak `79.893 °/s`
+  - yaw_left peak `79.892 °/s`
+- **Release remains crisp:** from settle-start yaw rate to near-zero:
+  - `125031`: `<5°/s` in `0.26s`, `<1°/s` in `0.28s`
+  - `164309`: `<5°/s` in `0.26s`, `<1°/s` in `0.28s`
+
+No obvious long tail appeared; post-patch stop profile matches the healthy reference session.
+
+## Isolation check (did yaw patch disturb other axes?)
+
+`145236 -> 164309` shows:
+- `forward_step`: `2.112 -> 2.112` (no change)
+- `lateral_right`: `8.925 -> 8.925` (right-trim preserved)
+- `lateral_left`: `9.812 -> 9.812` (no change)
+- `climb`: `2.940 -> 2.940` (no change)
+- `descent`: `2.925 -> 2.925` (no change)
+- `yaw_right`: `38.829 -> 79.893` (fixed)
+- `yaw_left`: `38.831 -> 79.892` (fixed)
+
+Conclusion: observed post-patch change is isolated to yaw held-input behavior.
 
 ## Vertical interpretation update
 
-`climb`/`descent` remain near ~2.94/~2.93 m/s despite increased vertical authority values. Under the current benchmark protocol, this is likely dominated by controller slew/protocol interaction, not simply insufficient vertical gain:
+Vertical remains essentially flat despite authority increases (`~2.94` climb / `~2.93` descent). Under current protocol this still fits a slew/protocol-limited explanation:
 
-- benchmark vertical input hold is only `1.0s` (`Maneuver_VerticalStep.asset`, `Maneuver_Descent.asset`)
-- commanded acceleration is slew-limited by `accelerationSlewRate` before application
-- therefore short-window peak speed can remain ramp-limited even when vertical gain/caps increase
+- `climb` / `descent` holds are `1.0s`
+- commanded acceleration is slew-limited (`accelerationSlewRate`) before application
+- short window peak can stay ramp-limited
 
-Conclusion: do not auto-prescribe additional vertical gain from this evidence alone; first separate onset-shape targets from peak-speed targets in protocol interpretation.
+So this is still not strong evidence for a simple raw-gain deficit.
 
-## Decision summary (post-145236 audit)
+## Decision summary (post-164309 audit)
 
-1. Keep the right-lateral trim (`lateralRightSpeedMultiplier=0.88`, `lateralRightAccelerationMultiplier=0.92`) because it improved the known right-only overshoot problem.
-2. Revert/fix the active-yaw damping structure so held yaw converges to command while neutral stick still brakes hard.
-3. Reframe vertical as likely slew/protocol-limited in current 1.0s step windows; avoid blind gain-only retuning.
-4. Keep forward provenance caveat active (`forward_step` amplitude confidence remains provisional/medium).
+1. Yaw held-input regression is fixed and can be considered **done for now**.
+2. Keep right-lateral trim (`0.88` speed multiplier, `0.92` acceleration multiplier).
+3. Prioritize **forward** as next tuning target.
+4. Treat vertical as a protocol/onset-shape investigation next, not immediate gain inflation.
