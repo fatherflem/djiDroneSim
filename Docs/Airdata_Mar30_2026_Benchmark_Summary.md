@@ -61,11 +61,11 @@ Source CSV (used directly):
 | Category | Status | Sim input confidence | Sim input provenance | Delay Δ | Peak Δ | Accel Δ | Settle Δ | Overshoot Δ | Verdict |
 |---|---|---|---|---:|---:|---:|---:|---:|---|
 | hover_hold | compared | high | designer_assumption | - | - | - | - | - | insufficient_data |
-| forward_step | compared | medium | estimated_from_limited_segments | 0.0 | -0.233 | 0.028 | 0.127 | 0.492 | too_sluggish_provisional_input_amplitude |
-| lateral_right | compared | high | directly_measured | -0.01 | -2.34 | 0.324 | 0.0 | 0.43 | too_sluggish |
-| lateral_left | compared | low | estimated_from_limited_segments | -0.21 | -4.942 | 0.527 | 0.0 | 0.389 | too_sluggish_provisional_input_amplitude |
-| climb | compared | medium | estimated_from_limited_segments | 0.12 | 0.677 | 0.25 | -0.425 | -0.691 | too_aggressive_provisional_input_amplitude |
-| descent | compared | medium | estimated_from_limited_segments | 0.125 | 0.723 | 0.75 | 0.0 | -0.731 | too_aggressive_provisional_input_amplitude |
+| forward_step | compared | medium | estimated_from_limited_segments | -0.02 | -0.521 | 0.028 | -0.133 | -0.351 | too_sluggish_provisional_input_amplitude |
+| lateral_right | compared | high | directly_measured | -0.13 | -4.574 | 0.324 | 0.0 | 0.026 | too_sluggish |
+| lateral_left | compared | low | estimated_from_limited_segments | -0.33 | -7.176 | 0.527 | 0.0 | -0.015 | too_sluggish_provisional_input_amplitude |
+| climb | compared | medium | estimated_from_limited_segments | 0.02 | -1.457 | 0.25 | -0.425 | -1.085 | too_sluggish_provisional_input_amplitude |
+| descent | compared | medium | estimated_from_limited_segments | 0.045 | -0.846 | 0.75 | 0.0 | -1.134 | too_sluggish_provisional_input_amplitude |
 | yaw_right | compared | high | directly_measured | -0.24 | -2.403 | 4.823 | 0.0 | -1.307 | too_sluggish |
 | yaw_left | compared | high | directly_measured | -0.24 | -2.404 | -35.195 | 0.0 | -2.408 | too_sluggish |
 

@@ -42,7 +42,7 @@
         "neutral dwell before+after",
         "attitude response agrees"
       ],
-      "cluster_id": 74874,
+      "cluster_id": 76272,
       "sequence_index": 4
     },
     {
@@ -62,7 +62,7 @@
         "neutral dwell on one side",
         "attitude response agrees"
       ],
-      "cluster_id": 29854,
+      "cluster_id": 11065,
       "sequence_index": 5
     },
     {
@@ -84,7 +84,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 87409,
+      "cluster_id": 786,
       "sequence_index": 5
     },
     {
@@ -106,7 +106,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 25557,
+      "cluster_id": 48907,
       "sequence_index": 5
     },
     {
@@ -125,7 +125,7 @@
         "neutral dwell on one side",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 69330,
+      "cluster_id": 91908,
       "sequence_index": 5
     },
     {
@@ -145,7 +145,7 @@
         "neutral dwell before+after",
         "motion sign agrees"
       ],
-      "cluster_id": 53581,
+      "cluster_id": 68406,
       "sequence_index": 5
     },
     {
@@ -165,7 +165,7 @@
         "neutral dwell before+after",
         "motion sign agrees"
       ],
-      "cluster_id": 47925,
+      "cluster_id": 61691,
       "sequence_index": 5
     },
     {
@@ -187,7 +187,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 21867,
+      "cluster_id": 18523,
       "sequence_index": 5
     },
     {
@@ -209,7 +209,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 11294,
+      "cluster_id": 7950,
       "sequence_index": 5
     },
     {
@@ -231,7 +231,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 70663,
+      "cluster_id": 40420,
       "sequence_index": 5
     },
     {
@@ -253,7 +253,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 17729,
+      "cluster_id": 89434,
       "sequence_index": 5
     },
     {
@@ -274,7 +274,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 98600,
+      "cluster_id": 28916,
       "sequence_index": 5
     },
     {
@@ -295,7 +295,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 43511,
+      "cluster_id": 37414,
       "sequence_index": 5
     },
     {
@@ -315,7 +315,7 @@
         "neutral dwell before+after",
         "attitude response agrees"
       ],
-      "cluster_id": 51987,
+      "cluster_id": 97724,
       "sequence_index": 5
     },
     {
@@ -335,7 +335,7 @@
         "neutral dwell before+after",
         "attitude response agrees"
       ],
-      "cluster_id": 50204,
+      "cluster_id": 31379,
       "sequence_index": 5
     },
     {
@@ -356,7 +356,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 73739,
+      "cluster_id": 96952,
       "sequence_index": 5
     },
     {
@@ -377,7 +377,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 12741,
+      "cluster_id": 49051,
       "sequence_index": 6
     },
     {
@@ -398,7 +398,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 4824,
+      "cluster_id": 94783,
       "sequence_index": 6
     },
     {
@@ -419,7 +419,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 56378,
+      "cluster_id": 79218,
       "sequence_index": 7
     },
     {
@@ -440,7 +440,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 54950,
+      "cluster_id": 62681,
       "sequence_index": 7
     },
     {
@@ -459,7 +459,7 @@
         "low cross-axis input",
         "motion sign agrees"
       ],
-      "cluster_id": 81348,
+      "cluster_id": 60652,
       "sequence_index": 7
     },
     {
@@ -478,7 +478,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 72603,
+      "cluster_id": 94979,
       "sequence_index": 7
     }
   ],
@@ -1435,31 +1435,31 @@
         "residual_drift_mean": 1.899
       },
       "sim": {
-        "response_delay_s_mean": 0.3,
-        "peak_rate_mean": 2.4,
+        "response_delay_s_mean": 0.28,
+        "peak_rate_mean": 2.112,
         "max_accel_mean": 3.0,
-        "settle_time_s_mean": 0.26,
-        "overshoot_mean": 0.925,
-        "residual_drift_mean": 0.098,
+        "settle_time_s_mean": 0.0,
+        "overshoot_mean": 0.082,
+        "residual_drift_mean": 1.961,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": 0.0,
-        "peak_rate_mean": -0.233,
+        "response_delay_s_mean": -0.02,
+        "peak_rate_mean": -0.521,
         "max_accel_mean": 0.028,
-        "settle_time_s_mean": 0.127,
-        "overshoot_mean": 0.492,
-        "residual_drift_mean": -1.801
+        "settle_time_s_mean": -0.133,
+        "overshoot_mean": -0.351,
+        "residual_drift_mean": 0.062
       },
       "delta_assessment": {
         "response_delay_s_mean": "matches_well_provisional_input_amplitude",
         "peak_rate_mean": "too_sluggish_provisional_input_amplitude",
         "max_accel_mean": "matches_well_provisional_input_amplitude",
         "settle_time_s_mean": "matches_well_provisional_input_amplitude",
-        "overshoot_mean": "too_aggressive_provisional_input_amplitude",
-        "residual_drift_mean": "too_sluggish_provisional_input_amplitude"
+        "overshoot_mean": "too_sluggish_provisional_input_amplitude",
+        "residual_drift_mean": "matches_well_provisional_input_amplitude"
       },
       "real_evidence": "directly_measured_from_airdata",
       "sim_evidence": "directly_measured_from_sim_csv",
@@ -1484,30 +1484,30 @@
         "residual_drift_mean": 7.125
       },
       "sim": {
-        "response_delay_s_mean": 0.44,
-        "peak_rate_mean": 5.1,
+        "response_delay_s_mean": 0.32,
+        "peak_rate_mean": 2.866,
         "max_accel_mean": 5.0,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.604,
-        "residual_drift_mean": 4.061,
+        "overshoot_mean": 0.2,
+        "residual_drift_mean": 2.516,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": -0.01,
-        "peak_rate_mean": -2.34,
+        "response_delay_s_mean": -0.13,
+        "peak_rate_mean": -4.574,
         "max_accel_mean": 0.324,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.43,
-        "residual_drift_mean": -3.064
+        "overshoot_mean": 0.026,
+        "residual_drift_mean": -4.609
       },
       "delta_assessment": {
-        "response_delay_s_mean": "matches_well",
+        "response_delay_s_mean": "too_sluggish",
         "peak_rate_mean": "too_sluggish",
         "max_accel_mean": "too_aggressive",
         "settle_time_s_mean": "matches_well",
-        "overshoot_mean": "too_aggressive",
+        "overshoot_mean": "matches_well",
         "residual_drift_mean": "too_sluggish"
       },
       "real_evidence": "directly_measured_from_airdata",
@@ -1533,30 +1533,30 @@
         "residual_drift_mean": 9.656
       },
       "sim": {
-        "response_delay_s_mean": 0.44,
-        "peak_rate_mean": 5.1,
+        "response_delay_s_mean": 0.32,
+        "peak_rate_mean": 2.866,
         "max_accel_mean": 5.0,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.604,
-        "residual_drift_mean": 4.061,
+        "overshoot_mean": 0.2,
+        "residual_drift_mean": 2.516,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": -0.21,
-        "peak_rate_mean": -4.942,
+        "response_delay_s_mean": -0.33,
+        "peak_rate_mean": -7.176,
         "max_accel_mean": 0.527,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.389,
-        "residual_drift_mean": -5.595
+        "overshoot_mean": -0.015,
+        "residual_drift_mean": -7.14
       },
       "delta_assessment": {
         "response_delay_s_mean": "too_sluggish_provisional_input_amplitude",
         "peak_rate_mean": "too_sluggish_provisional_input_amplitude",
         "max_accel_mean": "too_aggressive_provisional_input_amplitude",
         "settle_time_s_mean": "matches_well_provisional_input_amplitude",
-        "overshoot_mean": "too_aggressive_provisional_input_amplitude",
+        "overshoot_mean": "matches_well_provisional_input_amplitude",
         "residual_drift_mean": "too_sluggish_provisional_input_amplitude"
       },
       "real_evidence": "directly_measured_from_airdata",
@@ -1582,31 +1582,31 @@
         "residual_drift_mean": 3.091
       },
       "sim": {
-        "response_delay_s_mean": 0.42,
-        "peak_rate_mean": 5.002,
+        "response_delay_s_mean": 0.32,
+        "peak_rate_mean": 2.868,
         "max_accel_mean": 5.0,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.594,
-        "residual_drift_mean": 3.891,
+        "overshoot_mean": 0.2,
+        "residual_drift_mean": 2.518,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": 0.12,
-        "peak_rate_mean": 0.677,
+        "response_delay_s_mean": 0.02,
+        "peak_rate_mean": -1.457,
         "max_accel_mean": 0.25,
         "settle_time_s_mean": -0.425,
-        "overshoot_mean": -0.691,
-        "residual_drift_mean": 0.8
+        "overshoot_mean": -1.085,
+        "residual_drift_mean": -0.573
       },
       "delta_assessment": {
-        "response_delay_s_mean": "too_aggressive_provisional_input_amplitude",
-        "peak_rate_mean": "too_aggressive_provisional_input_amplitude",
+        "response_delay_s_mean": "matches_well_provisional_input_amplitude",
+        "peak_rate_mean": "too_sluggish_provisional_input_amplitude",
         "max_accel_mean": "too_aggressive_provisional_input_amplitude",
         "settle_time_s_mean": "too_sluggish_provisional_input_amplitude",
         "overshoot_mean": "too_sluggish_provisional_input_amplitude",
-        "residual_drift_mean": "too_aggressive_provisional_input_amplitude"
+        "residual_drift_mean": "too_sluggish_provisional_input_amplitude"
       },
       "real_evidence": "directly_measured_from_airdata",
       "sim_evidence": "directly_measured_from_sim_csv",
@@ -1631,27 +1631,27 @@
         "residual_drift_mean": 2.281
       },
       "sim": {
-        "response_delay_s_mean": 0.4,
-        "peak_rate_mean": 4.398,
+        "response_delay_s_mean": 0.32,
+        "peak_rate_mean": 2.829,
         "max_accel_mean": 5.0,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.584,
-        "residual_drift_mean": 2.808,
+        "overshoot_mean": 0.181,
+        "residual_drift_mean": 2.504,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": 0.125,
-        "peak_rate_mean": 0.723,
+        "response_delay_s_mean": 0.045,
+        "peak_rate_mean": -0.846,
         "max_accel_mean": 0.75,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": -0.731,
-        "residual_drift_mean": 0.527
+        "overshoot_mean": -1.134,
+        "residual_drift_mean": 0.223
       },
       "delta_assessment": {
         "response_delay_s_mean": "too_aggressive_provisional_input_amplitude",
-        "peak_rate_mean": "too_aggressive_provisional_input_amplitude",
+        "peak_rate_mean": "too_sluggish_provisional_input_amplitude",
         "max_accel_mean": "too_aggressive_provisional_input_amplitude",
         "settle_time_s_mean": "matches_well_provisional_input_amplitude",
         "overshoot_mean": "too_sluggish_provisional_input_amplitude",
