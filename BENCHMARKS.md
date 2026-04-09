@@ -60,7 +60,7 @@ Default protocol stick amplitude:
   - `amplitudeProvenance` (`DirectlyMeasured`, `EstimatedFromLimitedSegments`, `DesignerAssumption`)
   - legacy/freetext trace notes remain in `inputAmplitudeEvidence` + `inputAmplitudeNotes`
 - update these fields in `Assets/Resources/Benchmarks/Maneuver_*.asset` whenever new real logs improve evidence quality
-- regenerate RC-derived recommendation artifacts with (current primary reference is Apr 8, 2026):
+- regenerate RC-derived recommendation artifacts from the historical Mar 30 calibration log when needed:
   - `python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root ""`
 
 ## Repeatable reset policy before every run
@@ -141,6 +141,11 @@ Optional scene debug:
 `BenchmarkRuns/` is the only user-facing drop location for comparison inputs. Manual per-session subfolders are not required in the repo workflow.
 
 ## Analysis workflow (real + sim)
+Authoritative real-flight baseline for the current benchmark pass:
+- `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
+
+Historical logs (for example `Mar-30th-2026-08-31AM-Flight-Airdata.csv`) are useful for amplitude provenance, but should not be treated as the primary benchmark baseline unless explicitly noted.
+
 Real-only pass:
 
 ```bash
