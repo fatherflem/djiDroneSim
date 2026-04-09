@@ -107,24 +107,26 @@ The original asymmetry "hack" multipliers were removed after the body-frame bug 
 
 Press **F9** in Play mode to run the full benchmark protocol. It plays each maneuver sequentially:
 
-1. `hover_hold` — 3s hold, no input
-2. `forward_step` — full pitch forward, 2.5s hold
-3. `lateral_right` — full roll right, 2.5s hold
-4. `lateral_left` — full roll left, 2.5s hold
-5. `climb` — full throttle up, 2.5s hold
-6. `descent` — full throttle down, 2.5s hold
-7. `yaw_right` — full yaw right, 2.5s hold
-8. `yaw_left` — full yaw left, 2.5s hold
+1. `hover_hold` — neutral hold segment **7.0s** (10.0s total including runner pre-roll + settle)
+2. `forward_step` — +pitch step, **1.0s** hold
+3. `lateral_right` — +roll step, **2.5s** hold
+4. `lateral_left` — -roll step, **2.5s** hold
+5. `climb` — +throttle step, **1.0s** hold
+6. `descent` — -throttle step, **1.0s** hold
+7. `yaw_right` — +yaw step, **1.0s** hold
+8. `yaw_left` — -yaw step, **1.0s** hold
 
 Each maneuver has a pre-roll (1.5s calm), input phase, and settle phase (1.5s release). Output goes to `BenchmarkRuns/session_YYYYMMDD_HHMMSS/`.
 
-Benchmark maneuver assets live in `Assets/Resources/Benchmarks/`. The segment `duration` field was extended from 1.0 to 2.5 seconds for lateral maneuvers (commit `f609a76`) because the 1-second hold at 5 m/s² cap couldn't reach the real peak of ~7-10 m/s.
+Benchmark maneuver assets in `Assets/Resources/Benchmarks/` are the source of truth for input-phase timing (`ManeuverDefinition.segments[].duration`). Currently only the lateral step maneuvers were extended from 1.0 to 2.5 seconds (commit `f609a76`); the other non-hover step maneuvers remain 1.0 seconds.
 
 ### Running the Analyzer
 
 ```bash
 python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_125031
 ```
+
+`Apr-8th-2026-08-15AM-Flight-Airdata.csv` is the authoritative real-flight benchmark reference for this tuning pass. The Mar 30 log remains useful for stick-amplitude calibration history but is not the primary benchmark baseline.
 
 This produces:
 - `Docs/airdata_mar30_analysis.json` — full structured comparison
