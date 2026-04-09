@@ -47,12 +47,12 @@ Tune these first (in this order):
 Use this helper when you ingest large Airdata logs:
 
 ```bash
-python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv
+python Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv
 ```
 
 It outputs:
-- `Docs/airdata_mar30_analysis.json` (machine-readable)
-- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` (human summary)
+- `Docs/airdata_mar30_analysis.json` (machine-readable; default filename is legacy and does not imply source date)
+- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` (human summary; default filename is legacy and does not imply source date)
 - confidence-labeled segment metrics for hover/forward/lateral/vertical/yaw windows
 - `evidence_classification` for each key target as:
   - `directly_measured`
@@ -89,7 +89,7 @@ Use `DroneModeCine`, `DroneModeNormal`, and `DroneModeSport` assets.
 3. Run:
 
 ```bash
-python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root BenchmarkRuns
+python Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --sim-root BenchmarkRuns
 ```
 
 4. Review `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` and `Docs/airdata_mar30_analysis.json`.
