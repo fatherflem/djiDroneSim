@@ -203,7 +203,31 @@ namespace DroneSim.Drone.Flight
             Vector3 gravityAssist = Vector3.up * (-UnityEngine.Physics.gravity.y * gravityCancelMultiplier);
             Vector3 desiredPilotAcceleration = worldAcceleration + Vector3.up * verticalAcceleration;
             float maxPilotAccelDelta = accelerationSlewRate * Time.fixedDeltaTime;
-            slewedPilotAcceleration = Vector3.MoveTowards(slewedPilotAcceleration, desiredPilotAcceleration, maxPilotAccelDelta);
+            Vector3 globallySlewedPilotAcceleration = Vector3.MoveTowards(
+                slewedPilotAcceleration,
+                desiredPilotAcceleration,
+                maxPilotAccelDelta);
+
+            float configuredForwardAccelerationSlew = config.forwardAccelerationSlewRate > 0f
+                ? config.forwardAccelerationSlewRate
+                : accelerationSlewRate;
+            float configuredForwardBrakeSlew = config.forwardBrakeSlewRate > 0f
+                ? config.forwardBrakeSlewRate
+                : accelerationSlewRate;
+            bool forwardInputActive = Mathf.Abs(input.Pitch) >= brakingInputDeadband;
+            float forwardAxisSlewRate = forwardInputActive ? configuredForwardAccelerationSlew : configuredForwardBrakeSlew;
+
+            Vector3 currentLocalPilotAcceleration = Quaternion.Inverse(transform.rotation) * slewedPilotAcceleration;
+            Vector3 desiredLocalPilotAcceleration = Quaternion.Inverse(transform.rotation) * desiredPilotAcceleration;
+            float maxForwardAxisAccelDelta = forwardAxisSlewRate * Time.fixedDeltaTime;
+            float slewedLocalForwardAcceleration = Mathf.MoveTowards(
+                currentLocalPilotAcceleration.z,
+                desiredLocalPilotAcceleration.z,
+                maxForwardAxisAccelDelta);
+
+            Vector3 localPilotAcceleration = Quaternion.Inverse(transform.rotation) * globallySlewedPilotAcceleration;
+            localPilotAcceleration.z = slewedLocalForwardAcceleration;
+            slewedPilotAcceleration = transform.TransformDirection(localPilotAcceleration);
             lastCommandedAcceleration = slewedPilotAcceleration + gravityAssist;
             physicsBody.ApplyWorldAcceleration(lastCommandedAcceleration);
             physicsBody.ApplyYawStep(currentYawRate * Time.fixedDeltaTime);

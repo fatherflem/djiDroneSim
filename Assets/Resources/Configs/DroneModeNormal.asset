@@ -18,6 +18,8 @@ MonoBehaviour:
   forwardAcceleration: 2.8
   lateralAcceleration: 2.8
   forwardStopStrength: 4
+  forwardAccelerationSlewRate: 6
+  forwardBrakeSlewRate: 11
   lateralStopStrength: 7.1
   lateralRightSpeedMultiplier: 0.88
   lateralRightAccelerationMultiplier: 0.92
