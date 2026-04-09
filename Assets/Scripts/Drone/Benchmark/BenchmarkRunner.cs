@@ -85,6 +85,9 @@ namespace DroneSim.Drone.Benchmark
             public float global_lateral_accel_limit;
             public float global_vertical_accel_limit;
             public float braking_input_deadband;
+            public float acceleration_slew_rate;
+            public float yaw_overshoot_headroom;
+            public float yaw_acceleration_limit_multiplier;
         }
 
         [Serializable]
@@ -98,11 +101,20 @@ namespace DroneSim.Drone.Benchmark
             public float lateral_acceleration;
             public float forward_stop_strength;
             public float lateral_stop_strength;
+            public float lateral_right_speed_multiplier;
+            public float lateral_right_acceleration_multiplier;
+            public float lateral_right_stop_multiplier;
             public float max_climb_speed;
             public float max_descent_speed;
             public float vertical_acceleration;
             public float max_yaw_rate_degrees;
             public float yaw_catch_up_speed;
+            public float yaw_right_catch_up_multiplier;
+            public float yaw_left_catch_up_multiplier;
+            public float yaw_stop_speed;
+            public float yaw_right_command_gain;
+            public float yaw_left_command_gain;
+            public float yaw_right_stop_multiplier;
             public float tilt_limit_degrees;
             public float tilt_smoothing;
         }
@@ -578,7 +590,10 @@ namespace DroneSim.Drone.Benchmark
                     global_forward_accel_limit = controller.GlobalForwardAccelLimit,
                     global_lateral_accel_limit = controller.GlobalLateralAccelLimit,
                     global_vertical_accel_limit = controller.GlobalVerticalAccelLimit,
-                    braking_input_deadband = controller.BrakingInputDeadband
+                    braking_input_deadband = controller.BrakingInputDeadband,
+                    acceleration_slew_rate = controller.AccelerationSlewRate,
+                    yaw_overshoot_headroom = controller.YawOvershootHeadroom,
+                    yaw_acceleration_limit_multiplier = controller.YawAccelerationLimitMultiplier
                 },
                 mode_configs = BuildModeConfigSnapshots()
             };
@@ -627,11 +642,20 @@ namespace DroneSim.Drone.Benchmark
                 lateral_acceleration = config.lateralAcceleration,
                 forward_stop_strength = config.forwardStopStrength,
                 lateral_stop_strength = config.lateralStopStrength,
+                lateral_right_speed_multiplier = config.lateralRightSpeedMultiplier,
+                lateral_right_acceleration_multiplier = config.lateralRightAccelerationMultiplier,
+                lateral_right_stop_multiplier = config.lateralRightStopMultiplier,
                 max_climb_speed = config.maxClimbSpeed,
                 max_descent_speed = config.maxDescentSpeed,
                 vertical_acceleration = config.verticalAcceleration,
                 max_yaw_rate_degrees = config.maxYawRateDegrees,
                 yaw_catch_up_speed = config.yawCatchUpSpeed,
+                yaw_right_catch_up_multiplier = config.yawRightCatchUpMultiplier,
+                yaw_left_catch_up_multiplier = config.yawLeftCatchUpMultiplier,
+                yaw_stop_speed = config.yawStopSpeed,
+                yaw_right_command_gain = config.yawRightCommandGain,
+                yaw_left_command_gain = config.yawLeftCommandGain,
+                yaw_right_stop_multiplier = config.yawRightStopMultiplier,
                 tilt_limit_degrees = config.tiltLimitDegrees,
                 tilt_smoothing = config.tiltSmoothing
             });

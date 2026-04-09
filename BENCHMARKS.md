@@ -38,13 +38,15 @@ Do not add neutral-before or neutral-after segments to those assets; the runner 
 
 Default protocol timing for direct real-world comparison:
 - runner neutral pre-roll: `1.5s` (`BenchmarkRunner.defaultPreRollDuration`)
-- non-hover step input window: `1.0s` (single segment in each non-hover protocol maneuver asset)
+- non-hover step input windows are **asset-defined** (`ManeuverDefinition.segments[].duration`) and currently mixed:
+  - `2.5s`: `lateral_right`, `lateral_left`
+  - `1.0s`: `forward_step`, `climb`, `descent`, `yaw_right`, `yaw_left`
 - runner neutral settle: `1.5s` (`BenchmarkRunner.defaultSettleDuration`)
 - hover neutral total hold: `10.0s` via `1.5s` pre-roll + `7.0s` hover maneuver segment + `1.5s` settle
 
 Default protocol stick amplitude:
 - benchmark maneuver segment channels are normalized stick commands in `[-1, 1]`
-- default protocol step amplitudes are calibrated from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` RC channels using segmented active windows + median plateau magnitude per maneuver family
+- default protocol step amplitudes were originally calibrated from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` RC channels using segmented active windows + median plateau magnitude per maneuver family
 - current default protocol amplitudes:
   - `forward_step`: `pitch = +0.77` (**confidence: medium**, **provenance: estimated_from_limited_segments**)
   - `lateral_right`: `roll = +1.00` (**confidence: high**, **provenance: directly_measured**)
@@ -58,7 +60,7 @@ Default protocol stick amplitude:
   - `amplitudeProvenance` (`DirectlyMeasured`, `EstimatedFromLimitedSegments`, `DesignerAssumption`)
   - legacy/freetext trace notes remain in `inputAmplitudeEvidence` + `inputAmplitudeNotes`
 - update these fields in `Assets/Resources/Benchmarks/Maneuver_*.asset` whenever new real logs improve evidence quality
-- regenerate RC-derived recommendation artifacts with:
+- regenerate RC-derived recommendation artifacts with (current primary reference is Apr 8, 2026):
   - `python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root ""`
 
 ## Repeatable reset policy before every run
@@ -142,14 +144,14 @@ Optional scene debug:
 Real-only pass:
 
 ```bash
-python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root ""
+python Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --sim-root ""
 ```
 
 Real + simulator comparison pass (recommended):
 
 ```bash
 python Tools/analyze_airdata.py \
-  Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+  Apr-8th-2026-08-15AM-Flight-Airdata.csv \
   --sim-root BenchmarkRuns
 ```
 
@@ -157,22 +159,22 @@ Single-session comparison (recommended during tuning iterations):
 
 ```bash
 python Tools/analyze_airdata.py \
-  Mar-30th-2026-08-31AM-Flight-Airdata.csv \
-  --session session_20260402_185504
+  Apr-8th-2026-08-15AM-Flight-Airdata.csv \
+  --session session_20260409_125031
 ```
 
 Multiple specific sessions:
 
 ```bash
 python Tools/analyze_airdata.py \
-  Mar-30th-2026-08-31AM-Flight-Airdata.csv \
-  --session session_20260402_182438 --session session_20260402_185504
+  Apr-8th-2026-08-15AM-Flight-Airdata.csv \
+  --session session_20260409_122756 --session session_20260409_125031
 ```
 
 You can also provide explicit globs:
 
 ```bash
-python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+python Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv \
   --sim-csv-glob "BenchmarkRuns/**/*.csv" --sim-csv-glob "BenchmarkRuns/*.zip"
 ```
 
@@ -198,13 +200,13 @@ Use these protocol categories to align with Airdata analysis:
 - `yaw_left`
 
 ## Outputs
-- `Docs/airdata_mar30_analysis.json`
+- `Docs/airdata_mar30_analysis.json` (legacy default filename; content reflects whichever CSV you pass)
   - real maneuver segmentation and confidence labels
   - measured vs inferred classification
   - indexed simulator run inputs
   - `sim_primary_protocol_runs` and `sim_excluded_runs` (manifest-driven inclusion/exclusion traceability)
   - `sim_vs_real_comparison` with category-level deltas
-- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
+- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md` (legacy default filename; content reflects whichever CSV you pass)
   - concise comparison table and verdicts
 
 ## Evidence / trustworthiness policy

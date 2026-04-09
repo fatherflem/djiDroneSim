@@ -73,6 +73,9 @@ namespace DroneSim.Drone.Flight
         public float GlobalLateralAccelLimit => globalLateralAccelLimit;
         public float GlobalVerticalAccelLimit => globalVerticalAccelLimit;
         public float BrakingInputDeadband => brakingInputDeadband;
+        public float AccelerationSlewRate => accelerationSlewRate;
+        public float YawOvershootHeadroom => yawOvershootHeadroom;
+        public float YawAccelerationLimitMultiplier => yawAccelerationLimitMultiplier;
         public DroneFlightModeConfig CineConfig => cineConfig;
         public DroneFlightModeConfig NormalConfig => normalConfig;
         public DroneFlightModeConfig SportConfig => sportConfig;
