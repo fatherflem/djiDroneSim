@@ -141,8 +141,13 @@ Output files (legacy names, always overwritten):
 
 ---
 
+Forward protocol provenance update (Apr 9 follow-up):
+- Historical Mar 30 segmented calibration produced a legacy `forward_step` value of `+0.77`.
+- Current analyzer outputs for the Apr 8 real baseline recommend `forward_step = +1.00` normalized.
+- `Assets/Resources/Benchmarks/Maneuver_ForwardStep.asset` now uses `pitch: 1.0`; old sessions with `0.77` should be treated as legacy-protocol evidence.
+
 ## 8. Open issues / uncertainties
 
-1. `forward_step` still undershoots real peak (~2.11 vs 2.63 m/s) and remains partially provisional in amplitude provenance.
+1. `forward_step` benchmark input definition was corrected from legacy `+0.77` to `+1.00` pitch (per Apr 8 analyzer recommendation); rerun forward benchmark before any new controller retune so mismatch can be interpreted with corrected protocol input.
 2. Lateral asymmetry in real data may include environment/mechanical effects; sim right-only trim is currently pragmatic, not “proven physics truth.”
 3. Vertical mismatch remains likely onset-slew/protocol-limited under current 1.0s windows; needs protocol-aware diagnosis before raw-gain changes.
