@@ -37,6 +37,12 @@ namespace DroneSim.Drone.Flight
         [FormerlySerializedAs("horizontalStopStrength")]
         [Min(0.1f)] public float forwardStopStrength = 11f;
 
+        [Tooltip("Forward-axis slew limit (m/s^3) while pitch input is active. <= 0 falls back to controller global accelerationSlewRate.")]
+        [Min(0f)] public float forwardAccelerationSlewRate = 0f;
+
+        [Tooltip("Forward-axis slew limit (m/s^3) while pitch input is neutral (braking/release). <= 0 falls back to controller global accelerationSlewRate.")]
+        [Min(0f)] public float forwardBrakeSlewRate = 0f;
+
         [Tooltip("How strongly the drone brakes in lateral axis when sticks return near center.")]
         [Min(0.1f)] public float lateralStopStrength = 10f;
 
