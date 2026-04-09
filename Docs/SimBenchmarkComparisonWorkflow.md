@@ -3,7 +3,7 @@
 ## Scope
 This is the focused validation loop for comparing Unity benchmark maneuvers against the real Airdata benchmark log:
 
-- Real source: `Mar-30th-2026-08-31AM-Flight-Airdata.csv`
+- Real source: `Apr-8th-2026-08-15AM-Flight-Airdata.csv` (current authoritative baseline)
 - Sim source: benchmark CSV exports from `BenchmarkRunner`
 - Output: side-by-side category deltas in JSON + Markdown
 
@@ -25,13 +25,13 @@ Default full protocol order:
 
 Protocol assets are input-only for non-hover categories. `BenchmarkRunner` owns neutral pre-roll and settle timing.
 Default benchmark timing for protocol maneuvers:
-- non-hover steps: `1.0s` active input segments
+- non-hover steps: asset-defined active input segments (currently `2.5s` for `lateral_right`/`lateral_left`, `1.0s` for other non-hover protocol maneuvers)
 - runner neutral windows: `1.5s` pre-roll + `1.5s` settle
 - hover total neutral hold: `10.0s` (`1.5 + 7.0 + 1.5`)
 
 Default benchmark amplitude:
 - maneuver segment channels are normalized stick values in `[-1, 1]`
-- the default protocol now uses Airdata-calibrated amplitudes from `Mar-30th-2026-08-31AM-Flight-Airdata.csv`:
+- the default protocol now uses Airdata-calibrated amplitudes seeded from `Mar-30th-2026-08-31AM-Flight-Airdata.csv` (historical calibration source):
   - `forward_step`: `pitch +0.77` (confidence: medium, provenance: estimated_from_limited_segments)
   - `lateral_right`: `roll +1.00` (confidence: high, provenance: directly_measured)
   - `lateral_left`: `roll -1.00` (confidence: low, provenance: estimated_from_limited_segments; mirrored from right due missing clean left)
@@ -64,13 +64,13 @@ The analyzer uses these manifest fields to build the **primary protocol comparis
 From repo root:
 
 ```bash
-python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv --sim-root BenchmarkRuns
+python Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --sim-root BenchmarkRuns
 ```
 
 Optional explicit input control:
 
 ```bash
-python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+python Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv \
   --sim-csv-glob "BenchmarkRuns/**/*.csv" --sim-csv-glob "BenchmarkRuns/*.zip"
 ```
 
@@ -88,15 +88,16 @@ python Tools/analyze_airdata.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
 Run the dedicated comparison script (auto-discovers sessions from `BenchmarkRuns/`, whether each session is a zip or extracted directory):
 
 ```bash
-python Tools/closed_loop_validation.py Mar-30th-2026-08-31AM-Flight-Airdata.csv \
+python Tools/closed_loop_validation.py Apr-8th-2026-08-15AM-Flight-Airdata.csv \
   --benchmark-runs-root BenchmarkRuns \
-  --baseline-session-id session_20260402_133209 \
-  --post-session-id session_20260402_140700
+  --baseline-session-id session_20260409_115951 \
+  --post-session-id session_20260409_122756 \
+  --newest-session-id session_20260409_125031
 ```
 
 Outputs:
-- `Docs/ClosedLoopValidation_Apr02_2026.json`
-- `Docs/ClosedLoopValidation_Apr02_2026.md`
+- `Docs/ClosedLoopValidation_Apr09_2026.json`
+- `Docs/ClosedLoopValidation_Apr09_2026.md`
 
 ## Measured vs inferred policy
 - Real baseline metrics: segmented from Airdata with confidence labels.
