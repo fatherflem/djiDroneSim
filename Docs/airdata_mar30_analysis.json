@@ -42,7 +42,7 @@
         "neutral dwell before+after",
         "attitude response agrees"
       ],
-      "cluster_id": 81519,
+      "cluster_id": 59742,
       "sequence_index": 4
     },
     {
@@ -62,7 +62,7 @@
         "neutral dwell on one side",
         "attitude response agrees"
       ],
-      "cluster_id": 32400,
+      "cluster_id": 49747,
       "sequence_index": 5
     },
     {
@@ -84,7 +84,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 82539,
+      "cluster_id": 24847,
       "sequence_index": 5
     },
     {
@@ -106,7 +106,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 33409,
+      "cluster_id": 40795,
       "sequence_index": 5
     },
     {
@@ -125,7 +125,7 @@
         "neutral dwell on one side",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 26339,
+      "cluster_id": 23100,
       "sequence_index": 5
     },
     {
@@ -145,7 +145,7 @@
         "neutral dwell before+after",
         "motion sign agrees"
       ],
-      "cluster_id": 95529,
+      "cluster_id": 76765,
       "sequence_index": 5
     },
     {
@@ -165,7 +165,7 @@
         "neutral dwell before+after",
         "motion sign agrees"
       ],
-      "cluster_id": 65541,
+      "cluster_id": 69479,
       "sequence_index": 5
     },
     {
@@ -187,7 +187,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 89570,
+      "cluster_id": 66490,
       "sequence_index": 5
     },
     {
@@ -209,7 +209,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 83345,
+      "cluster_id": 55917,
       "sequence_index": 5
     },
     {
@@ -231,7 +231,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 63948,
+      "cluster_id": 87366,
       "sequence_index": 5
     },
     {
@@ -253,7 +253,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 16882,
+      "cluster_id": 66304,
       "sequence_index": 5
     },
     {
@@ -274,7 +274,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 57793,
+      "cluster_id": 47472,
       "sequence_index": 5
     },
     {
@@ -295,7 +295,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 66159,
+      "cluster_id": 62186,
       "sequence_index": 5
     },
     {
@@ -315,7 +315,7 @@
         "neutral dwell before+after",
         "attitude response agrees"
       ],
-      "cluster_id": 28955,
+      "cluster_id": 6263,
       "sequence_index": 5
     },
     {
@@ -335,7 +335,7 @@
         "neutral dwell before+after",
         "attitude response agrees"
       ],
-      "cluster_id": 67441,
+      "cluster_id": 33394,
       "sequence_index": 5
     },
     {
@@ -356,7 +356,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 77823,
+      "cluster_id": 60877,
       "sequence_index": 5
     },
     {
@@ -377,7 +377,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 94559,
+      "cluster_id": 55013,
       "sequence_index": 6
     },
     {
@@ -398,7 +398,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 80699,
+      "cluster_id": 56080,
       "sequence_index": 6
     },
     {
@@ -419,7 +419,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 37694,
+      "cluster_id": 19633,
       "sequence_index": 7
     },
     {
@@ -440,7 +440,7 @@
         "motion sign agrees",
         "attitude response agrees"
       ],
-      "cluster_id": 45769,
+      "cluster_id": 92744,
       "sequence_index": 7
     },
     {
@@ -459,7 +459,7 @@
         "low cross-axis input",
         "motion sign agrees"
       ],
-      "cluster_id": 9158,
+      "cluster_id": 27922,
       "sequence_index": 7
     },
     {
@@ -478,7 +478,7 @@
         "attitude response agrees",
         "out-of-order vs expected protocol"
       ],
-      "cluster_id": 8339,
+      "cluster_id": 90992,
       "sequence_index": 7
     }
   ],
@@ -1418,12 +1418,14 @@
       "sim_input_amplitude_provenance": "designer_assumption",
       "sim_input_amplitude_provisional": true,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_001_hover_hold_hover_hold_Normal_20260409_145254_run001.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_001_hover_hold_hover_hold_Normal_20260409_164322_run001.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_001_hover_hold_hover_hold_Normal_20260409_170238_run001.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_001_hover_hold_hover_hold_Normal_20260409_180425_run001.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_001_hover_hold_hover_hold_Normal_20260409_183829_run001.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_001_hover_hold_hover_hold_Normal_20260409_190111_run001.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_001_hover_hold_hover_hold_Normal_20260410_120608_run001.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_001_hover_hold_hover_hold_Normal_20260410_120608_run001.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_001_hover_hold_hover_hold_Normal_20260410_135721_run001.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1441,22 +1443,22 @@
       },
       "sim": {
         "response_delay_s_mean": 0.293,
-        "peak_rate_mean": 2.184,
+        "peak_rate_mean": 2.179,
         "max_accel_mean": 3.0,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.107,
-        "residual_drift_mean": 1.994,
+        "overshoot_mean": 0.106,
+        "residual_drift_mean": 1.992,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
         "response_delay_s_mean": -0.007,
-        "peak_rate_mean": -0.449,
+        "peak_rate_mean": -0.454,
         "max_accel_mean": 0.028,
         "settle_time_s_mean": -0.133,
-        "overshoot_mean": -0.326,
-        "residual_drift_mean": 0.095
+        "overshoot_mean": -0.327,
+        "residual_drift_mean": 0.093
       },
       "delta_assessment": {
         "response_delay_s_mean": "matches_well_provisional_input_amplitude",
@@ -1472,12 +1474,14 @@
       "sim_input_amplitude_provenance": "estimated_from_limited_segments",
       "sim_input_amplitude_provisional": true,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_002_forward_step_forward_step_Normal_20260409_145258_run002.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_002_forward_step_forward_step_Normal_20260409_164326_run002.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_002_forward_step_forward_step_Normal_20260409_170242_run002.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_002_forward_step_forward_step_Normal_20260409_180429_run002.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_002_forward_step_forward_step_Normal_20260409_183833_run002.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_002_forward_step_forward_step_Normal_20260409_190115_run002.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_002_forward_step_forward_step_Normal_20260410_120612_run002.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_002_forward_step_forward_step_Normal_20260410_120612_run002.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_002_forward_step_forward_step_Normal_20260410_135725_run002.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1526,12 +1530,14 @@
       "sim_input_amplitude_provenance": "directly_measured",
       "sim_input_amplitude_provisional": false,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_003_lateral_right_lateral_right_Normal_20260409_145303_run003.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_003_lateral_right_lateral_right_Normal_20260409_164331_run003.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_003_lateral_right_lateral_right_Normal_20260409_170247_run003.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_003_lateral_right_lateral_right_Normal_20260409_180435_run003.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_003_lateral_right_lateral_right_Normal_20260409_183839_run003.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_003_lateral_right_lateral_right_Normal_20260409_190121_run003.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_003_lateral_right_lateral_right_Normal_20260410_120618_run003.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_003_lateral_right_lateral_right_Normal_20260410_120618_run003.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_003_lateral_right_lateral_right_Normal_20260410_135731_run003.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1580,12 +1586,14 @@
       "sim_input_amplitude_provenance": "estimated_from_limited_segments",
       "sim_input_amplitude_provisional": true,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_004_lateral_left_lateral_left_Normal_20260409_145309_run004.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_004_lateral_left_lateral_left_Normal_20260409_164337_run004.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_004_lateral_left_lateral_left_Normal_20260409_170253_run004.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_004_lateral_left_lateral_left_Normal_20260409_180440_run004.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_004_lateral_left_lateral_left_Normal_20260409_183845_run004.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_004_lateral_left_lateral_left_Normal_20260409_190126_run004.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_004_lateral_left_lateral_left_Normal_20260410_120623_run004.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_004_lateral_left_lateral_left_Normal_20260410_120623_run004.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_004_lateral_left_lateral_left_Normal_20260410_135737_run004.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1602,23 +1610,23 @@
         "residual_drift_mean": 3.091
       },
       "sim": {
-        "response_delay_s_mean": 0.34,
-        "peak_rate_mean": 2.94,
-        "max_accel_mean": 5.88,
+        "response_delay_s_mean": 0.338,
+        "peak_rate_mean": 2.892,
+        "max_accel_mean": 5.695,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.23,
-        "residual_drift_mean": 2.545,
+        "overshoot_mean": 0.217,
+        "residual_drift_mean": 2.519,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": 0.04,
-        "peak_rate_mean": -1.385,
-        "max_accel_mean": 1.13,
+        "response_delay_s_mean": 0.038,
+        "peak_rate_mean": -1.433,
+        "max_accel_mean": 0.945,
         "settle_time_s_mean": -0.425,
-        "overshoot_mean": -1.055,
-        "residual_drift_mean": -0.546
+        "overshoot_mean": -1.068,
+        "residual_drift_mean": -0.572
       },
       "delta_assessment": {
         "response_delay_s_mean": "too_aggressive_provisional_input_amplitude",
@@ -1634,12 +1642,14 @@
       "sim_input_amplitude_provenance": "estimated_from_limited_segments",
       "sim_input_amplitude_provisional": true,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_005_climb_climb_Normal_20260409_145313_run005.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_005_climb_climb_Normal_20260409_164341_run005.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_005_climb_climb_Normal_20260409_170257_run005.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_005_climb_climb_Normal_20260409_180444_run005.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_005_climb_climb_Normal_20260409_183849_run005.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_005_climb_climb_Normal_20260409_190131_run005.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_005_climb_climb_Normal_20260410_120627_run005.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_005_climb_climb_Normal_20260410_120627_run005.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_005_climb_climb_Normal_20260410_135741_run005.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1656,23 +1666,23 @@
         "residual_drift_mean": 2.281
       },
       "sim": {
-        "response_delay_s_mean": 0.34,
-        "peak_rate_mean": 2.925,
-        "max_accel_mean": 5.64,
+        "response_delay_s_mean": 0.335,
+        "peak_rate_mean": 2.847,
+        "max_accel_mean": 5.421,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.22,
-        "residual_drift_mean": 2.543,
+        "overshoot_mean": 0.204,
+        "residual_drift_mean": 2.491,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": 0.065,
-        "peak_rate_mean": -0.75,
-        "max_accel_mean": 1.39,
+        "response_delay_s_mean": 0.06,
+        "peak_rate_mean": -0.828,
+        "max_accel_mean": 1.171,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": -1.095,
-        "residual_drift_mean": 0.262
+        "overshoot_mean": -1.111,
+        "residual_drift_mean": 0.21
       },
       "delta_assessment": {
         "response_delay_s_mean": "too_aggressive_provisional_input_amplitude",
@@ -1688,12 +1698,14 @@
       "sim_input_amplitude_provenance": "estimated_from_limited_segments",
       "sim_input_amplitude_provisional": true,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_006_descent_descent_Normal_20260409_145317_run006.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_006_descent_descent_Normal_20260409_164345_run006.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_006_descent_descent_Normal_20260409_170301_run006.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_006_descent_descent_Normal_20260409_180448_run006.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_006_descent_descent_Normal_20260409_183853_run006.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_006_descent_descent_Normal_20260409_190135_run006.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_006_descent_descent_Normal_20260410_120631_run006.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_006_descent_descent_Normal_20260410_120631_run006.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_006_descent_descent_Normal_20260410_135745_run006.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1710,23 +1722,23 @@
         "residual_drift_mean": 80.125
       },
       "sim": {
-        "response_delay_s_mean": 0.06,
-        "peak_rate_mean": 79.893,
+        "response_delay_s_mean": 0.058,
+        "peak_rate_mean": 74.76,
         "max_accel_mean": 295.2,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.353,
-        "residual_drift_mean": 79.223,
+        "overshoot_mean": 0.31,
+        "residual_drift_mean": 74.173,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": -0.24,
-        "peak_rate_mean": -2.107,
+        "response_delay_s_mean": -0.242,
+        "peak_rate_mean": -7.24,
         "max_accel_mean": 15.2,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": -1.347,
-        "residual_drift_mean": -0.902
+        "overshoot_mean": -1.39,
+        "residual_drift_mean": -5.952
       },
       "delta_assessment": {
         "response_delay_s_mean": "too_sluggish",
@@ -1742,12 +1754,14 @@
       "sim_input_amplitude_provenance": "directly_measured",
       "sim_input_amplitude_provisional": false,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_007_yaw_right_yaw_right_Normal_20260409_145321_run007.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_007_yaw_right_yaw_right_Normal_20260409_164349_run007.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_007_yaw_right_yaw_right_Normal_20260409_170305_run007.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_007_yaw_right_yaw_right_Normal_20260409_180452_run007.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_007_yaw_right_yaw_right_Normal_20260409_183857_run007.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_007_yaw_right_yaw_right_Normal_20260409_190139_run007.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_007_yaw_right_yaw_right_Normal_20260410_120635_run007.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_007_yaw_right_yaw_right_Normal_20260410_120635_run007.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_007_yaw_right_yaw_right_Normal_20260410_135749_run007.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1764,23 +1778,23 @@
         "residual_drift_mean": 79.625
       },
       "sim": {
-        "response_delay_s_mean": 0.06,
-        "peak_rate_mean": 79.893,
+        "response_delay_s_mean": 0.058,
+        "peak_rate_mean": 74.76,
         "max_accel_mean": 295.181,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": 0.353,
-        "residual_drift_mean": 79.224,
+        "overshoot_mean": 0.31,
+        "residual_drift_mean": 74.173,
         "horizontal_rms_mps_mean": null,
         "vertical_rms_mps_mean": null,
         "alt_std_m_mean": null
       },
       "delta_sim_minus_real": {
-        "response_delay_s_mean": -0.24,
-        "peak_rate_mean": -2.107,
+        "response_delay_s_mean": -0.242,
+        "peak_rate_mean": -7.24,
         "max_accel_mean": -24.819,
         "settle_time_s_mean": 0.0,
-        "overshoot_mean": -2.447,
-        "residual_drift_mean": -0.401
+        "overshoot_mean": -2.49,
+        "residual_drift_mean": -5.452
       },
       "delta_assessment": {
         "response_delay_s_mean": "too_sluggish",
@@ -1796,12 +1810,14 @@
       "sim_input_amplitude_provenance": "directly_measured",
       "sim_input_amplitude_provisional": false,
       "sim_sources": [
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_008_yaw_left_yaw_left_Normal_20260409_145325_run008.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_008_yaw_left_yaw_left_Normal_20260409_164353_run008.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_170224.zip:run_008_yaw_left_yaw_left_Normal_20260409_170309_run008.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_180413.zip:run_008_yaw_left_yaw_left_Normal_20260409_180514_run008.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_183817.zip:run_008_yaw_left_yaw_left_Normal_20260409_183901_run008.csv",
         "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_190056.zip:run_008_yaw_left_yaw_left_Normal_20260409_190143_run008.csv",
-        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_008_yaw_left_yaw_left_Normal_20260410_120640_run008.csv"
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_008_yaw_left_yaw_left_Normal_20260410_120640_run008.csv",
+        "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_008_yaw_left_yaw_left_Normal_20260410_135753_run008.csv"
       ],
       "sim_modes": [
         "Normal"
@@ -1809,6 +1825,8 @@
     }
   },
   "sim_csv_inputs": [
+    "BenchmarkRuns/session_20260409_145236.zip",
+    "BenchmarkRuns/session_20260409_145236/**/*.csv",
     "BenchmarkRuns/session_20260409_164309.zip",
     "BenchmarkRuns/session_20260409_164309/**/*.csv",
     "BenchmarkRuns/session_20260409_170224.zip",
@@ -1820,9 +1838,123 @@
     "BenchmarkRuns/session_20260409_190056.zip",
     "BenchmarkRuns/session_20260409_190056/**/*.csv",
     "BenchmarkRuns/session_20260410_120548.zip",
-    "BenchmarkRuns/session_20260410_120548/**/*.csv"
+    "BenchmarkRuns/session_20260410_120548/**/*.csv",
+    "BenchmarkRuns/session_20260410_135709.zip",
+    "BenchmarkRuns/session_20260410_135709/**/*.csv"
   ],
   "sim_runs_index": [
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_001_hover_hold_hover_hold_Normal_20260409_145254_run001.csv",
+      "category": "hover_hold",
+      "rows": 503,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "designer_assumption",
+        "provisional": true,
+        "active_axis_magnitude": 0.0,
+        "notes": ""
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_002_forward_step_forward_step_Normal_20260409_145258_run002.csv",
+      "category": "forward_step",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 0.7699999809265137,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_elevator(percent) segmented plateau medians; recommended +0.77 normalized pitch."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_003_lateral_right_lateral_right_Normal_20260409_145303_run003.csv",
+      "category": "lateral_right",
+      "rows": 278,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_004_lateral_left_lateral_left_Normal_20260409_145309_run004.csv",
+      "category": "lateral_left",
+      "rows": 278,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "low",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_005_climb_climb_Normal_20260409_145313_run005.csv",
+      "category": "climb",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_006_descent_descent_Normal_20260409_145317_run006.csv",
+      "category": "descent",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_007_yaw_right_yaw_right_Normal_20260409_145321_run007.csv",
+      "category": "yaw_right",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_008_yaw_left_yaw_left_Normal_20260409_145325_run008.csv",
+      "category": "yaw_left",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
+      }
+    },
     {
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_164309.zip:run_001_hover_hold_hover_hold_Normal_20260409_164322_run001.csv",
       "category": "hover_hold",
@@ -2522,9 +2654,156 @@
         "active_axis_magnitude": 1.0,
         "notes": "Matches descent amplitude (-1.0 throttle) with 2.5s hold to test vertical slew/protocol limitation."
       }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_001_hover_hold_hover_hold_Normal_20260410_135721_run001.csv",
+      "category": "hover_hold",
+      "rows": 503,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "designer_assumption",
+        "provisional": true,
+        "active_axis_magnitude": 0.0,
+        "notes": ""
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_002_forward_step_forward_step_Normal_20260410_135725_run002.csv",
+      "category": "forward_step",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Legacy Mar-30th-2026 segmented estimate used +0.77 pitch; Apr-8th-2026 analyzer recommendation is +1.00 normalized and now adopted for protocol runs."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_003_lateral_right_lateral_right_Normal_20260410_135731_run003.csv",
+      "category": "lateral_right",
+      "rows": 278,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_aileron(percent) clean plateaus; recommended +1.00 normalized roll."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_004_lateral_left_lateral_left_Normal_20260410_135737_run004.csv",
+      "category": "lateral_left",
+      "rows": 278,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "low",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "No clean Mar-30th-2026 lateral_left segment in Airdata; mirrored from lateral_right magnitude to preserve protocol symmetry (-1.00 roll)."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_005_climb_climb_Normal_20260410_135741_run005.csv",
+      "category": "climb",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) climb segments; plateau median supports +1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_006_descent_descent_Normal_20260410_135745_run006.csv",
+      "category": "descent",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent segments; plateau median supports -1.00 normalized throttle."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_007_yaw_right_yaw_right_Normal_20260410_135749_run007.csv",
+      "category": "yaw_right",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean plateaus; recommended +1.00 normalized yaw."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_008_yaw_left_yaw_left_Normal_20260410_135753_run008.csv",
+      "category": "yaw_left",
+      "rows": 203,
+      "in_primary_protocol": true,
+      "exclusion_reason": null,
+      "amplitude_metadata": {
+        "confidence_label": "high",
+        "provenance": "directly_measured",
+        "provisional": false,
+        "active_axis_magnitude": 1.0,
+        "notes": "Calibrated from Mar-30th-2026 Airdata rc_rudder(percent) clean left-yaw plateaus; recommended -1.00 normalized yaw."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_009_climb_long_climb_long_Normal_20260410_135758_run009.csv",
+      "category": "climb_long",
+      "rows": 278,
+      "in_primary_protocol": false,
+      "exclusion_reason": "outside_core_comparison_categories",
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Matches climb amplitude (+1.0 throttle) with 2.5s hold to test vertical slew/protocol limitation."
+      }
+    },
+    {
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_010_descent_long_descent_long_Normal_20260410_135804_run010.csv",
+      "category": "descent_long",
+      "rows": 278,
+      "in_primary_protocol": false,
+      "exclusion_reason": "outside_core_comparison_categories",
+      "amplitude_metadata": {
+        "confidence_label": "medium",
+        "provenance": "estimated_from_limited_segments",
+        "provisional": true,
+        "active_axis_magnitude": 1.0,
+        "notes": "Matches descent amplitude (-1.0 throttle) with 2.5s hold to test vertical slew/protocol limitation."
+      }
     }
   ],
   "sim_primary_protocol_runs": [
+    {
+      "run_number": 1,
+      "category": "hover_hold",
+      "protocol_order": 1,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_001_hover_hold_hover_hold_Normal_20260409_145254_run001.csv"
+    },
     {
       "run_number": 1,
       "category": "hover_hold",
@@ -2566,6 +2845,20 @@
       "protocol_order": 1,
       "run_source": "full_protocol",
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_001_hover_hold_hover_hold_Normal_20260410_120608_run001.csv"
+    },
+    {
+      "run_number": 1,
+      "category": "hover_hold",
+      "protocol_order": 1,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_001_hover_hold_hover_hold_Normal_20260410_135721_run001.csv"
+    },
+    {
+      "run_number": 2,
+      "category": "forward_step",
+      "protocol_order": 2,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_002_forward_step_forward_step_Normal_20260409_145258_run002.csv"
     },
     {
       "run_number": 2,
@@ -2610,6 +2903,20 @@
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_002_forward_step_forward_step_Normal_20260410_120612_run002.csv"
     },
     {
+      "run_number": 2,
+      "category": "forward_step",
+      "protocol_order": 2,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_002_forward_step_forward_step_Normal_20260410_135725_run002.csv"
+    },
+    {
+      "run_number": 3,
+      "category": "lateral_right",
+      "protocol_order": 3,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_003_lateral_right_lateral_right_Normal_20260409_145303_run003.csv"
+    },
+    {
       "run_number": 3,
       "category": "lateral_right",
       "protocol_order": 3,
@@ -2650,6 +2957,20 @@
       "protocol_order": 3,
       "run_source": "full_protocol",
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_003_lateral_right_lateral_right_Normal_20260410_120618_run003.csv"
+    },
+    {
+      "run_number": 3,
+      "category": "lateral_right",
+      "protocol_order": 3,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_003_lateral_right_lateral_right_Normal_20260410_135731_run003.csv"
+    },
+    {
+      "run_number": 4,
+      "category": "lateral_left",
+      "protocol_order": 4,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_004_lateral_left_lateral_left_Normal_20260409_145309_run004.csv"
     },
     {
       "run_number": 4,
@@ -2694,6 +3015,20 @@
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_004_lateral_left_lateral_left_Normal_20260410_120623_run004.csv"
     },
     {
+      "run_number": 4,
+      "category": "lateral_left",
+      "protocol_order": 4,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_004_lateral_left_lateral_left_Normal_20260410_135737_run004.csv"
+    },
+    {
+      "run_number": 5,
+      "category": "climb",
+      "protocol_order": 5,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_005_climb_climb_Normal_20260409_145313_run005.csv"
+    },
+    {
       "run_number": 5,
       "category": "climb",
       "protocol_order": 5,
@@ -2734,6 +3069,20 @@
       "protocol_order": 5,
       "run_source": "full_protocol",
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_005_climb_climb_Normal_20260410_120627_run005.csv"
+    },
+    {
+      "run_number": 5,
+      "category": "climb",
+      "protocol_order": 5,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_005_climb_climb_Normal_20260410_135741_run005.csv"
+    },
+    {
+      "run_number": 6,
+      "category": "descent",
+      "protocol_order": 6,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_006_descent_descent_Normal_20260409_145317_run006.csv"
     },
     {
       "run_number": 6,
@@ -2778,6 +3127,20 @@
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_006_descent_descent_Normal_20260410_120631_run006.csv"
     },
     {
+      "run_number": 6,
+      "category": "descent",
+      "protocol_order": 6,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_006_descent_descent_Normal_20260410_135745_run006.csv"
+    },
+    {
+      "run_number": 7,
+      "category": "yaw_right",
+      "protocol_order": 7,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_007_yaw_right_yaw_right_Normal_20260409_145321_run007.csv"
+    },
+    {
       "run_number": 7,
       "category": "yaw_right",
       "protocol_order": 7,
@@ -2820,6 +3183,20 @@
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_007_yaw_right_yaw_right_Normal_20260410_120635_run007.csv"
     },
     {
+      "run_number": 7,
+      "category": "yaw_right",
+      "protocol_order": 7,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_007_yaw_right_yaw_right_Normal_20260410_135749_run007.csv"
+    },
+    {
+      "run_number": 8,
+      "category": "yaw_left",
+      "protocol_order": 8,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260409_145236.zip:run_008_yaw_left_yaw_left_Normal_20260409_145325_run008.csv"
+    },
+    {
       "run_number": 8,
       "category": "yaw_left",
       "protocol_order": 8,
@@ -2860,6 +3237,13 @@
       "protocol_order": 8,
       "run_source": "full_protocol",
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_008_yaw_left_yaw_left_Normal_20260410_120640_run008.csv"
+    },
+    {
+      "run_number": 8,
+      "category": "yaw_left",
+      "protocol_order": 8,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_008_yaw_left_yaw_left_Normal_20260410_135753_run008.csv"
     }
   ],
   "sim_excluded_runs": [
@@ -2872,11 +3256,27 @@
       "reason": "outside_core_comparison_categories"
     },
     {
+      "run_number": 9,
+      "category": "climb_long",
+      "protocol_order": 9,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_009_climb_long_climb_long_Normal_20260410_135758_run009.csv",
+      "reason": "outside_core_comparison_categories"
+    },
+    {
       "run_number": 10,
       "category": "descent_long",
       "protocol_order": 10,
       "run_source": "full_protocol",
       "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_120548.zip:run_010_descent_long_descent_long_Normal_20260410_120651_run010.csv",
+      "reason": "outside_core_comparison_categories"
+    },
+    {
+      "run_number": 10,
+      "category": "descent_long",
+      "protocol_order": 10,
+      "run_source": "full_protocol",
+      "path": "/workspace/djiDroneSim/BenchmarkRuns/session_20260410_135709.zip:run_010_descent_long_descent_long_Normal_20260410_135804_run010.csv",
       "reason": "outside_core_comparison_categories"
     }
   ]

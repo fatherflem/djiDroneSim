@@ -11,9 +11,10 @@
   - `BenchmarkRuns/session_20260409_180413.zip` (forward-step amplitude updated to pitch=1.0; exposed carryover)
   - `BenchmarkRuns/session_20260409_183817.zip` (forward brake-slew validation)
   - `BenchmarkRuns/session_20260409_190056.zip` (forward brake-slew confirmation + manifest provenance)
-  - `BenchmarkRuns/session_20260410_120548.zip` (**first 10-maneuver run with `climb_long`/`descent_long`; latest decisive evidence**)
+  - `BenchmarkRuns/session_20260410_120548.zip` (first 10-maneuver run with `climb_long`/`descent_long`; vertical mismatch exposed)
+  - `BenchmarkRuns/session_20260410_135709.zip` (**post-vertical-fix 10-maneuver run; latest decisive evidence**)
 
-The newest decisive evidence is `session_20260410_120548`.
+The newest decisive evidence is `session_20260410_135709`.
 
 ## Apr 10 protocol milestone (10 maneuvers verified)
 
@@ -30,10 +31,28 @@ Input-phase peaks in this session:
 - `climb_long`: `6.490 m/s`
 - `descent_long`: `5.301 m/s`
 
-Interpretation:
+Interpretation of `120548`:
 - yaw fix remains healthy.
 - forward brake-slew behavior remains preserved.
 - long-window vertical is now explicitly measured and is the clearest mismatch.
+
+## Apr 10 vertical-fix validation (`session_20260410_135709`)
+
+`session_20260410_135709` is the immediate follow-up run after the vertical-only config change (`verticalAcceleration: 5.4 -> 1.6` in Normal mode).
+
+Input-phase peaks in this session:
+- `forward_step`: `2.220 m/s` (full-run peak `2.720`, carryover `0.500`)
+- `lateral_right`: `8.925 m/s`
+- `lateral_left`: `9.812 m/s`
+- `yaw_right`: `79.893 °/s`
+- `yaw_left`: `79.892 °/s`
+- `climb_long`: `4.194 m/s`
+- `descent_long`: `3.578 m/s`
+
+Interpretation of `135709`:
+- Long-window vertical mismatch is materially corrected and now within current ±15% acceptance thresholds.
+- Forward/yaw/lateral values are effectively unchanged from `120548`, supporting one-axis isolation.
+- Normal-mode state is now "good enough for now" with only narrow residual misses (forward onset borderline low; right-lateral high).
 
 ## Forward-focused Apr 9 comparison (`164309`/`170224`/`180413`/`183817`)
 
@@ -187,7 +206,7 @@ Math target for release carryover with `A=3.0 m/s²` and `brake_slew=11 m/s³`:
 5. Vertical remains a protocol/onset-shape investigation, not immediate gain inflation.
 
 
-## Apr 10, 2026 vertical-only patch (post-evidence, pre-new-run)
+## Apr 10, 2026 vertical-only patch (implementation + validation)
 
 Implemented after auditing `session_20260410_120548`:
 - `DroneModeNormal.asset`: `verticalAcceleration` reduced from `5.4` to `1.6`.
@@ -202,4 +221,4 @@ Expected next-run effect:
 - minimal change in yaw/forward/lateral because those paths were not modified.
 
 Status honesty:
-- this patch is **not yet benchmark-validated** in Unity from this environment.
+- this patch **is benchmark-validated** by `session_20260410_135709` and should remain frozen unless new evidence justifies reopening one axis.

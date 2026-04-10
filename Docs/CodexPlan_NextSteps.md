@@ -1,6 +1,6 @@
-# Codex Next Steps Plan (Vertical-Focused Pass)
+# Codex Next Steps Plan (Post Vertical-Fix Audit)
 
-_Last refreshed: April 10, 2026 after auditing `session_20260410_120548`._
+_Last refreshed: April 10, 2026 after auditing `session_20260410_135709`._
 
 ## 1) Where the project has been (closed-loop sequence)
 
@@ -9,75 +9,65 @@ _Last refreshed: April 10, 2026 after auditing `session_20260410_120548`._
 3. `session_20260409_180413`: forward protocol amplitude corrected to `forward_step pitch=1.0`.
 4. `session_20260409_183817` + `190056`: forward brake-slew patch reduced carryover to ~0.500 m/s while preserving onset.
 5. `session_20260410_120548`: first archived **10-maneuver** Normal run with `climb_long` / `descent_long`.
+6. `session_20260410_135709`: validated the vertical-only patch and showed long vertical peaks now in-range without cross-axis regression.
 
 ## 2) What newest evidence proved
 
-From `session_20260410_120548` input-phase peaks:
+From `session_20260410_135709` input-phase peaks:
 
 - `forward_step`: ~2.220 m/s (carryover ~0.500 m/s full-run delta)
 - `lateral_right`: ~8.925 m/s
 - `lateral_left`: ~9.812 m/s
 - `yaw_right` / `yaw_left`: ~79.89 °/s
-- `climb_long`: ~6.490 m/s
-- `descent_long`: ~5.301 m/s
+- `climb_long`: ~4.194 m/s
+- `descent_long`: ~3.578 m/s
 
 Interpretation:
 - Yaw is effectively done for now.
 - Forward is improved and stable enough to defer.
-- Right-lateral remains somewhat aggressive, but is not the strongest blocker.
-- Long-window vertical is now a measured mismatch (no longer “blocked pending evidence”).
+- Long-window vertical is now in the target zone by current ±15% criterion.
+- Remaining misses are narrow: forward input-phase is slightly below threshold, and right-lateral remains somewhat aggressive.
 
-## 3) Why vertical is the next one-axis target
+## 3) Decision: PATH A (freeze Normal tuning for now)
 
-Short-window (`1.0s`) vertical maneuvers were ambiguous because they mixed onset ramp effects with steady-state behavior. The new `2.5s` holds reveal sustained response, and both climb/descent now overshoot real peaks by ~44–50%.
+Why freeze:
+- Recent one-axis fixes succeeded without reopening solved axes.
+- Normal mode now meets most high-value acceptance targets, including yaw and long-window vertical.
+- Remaining misses are relatively small (forward onset) or potentially intentional asymmetry tradeoff (right-lateral) and do not currently justify another risk cycle.
 
-This makes vertical the clearest next focused pass, with yaw/forward/lateral frozen unless a new regression appears.
+## 4) What to do next (evidence, not retune)
 
-## 4) Current patch hypothesis (this repo state)
+1. Archive one full-protocol **Cine** session using `protocolModeOverride`.
+2. Archive one full-protocol **Sport** session using `protocolModeOverride`.
+3. Record hover-box completion timing for Normal/Cine/Sport.
+4. Only reopen Normal tuning if those runs or playtests show a concrete training-impact issue.
 
-Hypothesis: Normal-mode `verticalAcceleration` was high enough to drive overly strong sustained vertical response in long holds; reducing vertical authority should lower both `climb_long` and `descent_long` peaks without touching other axes.
+## 5) Reopen gates (strict)
 
-Implemented in this pass:
-- `Assets/Resources/Configs/DroneModeNormal.asset`
-  - `verticalAcceleration: 5.4 -> 1.6`
+Permit one new Normal micro-patch only if:
+- a new run shows statistically meaningful regression, or
+- instructional/pilot testing confirms the remaining mismatch impairs training outcomes.
 
-Intentionally not changed:
-- Yaw tuning
-- Forward tuning (including forward-specific slew)
-- Lateral tuning
-- Benchmark timing/protocol assets
+If reopened, choose only one axis and keep the patch tiny.
 
-## 5) Exact next benchmark to run
+## 6) Analyzer commands
 
-Run one Normal-mode F9 full protocol session and compare against `session_20260410_120548`.
-
-Recommended command for post-run analysis:
+Primary latest-session check:
 
 ```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session <new_session_id>
+python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260410_135709
 ```
 
-Optional trend command:
+Trend audit command:
 
 ```bash
 python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv \
+  --session session_20260409_145236 \
   --session session_20260409_164309 \
   --session session_20260409_170224 \
   --session session_20260409_180413 \
   --session session_20260409_183817 \
   --session session_20260409_190056 \
   --session session_20260410_120548 \
-  --session <new_session_id>
+  --session session_20260410_135709
 ```
-
-## 6) Success / failure gates for the next run
-
-### Success
-- `climb_long` and `descent_long` both move materially downward toward real values (~4.33 / ~3.67 m/s).
-- Yaw peaks stay near ~79.9 °/s.
-- Forward input-phase (~2.22 m/s) and carryover (~0.50 m/s) remain approximately stable.
-
-### Failure / follow-up
-- If vertical remains too high: apply one more vertical-only reduction (likely `verticalAcceleration` or vertical cap path), then re-run.
-- If vertical undershoots strongly: partially restore `verticalAcceleration` while preserving the same one-axis approach.
-- If another axis regresses: stop and investigate before additional tuning.
