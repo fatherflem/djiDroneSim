@@ -1,4 +1,4 @@
-# Closed-Loop Validation (Apr 9, 2026)
+# Closed-Loop Validation (Apr 9–10, 2026)
 
 ## Scope and latest evidence
 
@@ -9,9 +9,31 @@
   - `BenchmarkRuns/session_20260409_164309.zip` (post-yaw-fix validation)
   - `BenchmarkRuns/session_20260409_170224.zip` (same tuning as 164309; forward baseline repeat)
   - `BenchmarkRuns/session_20260409_180413.zip` (forward-step amplitude updated to pitch=1.0; exposed carryover)
-  - `BenchmarkRuns/session_20260409_183817.zip` (**forward brake-slew validation; latest decisive evidence**)
+  - `BenchmarkRuns/session_20260409_183817.zip` (forward brake-slew validation)
+  - `BenchmarkRuns/session_20260409_190056.zip` (forward brake-slew confirmation + manifest provenance)
+  - `BenchmarkRuns/session_20260410_120548.zip` (**first 10-maneuver run with `climb_long`/`descent_long`; latest decisive evidence**)
 
-The newest decisive evidence is `session_20260409_183817`.
+The newest decisive evidence is `session_20260410_120548`.
+
+## Apr 10 protocol milestone (10 maneuvers verified)
+
+`session_20260410_120548` archive contains 10 protocol runs including:
+- run #9 `climb_long`
+- run #10 `descent_long`
+
+Input-phase peaks in this session:
+- `forward_step`: `2.220 m/s` (full-run peak `2.720`, carryover `0.500`)
+- `lateral_right`: `8.925 m/s`
+- `lateral_left`: `9.812 m/s`
+- `yaw_right`: `79.893 °/s`
+- `yaw_left`: `79.894 °/s`
+- `climb_long`: `6.490 m/s`
+- `descent_long`: `5.301 m/s`
+
+Interpretation:
+- yaw fix remains healthy.
+- forward brake-slew behavior remains preserved.
+- long-window vertical is now explicitly measured and is the clearest mismatch.
 
 ## Forward-focused Apr 9 comparison (`164309`/`170224`/`180413`/`183817`)
 
@@ -81,15 +103,50 @@ No obvious long tail appeared; post-patch stop profile matches the healthy refer
 
 Conclusion: observed post-patch change is isolated to yaw held-input behavior.
 
-## Vertical interpretation update
+## Vertical diagnosis update (explicit math)
 
-Vertical remains essentially flat despite authority increases (`~2.94` climb / `~2.93` descent). Under current protocol this still fits a slew/protocol-limited explanation:
+### Control path
 
-- `climb` / `descent` holds are `1.0s`
-- commanded acceleration is slew-limited (`accelerationSlewRate`) before application
-- short window peak can stay ramp-limited
+In `DJIStyleFlightController`, vertical command is:
 
-So this is still not strong evidence for a simple raw-gain deficit.
+1. Target speed from throttle:
+   - climb: `targetVerticalSpeed = throttle * maxClimbSpeed`
+   - descent: `targetVerticalSpeed = throttle * maxDescentSpeed`
+2. Speed error: `verticalError = targetVerticalSpeed - currentVerticalSpeed`
+3. P authority + cap:
+   - `desiredVerticalAccel = clamp(verticalError * verticalAcceleration, ±globalVerticalAccelLimit)`
+4. Global acceleration slew:
+   - pilot acceleration vector is moved by at most `accelerationSlewRate * dt` each physics tick.
+
+### Why short-window evidence was ambiguous
+
+For 1.0s `climb`/`descent` maneuvers, response mixes:
+- onset-limited ramp (from slew cap),
+- early feedback convergence.
+
+That made it hard to distinguish “not enough authority” from “timing artifact”.
+
+### Why 2.5s long-hold is decisive
+
+With a 2.5s hold, the run spends much more time after onset. In `120548`:
+- `climb_long` reaches `6.490 m/s` vs real `~4.33` (about `+50%`)
+- `descent_long` reaches `5.301 m/s` vs real `~3.67` (about `+44%`)
+
+This is no longer a short-window under-reach problem; sustained response is too strong.
+
+### Saturation math at prior Normal settings
+
+Before this patch (`DroneModeNormal.asset`):
+- `maxClimbSpeed = 4.35`
+- `maxDescentSpeed = 3.7`
+- `verticalAcceleration = 5.4`
+- controller `globalVerticalAccelLimit = 7`
+
+Initial demanded accel magnitude:
+- climb: `4.35 * 5.4 = 23.49` -> clamped to `7`
+- descent: `3.7 * 5.4 = 19.98` -> clamped to `7`
+
+So vertical loop quickly enters saturated high-authority behavior during long holds. Combined with slew-limited handoff, this supports a “vertical authority too strong” diagnosis rather than weak braking.
 
 ## Forward architecture diagnosis from `180413` + `183817`
 
@@ -130,11 +187,19 @@ Math target for release carryover with `A=3.0 m/s²` and `brake_slew=11 m/s³`:
 5. Vertical remains a protocol/onset-shape investigation, not immediate gain inflation.
 
 
-## Apr 10, 2026 implementation update (pre-benchmark)
+## Apr 10, 2026 vertical-only patch (post-evidence, pre-new-run)
 
-A follow-up code/assets pass has been completed to execute the next validation phase:
-- Added protocol maneuvers `climb_long` and `descent_long` (2.5s throttle windows, orders 9 and 10) so vertical slew/protocol-limitation can be tested in the same F9 session as the original 1.0s climbs/descents.
-- Added `BenchmarkRunner` runtime `protocolModeOverride` (None/Cine/Normal/Sport) to run the same protocol under Cine/Sport without duplicating maneuver assets.
-- Added `Docs/AcceptanceCriteria.md` and recorded current pass/fail/blocked state from existing Apr 9 evidence.
+Implemented after auditing `session_20260410_120548`:
+- `DroneModeNormal.asset`: `verticalAcceleration` reduced from `5.4` to `1.6`.
 
-No new benchmark session ID is attached yet for these additions, so vertical root-cause status remains **hypothesis pending validation** as of April 10, 2026.
+Why this specific knob:
+- keeps patch one-axis and minimal (single vertical field in Normal mode),
+- directly reduces vertical authority used in the `verticalError * verticalAcceleration` term,
+- avoids reopening yaw/forward/lateral tuning.
+
+Expected next-run effect:
+- materially lower `climb_long` and `descent_long`,
+- minimal change in yaw/forward/lateral because those paths were not modified.
+
+Status honesty:
+- this patch is **not yet benchmark-validated** in Unity from this environment.

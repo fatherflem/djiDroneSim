@@ -25,6 +25,23 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 - `BenchmarkRunner` now supports a runtime `protocolModeOverride` (None/Cine/Normal/Sport) so the same maneuver set can be executed in Cine/Sport without duplicating benchmark assets.
 - Current acceptance status is tracked in `Docs/AcceptanceCriteria.md`.
 
+### Closed-loop journey snapshot (evidence-first)
+
+1. `session_20260409_145236` exposed a yaw regression (held input collapsed to ~38.8 °/s from active-input damping bias).
+2. `session_20260409_164309` and `session_20260409_170224` restored healthy yaw (~79.9 °/s) with crisp release.
+3. `session_20260409_180413` moved `forward_step` to pitch `1.0`, improving onset but increasing post-release carryover.
+4. `session_20260409_183817` and `session_20260409_190056` validated forward brake-slew tuning and reduced carryover to ~0.50 m/s.
+5. `session_20260410_120548` is the first archived 10-maneuver Normal run, adding `climb_long` and `descent_long` and proving vertical is now a measured mismatch (not just a blocked hypothesis).
+
+### Current priority
+
+- **Yaw:** done for now (~79.89 °/s vs ~82 °/s real).
+- **Forward:** improved and stable enough to leave untouched this pass (2.220 m/s input-phase, ~0.500 m/s carryover).
+- **Lateral:** right side remains somewhat fast (8.925 m/s vs ~7.44 m/s), but not the clearest next blocker.
+- **Vertical (next):** `climb_long` ~6.49 m/s vs ~4.33 real and `descent_long` ~5.30 m/s vs ~3.67 real in `session_20260410_120548`.
+
+This patch performs a single vertical-only tuning step (`verticalAcceleration` reduction in Normal mode) and leaves yaw/forward/lateral tuning unchanged pending the next benchmark run.
+
 ## Quick start (scene-authored default)
 
 1. Open the project in **Unity 6**.

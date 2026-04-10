@@ -1,179 +1,62 @@
 # DJI Mini 4 Pro Flight Simulator — Project Handoff
 
-> Last updated: 2026-04-10 after implementing next-phase scaffolding (long vertical maneuvers, protocol mode override support, and acceptance criteria doc).
-
----
+> Last updated: 2026-04-10 after vertical-focused audit + vertical-only tuning patch.
 
 ## 1. Current truth snapshot
 
-- **Latest decisive sim session:** `BenchmarkRuns/session_20260409_183817.zip`.
-- Comparison anchors: `BenchmarkRuns/session_20260409_125031.zip` (pre-regression reference), `BenchmarkRuns/session_20260409_145236.zip` (yaw-regressed).
-- Real reference log: `Apr-8th-2026-08-15AM-Flight-Airdata.csv`.
+- **Latest decisive evidence session:** `BenchmarkRuns/session_20260410_120548.zip`
+- This is the first archived **10-maneuver** Normal-mode run.
+- Real reference log: `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
 
-Observed protocol peaks across key sessions (forward includes both input-phase and full-run values to expose carryover):
+Observed input-phase peaks (from protocol run CSVs):
 
-| Category | 164309 | 170224 | 180413 | 183817 | Net story |
-|---|---:|---:|---:|---:|---|
-| forward_step input-phase peak | 2.112 m/s | 2.112 m/s | 2.220 m/s | 2.220 m/s | onset gain from pitch=1.0 held |
-| forward_step full-run peak | 2.400 m/s | 2.400 m/s | 3.060 m/s | 2.720 m/s | brake-slew patch reduced release carryover materially |
-| lateral_right input peak | 8.925 m/s | 8.925 m/s | 8.925 m/s | 8.925 m/s | unchanged |
-| lateral_left input peak | 9.812 m/s | 9.812 m/s | 9.812 m/s | 9.812 m/s | unchanged |
-| climb input peak | 2.940 m/s | 2.940 m/s | 2.940 m/s | 2.940 m/s | unchanged |
-| descent input peak | 2.925 m/s | 2.925 m/s | 2.925 m/s | 2.925 m/s | unchanged |
-| yaw_right input peak | 79.893 °/s | 79.893 °/s | 79.893 °/s | 79.893 °/s | unchanged (done for now) |
-| yaw_left input peak | 79.892 °/s | 79.892 °/s | 79.892 °/s | 79.894 °/s | unchanged (done for now) |
+| Category | 164309 | 170224 | 180413 | 183817 | 190056 | 120548 | Net story |
+|---|---:|---:|---:|---:|---:|---:|---|
+| forward_step input peak | 2.112 | 2.112 | 2.220 | 2.220 | 2.220 | 2.220 | forward onset improved vs pre-`pitch=1.0` and stable |
+| forward carryover (full-input delta) | 0.288 | 0.288 | 0.840 | 0.500 | 0.500 | 0.500 | brake-slew patch holds |
+| lateral_right input peak | 8.925 | 8.925 | 8.925 | 8.925 | 8.925 | 8.925 | still somewhat high vs real |
+| lateral_left input peak | 9.812 | 9.812 | 9.812 | 9.812 | 9.812 | 9.812 | near real |
+| yaw_right input peak (°/s) | 79.893 | 79.893 | 79.893 | 79.893 | 79.893 | 79.893 | fixed and stable |
+| yaw_left input peak (°/s) | 79.892 | 79.892 | 79.892 | 79.894 | 79.894 | 79.894 | fixed and stable |
+| climb_long input peak | - | - | - | - | - | 6.490 | newly measured, too high |
+| descent_long input peak | - | - | - | - | - | 5.301 | newly measured, too high |
 
-Yaw release behavior (from yaw-run settle windows):
-- `125031`: `|yaw_rate| < 5°/s` in `0.26s`, `<1°/s` in `0.28s`
-- `145236`: `|yaw_rate| < 5°/s` in `0.14s`, `<1°/s` in `0.14s` (faster only because held rate was incorrectly much lower)
-- `164309`: `|yaw_rate| < 5°/s` in `0.26s`, `<1°/s` in `0.28s` (matches healthy pre-regression feel)
+## 2. What changed in this patch
 
-Interpretation:
-1. The forward protocol input update (`forward_step` pitch `1.0`) worked: input-phase forward rose from ~2.112 to ~2.220 m/s.
-2. Forward-specific brake slew improved release shape: carryover dropped from `0.84 m/s` (`180413`) to `0.50 m/s` (`183817`), while preserving onset.
-3. Yaw behavior remains stable and should stay frozen.
-4. Lateral and vertical traces are unchanged; remaining gap is primarily forward residual carryover and vertical protocol/slew interpretation.
+### Code/config
+- **Vertical-only tuning:** `Assets/Resources/Configs/DroneModeNormal.asset`
+  - `verticalAcceleration` reduced from `5.4` to `1.6`.
 
----
+### Documentation updates
+- `README.md`
+- `Docs/AcceptanceCriteria.md`
+- `Docs/CodexPlan_NextSteps.md`
+- `Docs/ClosedLoopValidation_Apr09_2026.md`
+- `HANDOFF.md` (this file)
 
-## 2. Architecture and files you will touch most
+## 3. Why this patch is vertical-only
 
-| File | Purpose |
-|---|---|
-| `Assets/Scripts/Drone/Flight/DJIStyleFlightController.cs` | Core stabilized controller (velocity-error translation + yaw-rate control + acceleration slew). |
-| `Assets/Scripts/Drone/Flight/DroneFlightModeConfig.cs` | Mode tuning schema consumed by the controller. |
-| `Assets/Resources/Configs/DroneModeNormal.asset` | Main tuning values used by current benchmark loop. |
-| `Assets/Resources/Benchmarks/*.asset` | Protocol timing + stick amplitudes per maneuver. |
-| `Tools/analyze_airdata.py` | Analyzer for real-vs-sim metrics and reports. |
-| `BENCHMARKS.md` | Benchmark harness protocol rules and analyzer usage. |
-| `Docs/ClosedLoopValidation_Apr09_2026.md` | Apr 9 evidence/diagnosis summary. |
+Long-window vertical maneuvers (`climb_long`, `descent_long`, each 2.5s hold) are now measured in-archive and show large overshoot vs real. That makes vertical the clearest next axis.
 
----
+This patch intentionally does **not** retune yaw, forward, or lateral.
 
-## 3. Yaw regression: exact root cause and fix
+## 4. Next run checklist
 
-### Root cause (regressed path)
-
-Active-stick yaw used:
-
-- `yawError = targetYawRate - currentYawRate`
-- `yawDamping = currentYawRate * yawStopAuthority`
-- `rawYawAcceleration = yawError * yawCatchUpAuthority - yawDamping`
-
-This creates a biased held-input equilibrium:
-
-`equilibriumYawRate = targetYawRate * yawCatchUpAuthority / (yawCatchUpAuthority + yawStopAuthority)`
-
-With Normal mode run values (`82`, `3.6`, `4.0`):
-
-`82 * 3.6 / (3.6 + 4.0) = 38.84 °/s`
-
-Exactly what `session_20260409_145236` showed (~38.83 °/s both directions).
-
-### Fix (validated in 164309)
-
-- Removed active-input full-rate damping term from the held-input branch.
-- Held-input yaw now uses rate-error catch-up only (`yawError * yawCatchUpAuthority`) with the existing acceleration clamp + overshoot headroom.
-- Neutral-stick branch still uses hard-stop braking (`MoveTowards` with `yawStopSpeed`) for DJI-like snap stop.
-
-Result in benchmark evidence:
-- held yaw restored to ~`79.9 °/s` both directions in `164309`
-- release decay timing returned to the pre-regression profile (`~0.26s` to <5°/s, `~0.28s` to <1°/s)
-
----
-
-## 4. Vertical interpretation (important)
-
-Do **not** treat current climb/descent deltas as pure “needs more gain” evidence.
-
-Why:
-- Vertical maneuvers (`climb`, `descent`) are `1.0s` input windows.
-- Commanded acceleration is slew-limited (`accelerationSlewRate`) before physics application.
-- In short windows, peak speed can remain onset-ramp limited even if vertical P-gain/cap increase.
-
-So current data remains consistent with **slew/protocol interaction** as the dominant factor for peak vertical mismatch.
-
----
-
-## 5. Right-lateral trim status
-
-Keep these in `DroneModeNormal.asset`:
-- `lateralRightSpeedMultiplier: 0.88`
-- `lateralRightAccelerationMultiplier: 0.92`
-
-The improvement remained preserved from `145236` to `164309` with no new left-side regression.
-
----
-
-## 6. Benchmark protocol facts to remember
-
-Default F9 protocol (relevant durations):
-1. `hover_hold` (7.0s segment + runner pre/settle)
-2. `forward_step` (1.0s input)
-3. `lateral_right` (2.5s input)
-4. `lateral_left` (2.5s input)
-5. `climb` (1.0s input)
-6. `descent` (1.0s input)
-7. `yaw_right` (1.0s input)
-8. `yaw_left` (1.0s input)
-9. `climb_long` (2.5s input)
-10. `descent_long` (2.5s input)
-
-This mixed 2.5s lateral vs 1.0s forward/vertical/yaw structure matters for interpreting “peak reached vs not reached” outcomes.
-
----
-
-## 7. Analyzer commands
-
-Single latest session (recommended quick check):
+1. Run one F9 full protocol in Normal mode.
+2. Confirm session archive has 10 runs including `climb_long` and `descent_long`.
+3. Analyze with:
 
 ```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session session_20260409_183817
+python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session <new_session_id>
 ```
 
-Three-session comparison sweep:
+4. Compare to `session_20260410_120548`:
+   - `climb_long` should decrease from ~6.49 toward ~4.33 m/s.
+   - `descent_long` should decrease from ~5.30 toward ~3.67 m/s.
+   - yaw/forward/lateral should remain approximately unchanged.
 
-```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv \
-  --session session_20260409_125031 --session session_20260409_145236 --session session_20260409_164309
-```
+## 5. Known open issues (after this patch, before new benchmark)
 
-Output files (legacy names, always overwritten):
-- `Docs/airdata_mar30_analysis.json`
-- `Docs/Airdata_Mar30_2026_Benchmark_Summary.md`
-
----
-
-Forward protocol provenance update (Apr 9 follow-up):
-- Historical Mar 30 segmented calibration produced a legacy `forward_step` value of `+0.77`.
-- Current analyzer outputs for the Apr 8 real baseline recommend `forward_step = +1.00` normalized.
-- `Assets/Resources/Benchmarks/Maneuver_ForwardStep.asset` now uses `pitch: 1.0`; old sessions with `0.77` should be treated as legacy-protocol evidence.
-
-
-Forward slew patch now in code/config (validated in 183817):
-- `DroneFlightModeConfig` now exposes `forwardAccelerationSlewRate` and `forwardBrakeSlewRate` (<=0 falls back to global slew).
-- `DJIStyleFlightController` now applies a forward-axis local-Z slew using those fields while preserving global slew behavior for lateral/vertical coupling.
-- `DroneModeNormal.asset` sets `forwardAccelerationSlewRate: 6` and `forwardBrakeSlewRate: 11`; `session_20260409_183817` is the validating run that reduced carryover.
-
-## 8. Open issues / uncertainties
-
-1. `session_20260409_183817` validated the forward brake-slew patch and is a reasonable **done-for-now** stopping point.
-2. Yaw is done for now; do not reopen yaw tuning unless new evidence appears.
-3. Lateral asymmetry in real data may include environment/mechanical effects; sim right-only trim remains pragmatic.
-4. Vertical mismatch remains likely onset-slew/protocol-limited under current 1.0s windows; needs protocol-aware diagnosis before raw-gain changes.
-
-
-## 9. Next-phase scaffolding implemented on Apr 10, 2026
-
-Implemented code/assets (no new benchmark session yet):
-- Added `Maneuver_ClimbLong.asset` (`climb_long`, 2.5s throttle +1.0, protocol order 9).
-- Added `Maneuver_DescentLong.asset` (`descent_long`, 2.5s throttle -1.0, protocol order 10).
-- Kept original 1.0s `climb` and `descent` maneuvers in default protocol for direct same-session comparison.
-- Added `BenchmarkRunner` runtime `protocolModeOverride` (None/Cine/Normal/Sport) so full protocol can be forced to Cine/Sport without duplicating maneuver assets.
-- Added run-manifest `effective_mode` field to distinguish authored maneuver mode from runtime override mode.
-- Added `Docs/AcceptanceCriteria.md` with pass/fail/blocked status snapshot and evidence anchors.
-
-Immediate next run recommendation:
-1. Run one F9 full protocol in Normal with new long vertical maneuvers and compare `climb` vs `climb_long`, `descent` vs `descent_long`.
-2. Run one F9 in Cine and one F9 in Sport using `protocolModeOverride` and archive session zips/manifests.
-3. Update `Docs/ClosedLoopValidation_Apr09_2026.md` with those outcomes and convert vertical hypothesis to a conclusion.
+- Vertical patch is implemented but **not yet validated by a new Unity benchmark session in this environment**.
+- Right-lateral remains somewhat high relative to real, but is deferred while vertical is the active focus.
+- Cine/Sport full-protocol evidence remains pending.
