@@ -17,6 +17,14 @@ namespace DroneSim.Drone.Benchmark
     /// </summary>
     public class BenchmarkRunner : MonoBehaviour
     {
+        private enum ProtocolModeOverride
+        {
+            None,
+            Cine,
+            Normal,
+            Sport
+        }
+
         private enum RunPhase
         {
             Idle,
@@ -52,6 +60,7 @@ namespace DroneSim.Drone.Benchmark
             public float default_settle_s;
             public bool run_protocol_in_order;
             public bool reset_mode_between_runs;
+            public string protocol_mode_override;
             public int maneuver_count;
             public int default_protocol_maneuver_count;
             public bool has_provisional_default_amplitudes;
@@ -143,6 +152,7 @@ namespace DroneSim.Drone.Benchmark
         [SerializeField, Min(0f)] private float defaultSettleDuration = 1.5f;
         [SerializeField] private bool runProtocolInOrder = true;
         [SerializeField] private bool resetRequestedModeToManeuver = true;
+        [SerializeField] private ProtocolModeOverride protocolModeOverride = ProtocolModeOverride.None;
 
         [Header("Debug window")]
         [SerializeField] private bool showDebugWindow = true;
@@ -425,12 +435,13 @@ namespace DroneSim.Drone.Benchmark
 
             recorder.BeginRun();
             inputReader.SetExternalInputEnabled(true);
-            BenchmarkInputFrame neutralFrame = BenchmarkInputFrame.Neutral(activeManeuver.flightMode);
+            DroneMode effectiveMode = GetEffectiveMode(activeManeuver);
+            BenchmarkInputFrame neutralFrame = BenchmarkInputFrame.Neutral(effectiveMode);
             inputReader.SetExternalInputFrame(neutralFrame.ToDroneInputFrame());
             activeRunSource = fromProtocolQueue ? "full_protocol" : "manual";
 
             string launchKind = fromProtocolQueue ? "protocol" : "manual";
-            Debug.Log($"BenchmarkRunner started '{activeManeuver.maneuverName}' ({launchKind}) with pre-roll {activePreRollDuration:F2}s, input {activeManeuver.Duration:F2}s, settle {activeSettleDuration:F2}s in {activeManeuver.flightMode} mode.");
+            Debug.Log($"BenchmarkRunner started '{activeManeuver.maneuverName}' ({launchKind}) with pre-roll {activePreRollDuration:F2}s, input {activeManeuver.Duration:F2}s, settle {activeSettleDuration:F2}s in {effectiveMode} mode.");
             if (activeManeuver.UsesProvisionalAmplitude)
             {
                 Debug.LogWarning($"BenchmarkRunner maneuver '{activeManeuver.maneuverName}' uses provisional amplitude ({activeManeuver.AmplitudeConfidenceLabelNormalized}, {activeManeuver.AmplitudeProvenanceNormalized}). Interpret sim-vs-real deltas cautiously.");
@@ -452,12 +463,15 @@ namespace DroneSim.Drone.Benchmark
 
         private BenchmarkInputFrame EvaluateInputForCurrentPhase()
         {
+            DroneMode activeMode = GetEffectiveMode(activeManeuver);
             if (runPhase == RunPhase.Input)
             {
-                return activeManeuver.Evaluate(phaseElapsedTime);
+                BenchmarkInputFrame frame = activeManeuver.Evaluate(phaseElapsedTime);
+                frame.Mode = activeMode;
+                return frame;
             }
 
-            return BenchmarkInputFrame.Neutral(activeManeuver.flightMode);
+            return BenchmarkInputFrame.Neutral(activeMode);
         }
 
         private void AdvanceRunPhaseIfNeeded()
@@ -580,6 +594,7 @@ namespace DroneSim.Drone.Benchmark
                     default_settle_s = defaultSettleDuration,
                     run_protocol_in_order = runProtocolInOrder,
                     reset_mode_between_runs = resetRequestedModeToManeuver,
+                    protocol_mode_override = protocolModeOverride.ToString(),
                     maneuver_count = maneuvers.Count,
                     default_protocol_maneuver_count = GetDefaultProtocolManeuvers().Count,
                     has_provisional_default_amplitudes = HasProvisionalDefaultProtocolAmplitudes(),
@@ -678,6 +693,7 @@ namespace DroneSim.Drone.Benchmark
                 .Append("\"protocol_category\":\"").Append(maneuver != null ? maneuver.EffectiveProtocolCategory : "unknown").Append("\",")
                 .Append("\"protocol_order\":").Append(maneuver != null ? maneuver.protocolOrder : -1).Append(',')
                 .Append("\"mode\":\"").Append(maneuver != null ? maneuver.flightMode.ToString() : "Unknown").Append("\",")
+                .Append("\"effective_mode\":\"").Append(maneuver != null ? GetEffectiveMode(maneuver).ToString() : "Unknown").Append("\",")
                 .Append("\"amplitude_confidence_label\":\"").Append(maneuver != null ? maneuver.AmplitudeConfidenceLabelNormalized : "unknown").Append("\",")
                 .Append("\"amplitude_provenance\":\"").Append(maneuver != null ? maneuver.AmplitudeProvenanceNormalized : "unknown").Append("\",")
                 .Append("\"amplitude_provisional\":").Append(maneuver != null && maneuver.UsesProvisionalAmplitude ? "true" : "false").Append(',')
@@ -856,8 +872,9 @@ namespace DroneSim.Drone.Benchmark
 
         private void ResetDroneState(ManeuverDefinition maneuver)
         {
-            inputReader.ResetForBenchmark(resetRequestedModeToManeuver ? maneuver.flightMode : inputReader.CurrentInput.RequestedMode);
-            controller.ResetForBenchmark(maneuver.flightMode);
+            DroneMode effectiveMode = GetEffectiveMode(maneuver);
+            inputReader.ResetForBenchmark(resetRequestedModeToManeuver ? effectiveMode : inputReader.CurrentInput.RequestedMode);
+            controller.ResetForBenchmark(effectiveMode);
 
             Rigidbody body = physicsBody.Body;
             Vector3 benchmarkStartPosition = environmentController != null
@@ -869,6 +886,26 @@ namespace DroneSim.Drone.Benchmark
             body.angularVelocity = Vector3.zero;
             body.Sleep();
             body.WakeUp();
+        }
+
+        private DroneMode GetEffectiveMode(ManeuverDefinition maneuver)
+        {
+            if (maneuver == null)
+            {
+                return DroneMode.Normal;
+            }
+
+            switch (protocolModeOverride)
+            {
+                case ProtocolModeOverride.Cine:
+                    return DroneMode.Cine;
+                case ProtocolModeOverride.Normal:
+                    return DroneMode.Normal;
+                case ProtocolModeOverride.Sport:
+                    return DroneMode.Sport;
+                default:
+                    return maneuver.flightMode;
+            }
         }
     }
 }

@@ -15,6 +15,16 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 - A simple hover-box training drill plus telemetry/debug HUD.
 - Runtime bootstrap that can assemble a runnable test setup quickly.
 
+
+## Benchmark protocol status (Apr 10, 2026)
+
+- The default F9 protocol now includes 10 maneuvers by adding:
+  - `climb_long` (2.5s vertical input hold)
+  - `descent_long` (2.5s vertical input hold)
+- The original 1.0s `climb` and `descent` maneuvers remain in the protocol for same-session comparison.
+- `BenchmarkRunner` now supports a runtime `protocolModeOverride` (None/Cine/Normal/Sport) so the same maneuver set can be executed in Cine/Sport without duplicating benchmark assets.
+- Current acceptance status is tracked in `Docs/AcceptanceCriteria.md`.
+
 ## Quick start (scene-authored default)
 
 1. Open the project in **Unity 6**.
