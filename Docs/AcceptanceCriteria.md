@@ -33,19 +33,19 @@ This is a classroom training simulator. The goal is "representative enough that 
 
 ## Current Status (as of April 10, 2026)
 
-Evidence anchor: `session_20260410_120548` (latest decisive 10-maneuver Normal run), with trend context from `164309`/`170224`/`180413`/`183817`/`190056`.
+Evidence anchor: `session_20260410_135709` (latest decisive 10-maneuver Normal run), with trend context from `145236`/`164309`/`170224`/`180413`/`183817`/`190056`/`120548`.
 
 | Criterion | Status | Evidence / Note |
 |---|---|---|
-| Forward input-phase peak within 15% | ❌ Fail (borderline) | Sim peak 2.220 m/s vs real ~2.63 m/s (~15.6% low), just outside threshold. |
-| Forward post-release carryover ≤ 0.5 m/s | ✅ Pass | Carryover stabilized at ~0.500 m/s in `session_20260409_183817`, `190056`, and `20260410_120548`. |
+| Forward input-phase peak within 15% | ❌ Fail (borderline) | Sim peak 2.220 m/s vs real ~2.63 m/s (~15.6% low), just outside threshold in `session_20260410_135709`. |
+| Forward post-release carryover ≤ 0.5 m/s | ✅ Pass | Carryover remains ~0.500 m/s in `session_20260409_183817`, `190056`, `20260410_120548`, and `20260410_135709`. |
 | Lateral right within 15% | ❌ Fail | Sim 8.925 m/s vs real ~7.44 m/s (~20% high). |
 | Lateral left within 15% | ✅ Pass | Sim 9.812 m/s vs real ~10.04 m/s (~2% low). |
-| Climb within 15% (2.5s window) | ❌ Fail | `climb_long` now measured: sim 6.490 m/s vs real ~4.33 m/s (~50% high). |
-| Descent within 15% (2.5s window) | ❌ Fail | `descent_long` now measured: sim 5.301 m/s vs real ~3.67 m/s (~44% high). |
+| Climb within 15% (2.5s window) | ✅ Pass | `climb_long` improved to 4.194 m/s vs real ~4.33 m/s (~3% low) in `session_20260410_135709`. |
+| Descent within 15% (2.5s window) | ✅ Pass | `descent_long` improved to 3.578 m/s vs real ~3.67 m/s (~2.5% low) in `session_20260410_135709`. |
 | Yaw held-input within 5% | ✅ Pass | ~79.9°/s sim vs ~82°/s real (~3% low) both directions. |
-| Yaw release settle timing | ✅ Pass | ~0.26s to <5°/s matches healthy reference profile. |
-| Hover horizontal drift ≤ 1.5 m/s RMS | 🚧 Pending | Metric not yet exported as a dedicated acceptance KPI. |
+| Yaw release settle timing | ✅ Pass | ~0.26s to <5°/s in `session_20260410_135709`, matching healthy reference profile. |
+| Hover horizontal drift ≤ 1.5 m/s RMS | ✅ Pass (for benchmark hover_hold) | `session_20260410_135709` hover_hold input-phase horizontal RMS is ~0.000 m/s (well under 1.5). |
 | Cine mode coverage | 🚧 Pending | Benchmark runner now supports runtime mode override; Cine protocol session not yet archived. |
 | Sport mode coverage | 🚧 Pending | Benchmark runner now supports runtime mode override; Sport protocol session not yet archived. |
 | Hover-box drill completable within 60s | 🚧 Pending | Playtest pass still needed in Normal/Cine/Sport. |
@@ -53,12 +53,14 @@ Evidence anchor: `session_20260410_120548` (latest decisive 10-maneuver Normal r
 ## Sign-off
 Each criterion must reference a specific benchmark session ID as evidence.
 
-## Immediate next benchmark target (vertical-only patch)
+## Immediate next benchmark target (freeze posture)
 
-- Patch hypothesis: long-window vertical overshoot is primarily caused by excessive vertical authority from `verticalAcceleration` in Normal mode, interacting with slew-limited acceleration handoff during a 2.5s hold.
-- Patch change: `DroneModeNormal.asset` `verticalAcceleration` reduced `5.4 -> 1.6` (no yaw/forward/lateral changes in this pass).
-- Expected outcome on next F9 Normal run:
-  - `climb_long` should move down from ~6.49 toward ~4.33 m/s.
-  - `descent_long` should move down from ~5.30 toward ~3.67 m/s.
-  - `forward_step`, `yaw_left/right`, and lateral peaks should remain near current values.
-- Success gate for this patch: both long vertical peaks improve materially (directionally correct and clearly lower) without regressions in yaw/forward behavior.
+- No immediate Normal-mode retune benchmark is required.
+- Reopen Normal tuning only if one of these happens:
+  1. New pilot feedback shows the remaining gaps (forward onset or right-lateral) produce meaningful training issues.
+  2. A new baseline dataset revises target values or tolerance policy.
+  3. A non-Normal change (Cine/Sport or physics/core refactor) causes measurable Normal regression.
+- Highest-value next evidence is now mode coverage:
+  - one archived full-protocol Cine run,
+  - one archived full-protocol Sport run,
+  - and hover-box completion timing by mode.

@@ -32,15 +32,17 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 3. `session_20260409_180413` moved `forward_step` to pitch `1.0`, improving onset but increasing post-release carryover.
 4. `session_20260409_183817` and `session_20260409_190056` validated forward brake-slew tuning and reduced carryover to ~0.50 m/s.
 5. `session_20260410_120548` is the first archived 10-maneuver Normal run, adding `climb_long` and `descent_long` and proving vertical is now a measured mismatch (not just a blocked hypothesis).
+6. `session_20260410_135709` validated the vertical-only patch: `climb_long` dropped to ~4.194 m/s and `descent_long` dropped to ~3.578 m/s while forward/yaw/lateral stayed effectively unchanged.
 
 ### Current priority
 
-- **Yaw:** done for now (~79.89 °/s vs ~82 °/s real).
-- **Forward:** improved and stable enough to leave untouched this pass (2.220 m/s input-phase, ~0.500 m/s carryover).
-- **Lateral:** right side remains somewhat fast (8.925 m/s vs ~7.44 m/s), but not the clearest next blocker.
-- **Vertical (next):** `climb_long` ~6.49 m/s vs ~4.33 real and `descent_long` ~5.30 m/s vs ~3.67 real in `session_20260410_120548`.
+- **Latest decisive evidence:** `session_20260410_135709`.
+- **Yaw:** done for now (~79.89 °/s vs ~82 °/s real, release settle ~0.26 s).
+- **Forward:** shape is materially improved and stable enough to freeze for now (2.220 m/s input-phase, ~0.500 m/s carryover).
+- **Vertical:** long-window climb/descent now pass current ±15% criteria (`climb_long` 4.194 vs ~4.33, `descent_long` 3.578 vs ~3.67).
+- **Remaining narrow gaps:** forward input-phase is still slightly low (~15.6% low, just outside threshold) and lateral_right remains high (8.925 vs ~7.44).
 
-This patch performs a single vertical-only tuning step (`verticalAcceleration` reduction in Normal mode) and leaves yaw/forward/lateral tuning unchanged pending the next benchmark run.
+Default project posture is now **Normal-mode tuning freeze (PATH A)** unless future evidence shows a meaningful training-impact reason to reopen one axis.
 
 ## Quick start (scene-authored default)
 
