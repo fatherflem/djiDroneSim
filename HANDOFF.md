@@ -1,6 +1,6 @@
 # DJI Mini 4 Pro Flight Simulator — Project Handoff
 
-> Last updated: 2026-04-09 after auditing benchmark `session_20260409_183817` (forward brake-slew validation pass).
+> Last updated: 2026-04-10 after implementing next-phase scaffolding (long vertical maneuvers, protocol mode override support, and acceptance criteria doc).
 
 ---
 
@@ -116,6 +116,8 @@ Default F9 protocol (relevant durations):
 6. `descent` (1.0s input)
 7. `yaw_right` (1.0s input)
 8. `yaw_left` (1.0s input)
+9. `climb_long` (2.5s input)
+10. `descent_long` (2.5s input)
 
 This mixed 2.5s lateral vs 1.0s forward/vertical/yaw structure matters for interpreting “peak reached vs not reached” outcomes.
 
@@ -159,3 +161,19 @@ Forward slew patch now in code/config (validated in 183817):
 2. Yaw is done for now; do not reopen yaw tuning unless new evidence appears.
 3. Lateral asymmetry in real data may include environment/mechanical effects; sim right-only trim remains pragmatic.
 4. Vertical mismatch remains likely onset-slew/protocol-limited under current 1.0s windows; needs protocol-aware diagnosis before raw-gain changes.
+
+
+## 9. Next-phase scaffolding implemented on Apr 10, 2026
+
+Implemented code/assets (no new benchmark session yet):
+- Added `Maneuver_ClimbLong.asset` (`climb_long`, 2.5s throttle +1.0, protocol order 9).
+- Added `Maneuver_DescentLong.asset` (`descent_long`, 2.5s throttle -1.0, protocol order 10).
+- Kept original 1.0s `climb` and `descent` maneuvers in default protocol for direct same-session comparison.
+- Added `BenchmarkRunner` runtime `protocolModeOverride` (None/Cine/Normal/Sport) so full protocol can be forced to Cine/Sport without duplicating maneuver assets.
+- Added run-manifest `effective_mode` field to distinguish authored maneuver mode from runtime override mode.
+- Added `Docs/AcceptanceCriteria.md` with pass/fail/blocked status snapshot and evidence anchors.
+
+Immediate next run recommendation:
+1. Run one F9 full protocol in Normal with new long vertical maneuvers and compare `climb` vs `climb_long`, `descent` vs `descent_long`.
+2. Run one F9 in Cine and one F9 in Sport using `protocolModeOverride` and archive session zips/manifests.
+3. Update `Docs/ClosedLoopValidation_Apr09_2026.md` with those outcomes and convert vertical hypothesis to a conclusion.

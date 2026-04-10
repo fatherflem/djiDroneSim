@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e57e519972452a8bca4bf9a0ce1002, type: 3}
+  m_Name: Maneuver_ClimbLong
+  m_EditorClassIdentifier: 
+  maneuverName: climb_long
+  description: Extended-window climb throttle step for slew-limiter hypothesis validation.
+  flightMode: 1
+  protocolCategory: climb_long
+  protocolOrder: 9
+  includeInDefaultProtocol: 1
+  amplitudeConfidence: 1
+  amplitudeProvenance: 1
+  inputAmplitudeEvidence: estimated_from_noisy_or_limited_segments
+  inputAmplitudeNotes: Matches climb amplitude (+1.0 throttle) with 2.5s hold to test vertical slew/protocol limitation.
+  initialPosition: {x: 0, y: 2, z: 0}
+  initialYawDegrees: 0
+  overridePreRollDuration: 0
+  preRollDuration: 1.5
+  overrideSettleDuration: 0
+  settleDuration: 1.5
+  segments:
+  - duration: 2.5
+    roll: 0
+    pitch: 0
+    throttle: 1
+    yaw: 0

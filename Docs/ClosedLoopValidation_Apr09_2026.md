@@ -128,3 +128,13 @@ Math target for release carryover with `A=3.0 m/s²` and `brake_slew=11 m/s³`:
 3. Forward-specific slew separation worked (onset preserved, release carryover reduced); current `183817` state is close enough to freeze for now.
 4. No further micro-retune is strongly justified without new real-evidence goals; if resumed later, keep it forward-only and tiny.
 5. Vertical remains a protocol/onset-shape investigation, not immediate gain inflation.
+
+
+## Apr 10, 2026 implementation update (pre-benchmark)
+
+A follow-up code/assets pass has been completed to execute the next validation phase:
+- Added protocol maneuvers `climb_long` and `descent_long` (2.5s throttle windows, orders 9 and 10) so vertical slew/protocol-limitation can be tested in the same F9 session as the original 1.0s climbs/descents.
+- Added `BenchmarkRunner` runtime `protocolModeOverride` (None/Cine/Normal/Sport) to run the same protocol under Cine/Sport without duplicating maneuver assets.
+- Added `Docs/AcceptanceCriteria.md` and recorded current pass/fail/blocked state from existing Apr 9 evidence.
+
+No new benchmark session ID is attached yet for these additions, so vertical root-cause status remains **hypothesis pending validation** as of April 10, 2026.
