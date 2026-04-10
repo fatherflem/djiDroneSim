@@ -26,7 +26,7 @@ MonoBehaviour:
   lateralRightStopMultiplier: 1
   maxClimbSpeed: 4.35
   maxDescentSpeed: 3.7
-  verticalAcceleration: 5.4
+  verticalAcceleration: 1.6
   maxYawRateDegrees: 82
   yawCatchUpSpeed: 3.6
   yawRightCatchUpMultiplier: 1
