@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Input-only yaw-right step for protocol comparison.
   flightMode: 1
   protocolCategory: yaw_right
-  protocolOrder: 7
+  protocolOrder: 8
   includeInDefaultProtocol: 1
   amplitudeConfidence: 0
   amplitudeProvenance: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Extended-window climb throttle step for slew-limiter hypothesis validation.
   flightMode: 1
   protocolCategory: climb_long
-  protocolOrder: 9
+  protocolOrder: 10
   includeInDefaultProtocol: 1
   amplitudeConfidence: 1
   amplitudeProvenance: 1

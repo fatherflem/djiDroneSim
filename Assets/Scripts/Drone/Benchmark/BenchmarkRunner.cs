@@ -164,6 +164,21 @@ namespace DroneSim.Drone.Benchmark
         [SerializeField] private Color benchmarkOriginColor = new Color(0.2f, 0.95f, 1f, 0.85f);
         [SerializeField, Min(0.1f)] private float benchmarkOriginRadius = 0.5f;
 
+        private static readonly List<string> CanonicalDefaultProtocolCategories = new List<string>
+        {
+            "hover_hold",
+            "forward_step",
+            "backward_step",
+            "lateral_right",
+            "lateral_left",
+            "climb",
+            "descent",
+            "yaw_right",
+            "yaw_left",
+            "climb_long",
+            "descent_long"
+        };
+
         private readonly BenchmarkTelemetryRecorder recorder = new BenchmarkTelemetryRecorder();
         private readonly Queue<int> queuedProtocolIndices = new Queue<int>();
 
@@ -730,7 +745,30 @@ namespace DroneSim.Drone.Benchmark
                 categories.Add(protocol[i].EffectiveProtocolCategory);
             }
 
-            return categories;
+            if (!runProtocolInOrder)
+            {
+                return categories;
+            }
+
+            List<string> ordered = new List<string>(categories.Count);
+            for (int i = 0; i < CanonicalDefaultProtocolCategories.Count; i++)
+            {
+                string canonical = CanonicalDefaultProtocolCategories[i];
+                if (categories.Contains(canonical))
+                {
+                    ordered.Add(canonical);
+                }
+            }
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                if (!ordered.Contains(categories[i]))
+                {
+                    ordered.Add(categories[i]);
+                }
+            }
+
+            return ordered;
         }
 
         private List<ProtocolInputAmplitudeSnapshot> BuildDefaultProtocolAmplitudeSnapshots()

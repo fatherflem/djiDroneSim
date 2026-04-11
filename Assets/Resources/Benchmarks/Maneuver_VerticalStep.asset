@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Input-only climb throttle step for protocol comparison.
   flightMode: 1
   protocolCategory: climb
-  protocolOrder: 5
+  protocolOrder: 6
   includeInDefaultProtocol: 1
   amplitudeConfidence: 1
   amplitudeProvenance: 1

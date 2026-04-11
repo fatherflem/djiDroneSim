@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Input-only left lateral roll step for protocol comparison.
   flightMode: 1
   protocolCategory: lateral_left
-  protocolOrder: 4
+  protocolOrder: 5
   includeInDefaultProtocol: 1
   amplitudeConfidence: 2
   amplitudeProvenance: 1
