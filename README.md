@@ -44,6 +44,20 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 
 Default project posture is now **Normal-mode tuning freeze (PATH A)** unless future evidence shows a meaningful training-impact reason to reopen one axis.
 
+### Evidence tiers (must stay separate)
+
+- **Tier 1 — Structured benchmark evidence (acceptance-grade):**
+  archived `BenchmarkRuns/session_*` protocol runs, especially `session_20260410_135709`.
+  These are the only runs used for acceptance/tuning sign-off.
+- **Tier 2 — Exploratory real-flight evidence (non-protocol):**
+  opportunistic AirData captures (for example `Apr-10th-2026-02-12PM-Flight-Airdata.csv`) mined for candidate maneuver windows.
+  These runs are useful for sanity checks and “real feel” hypotheses, but **not** for final acceptance claims.
+
+Latest exploratory artifacts for the Apr 10 free-fly log:
+- `Docs/Airdata_Apr10_2026_Exploratory_Maneuver_Mining.md`
+- `Docs/airdata_apr10_2026_1412_exploratory_maneuvers.json`
+- `Docs/Airdata_Apr10_2026_Exploratory_Assessment.md`
+
 ## Quick start (scene-authored default)
 
 1. Open the project in **Unity 6**.

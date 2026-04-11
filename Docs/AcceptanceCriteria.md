@@ -52,6 +52,7 @@ Evidence anchor: `session_20260410_135709` (latest decisive 10-maneuver Normal r
 
 ## Sign-off
 Each criterion must reference a specific benchmark session ID as evidence.
+Exploratory free-fly AirData analyses (non-protocol captures) may be cited as supplemental context, but they are not valid as sole acceptance evidence.
 
 ## Immediate next benchmark target (freeze posture)
 

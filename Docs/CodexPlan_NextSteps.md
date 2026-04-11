@@ -42,6 +42,11 @@ Why freeze:
 3. Record hover-box completion timing for Normal/Cine/Sport.
 4. Only reopen Normal tuning if those runs or playtests show a concrete training-impact issue.
 
+Exploratory track (separate from acceptance):
+- Use `Tools/extract_exploratory_maneuvers.py` for messy free-fly AirData logs.
+- Keep outputs in docs as exploratory sanity checks only.
+- Do **not** treat exploratory windows as protocol-equivalent acceptance evidence.
+
 ## 5) Reopen gates (strict)
 
 Permit one new Normal micro-patch only if:
