@@ -10,19 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4e57e519972452a8bca4bf9a0ce1002, type: 3}
-  m_Name: Maneuver_Descent
+  m_Name: Maneuver_BackwardStep
   m_EditorClassIdentifier: 
-  maneuverName: descent
-  description: Input-only descent throttle step for protocol comparison.
+  maneuverName: backward_step
+  description: Input-only backward pitch step for protocol comparison.
   flightMode: 1
-  protocolCategory: descent
-  protocolOrder: 7
+  protocolCategory: backward_step
+  protocolOrder: 3
   includeInDefaultProtocol: 1
   amplitudeConfidence: 1
   amplitudeProvenance: 1
-  inputAmplitudeEvidence: estimated_from_noisy_or_limited_segments
-  inputAmplitudeNotes: 'Calibrated from Mar-30th-2026 Airdata rc_throttle(percent) descent
-    segments; plateau median supports -1.00 normalized throttle.'
+  inputAmplitudeEvidence: directly_measured_from_clean_rc_plateaus
+  inputAmplitudeNotes: 'Legacy Mar-30th-2026 segmented estimate used +0.77 pitch; Apr-8th-2026 analyzer recommendation is +1.00 normalized and now adopted for protocol runs.'
   initialPosition: {x: 0, y: 2, z: 0}
   initialYawDegrees: 0
   overridePreRollDuration: 0
@@ -32,6 +31,6 @@ MonoBehaviour:
   segments:
   - duration: 1
     roll: 0
-    pitch: 0
-    throttle: -1
+    pitch: -1.0
+    throttle: 0
     yaw: 0

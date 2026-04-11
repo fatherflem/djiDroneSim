@@ -41,25 +41,32 @@ MANEUVER_MAP = {
 EXPECTED_ORDER = [
     "hover_hold",
     "forward_step",
+    "backward_step",
     "lateral_right",
     "lateral_left",
     "climb",
     "descent",
     "yaw_right",
     "yaw_left",
+    "climb_long",
+    "descent_long",
 ]
 COMPARISON_CATEGORIES = [
     "hover_hold",
     "forward_step",
+    "backward_step",
     "lateral_right",
     "lateral_left",
     "climb",
     "descent",
     "yaw_right",
     "yaw_left",
+    "climb_long",
+    "descent_long",
 ]
 AMPLITUDE_TARGETS = [
     "forward_step",
+    "backward_step",
     "lateral_right",
     "lateral_left",
     "climb",
@@ -410,6 +417,8 @@ def metrics_for_segments(usable: List[dict], segments: List[Segment]) -> Dict[st
 def _channel_for_maneuver(maneuver: str) -> Tuple[str, int]:
     if maneuver == "forward_step":
         return "rc_elevator", 1
+    if maneuver == "backward_step":
+        return "rc_elevator", -1
     if maneuver == "lateral_right":
         return "rc_aileron", 1
     if maneuver == "lateral_left":
@@ -596,6 +605,7 @@ def normalize_protocol_category(raw: str) -> str:
     n = (raw or "").strip().lower().replace(" ", "_")
     aliases = {
         "forward": "forward_step",
+        "backward": "backward_step",
         "lateral": "lateral_right",
         "vertical": "climb",
         "yaw": "yaw_right",
@@ -622,6 +632,8 @@ def infer_category_from_row(row: dict) -> str:
         return "descent"
     if "climb" in mname or "vertical" in mname:
         return "climb"
+    if "backward" in mname:
+        return "backward_step"
     if "forward" in mname:
         return "forward_step"
     if "hover" in mname:
@@ -647,6 +659,8 @@ def infer_category_from_row(row: dict) -> str:
         return "yaw_left"
     if category == "climb" and throttle < 0:
         return "descent"
+    if category == "forward_step" and pitch < 0:
+        return "backward_step"
     return category
 
 
@@ -912,11 +926,11 @@ def summarize_sim_run(run: dict, category: str) -> dict:
     times = _get_times(signal_rows)
     if category in ("yaw_right", "yaw_left"):
         signal = [abs(_safe_float(r, "yaw_rate_degps")) for r in signal_rows]
-    elif category == "forward_step":
+    elif category in ("forward_step", "backward_step"):
         signal = [abs(_safe_float(r, "forward_speed_mps")) for r in signal_rows]
     elif category in ("lateral_right", "lateral_left"):
         signal = [abs(_safe_float(r, "lateral_speed_mps")) for r in signal_rows]
-    elif category in ("climb", "descent"):
+    elif category in ("climb", "descent", "climb_long", "descent_long"):
         signal = [abs(_safe_float(r, "vertical_speed_mps")) for r in signal_rows]
     else:
         hs = [_safe_float(r, "horizontal_speed_mps") for r in analysis_rows]

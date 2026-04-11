@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Extended-window descent throttle step for slew-limiter hypothesis validation.
   flightMode: 1
   protocolCategory: descent_long
-  protocolOrder: 10
+  protocolOrder: 11
   includeInDefaultProtocol: 1
   amplitudeConfidence: 1
   amplitudeProvenance: 1

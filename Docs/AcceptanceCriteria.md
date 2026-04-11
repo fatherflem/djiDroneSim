@@ -9,6 +9,8 @@ This is a classroom training simulator. The goal is "representative enough that 
 |---|---|---|---|
 | Forward | Input-phase peak speed | Within 15% of real | Primary training axis |
 | Forward | Post-release carryover | ≤ 0.5 m/s | Affects stop-point learning |
+| Backward | Input-phase peak speed | Within 15% of real | Mirrors forward translational onset training |
+| Backward | Post-release carryover | ≤ 0.5 m/s | Mirrors forward stop-point learning |
 | Lateral (each) | Input-phase peak speed | Within 15% of real | Secondary training axis |
 | Climb | Peak speed (2.5s window) | Within 15% of real | Altitude control training |
 | Descent | Peak speed (2.5s window) | Within 15% of real | Altitude control training |
@@ -39,6 +41,8 @@ Evidence anchor: `session_20260410_135709` (latest decisive 10-maneuver Normal r
 |---|---|---|
 | Forward input-phase peak within 15% | ❌ Fail (borderline) | Sim peak 2.220 m/s vs real ~2.63 m/s (~15.6% low), just outside threshold in `session_20260410_135709`. |
 | Forward post-release carryover ≤ 0.5 m/s | ✅ Pass | Carryover remains ~0.500 m/s in `session_20260409_183817`, `190056`, `20260410_120548`, and `20260410_135709`. |
+| Backward input-phase peak within 15% | 🚧 Pending | Structured real-flight backward baseline expected from the next calibration session; threshold matches forward policy. |
+| Backward post-release carryover ≤ 0.5 m/s | 🚧 Pending | Structured real-flight backward baseline expected from the next calibration session; carryover criterion mirrors forward. |
 | Lateral right within 15% | ❌ Fail | Sim 8.925 m/s vs real ~7.44 m/s (~20% high). |
 | Lateral left within 15% | ✅ Pass | Sim 9.812 m/s vs real ~10.04 m/s (~2% low). |
 | Climb within 15% (2.5s window) | ✅ Pass | `climb_long` improved to 4.194 m/s vs real ~4.33 m/s (~3% low) in `session_20260410_135709`. |
