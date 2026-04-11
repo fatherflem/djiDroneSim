@@ -40,7 +40,19 @@ Reasoning:
 - Forward shape is much better than pre-brake-slew state, with only a borderline onset miss remaining.
 - Right-lateral remains high, but benefit/risk of another micro-patch is not compelling without stronger training-impact evidence.
 
-## 4. Next run checklist (mode coverage, not Normal retune)
+## 4. Exploratory free-fly AirData update (Apr 10, 2026 2:12 PM)
+
+- New non-protocol log assessed: `Apr-10th-2026-02-12PM-Flight-Airdata.csv`.
+- Classification: **exploratory evidence only** (not acceptance-grade).
+- Durable outputs:
+  - `Docs/airdata_apr10_2026_1412_exploratory_maneuvers.json`
+  - `Docs/Airdata_Apr10_2026_Exploratory_Maneuver_Mining.md`
+  - `Docs/Airdata_Apr10_2026_Exploratory_Assessment.md`
+- Practical takeaway:
+  - the file is good enough to mine many candidate windows (including useful forward/lateral/vertical/yaw samples),
+  - but mixed inputs and highly variable hold lengths make it unsuitable for replacing structured benchmark sessions.
+
+## 5. Next run checklist (mode coverage, not Normal retune)
 
 1. Run one F9 full protocol in Cine mode (`protocolModeOverride = Cine`).
 2. Run one F9 full protocol in Sport mode (`protocolModeOverride = Sport`).
@@ -53,7 +65,7 @@ python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --sessi
 
 5. Compare mode runs against Normal anchor `session_20260410_135709`.
 
-## 5. Known open issues
+## 6. Known open issues
 
 - Forward input-phase peak remains just outside threshold (~15.6% low).
 - Right-lateral remains somewhat high relative to real (~20% high).
