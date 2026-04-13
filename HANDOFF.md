@@ -52,13 +52,16 @@ Reopen Normal tuning only if one of these occurs:
 
 ## 5. Immediate next evidence work
 
-- No immediate Normal retune benchmark is required.
-- Highest-value next runs are still mode-coverage and scenario evidence:
+- No immediate Normal retune benchmark is required (freeze stays in force).
+- Highest-value remaining benchmark runs are mode-coverage and scenario evidence:
   1. one archived full-protocol Cine run,
   2. one archived full-protocol Sport run,
   3. hover-box completion timing by mode.
+- These are useful but **secondary** to current VR implementation/testing focus.
 
 ## 6. VR milestone (stationary Normal-mode pilot shell)
+
+Primary target hardware is **Meta Quest 3** (Quest 3 family devices).
 
 Added first serious VR slice under `Assets/Scenes/VR/VRPilotScene.unity`.
 
@@ -92,3 +95,22 @@ Stabilization updates made for practical headset testing:
 Important caveat:
 - XR/OpenXR package dependencies are committed, but full per-device OpenXR feature toggles are Unity Editor project settings that can still require one-time local configuration on the target headset/runtime.
 - Use `Docs/VRTestChecklist.md` for exact manual steps and a short troubleshooting list.
+
+
+## 8. Practical next VR steps (Quest 3-focused)
+
+1. **Phase 1 completion hardening (headset-testable prototype):**
+   - Keep stationary shell, no-hands UX, virtual RC visibility, and live feed path stable in Meta Quest 3 runs.
+   - Document repeatable manual Quest 3 OpenXR setup on clean machines.
+2. **Phase 2 controller alignment:**
+   - Decide tracked-prop source strategy for Quest 3-compatible workflow.
+   - Implement user calibration for real-controller/virtual-RC pose offset.
+   - Improve comfort/readability of RC pose in seated/standing stationary use.
+3. **Phase 3 training readiness:**
+   - Improve RC visuals and environment grounding.
+   - Raise reliability/performance for Quest 3 testing loops.
+   - Define operator workflow for repeatable training sessions.
+
+### Intentionally postponed
+- Additional Normal-mode micro-tuning unless reopen gates in section 4 are hit.
+- VR locomotion and hand interaction systems (outside stationary-pilot philosophy).
