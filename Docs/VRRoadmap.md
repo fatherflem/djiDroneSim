@@ -2,6 +2,7 @@
 
 ## Hardware target and design stance
 - Primary target hardware: **Meta Quest 3** (Quest 3 family devices where equivalent behavior applies).
+- Drone: **DJI Mini 5 Pro**.
 - Design stance: stationary pilot using a real physical controller, no VR locomotion, no virtual-hand dependency.
 
 ## Project-state context

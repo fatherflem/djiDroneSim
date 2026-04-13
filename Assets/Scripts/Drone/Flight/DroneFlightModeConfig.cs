@@ -55,6 +55,15 @@ namespace DroneSim.Drone.Flight
         [Tooltip("Multiplier applied to lateral stop strength when neutralizing from rightward motion.")]
         [Min(0.1f)] public float lateralRightStopMultiplier = 1f;
 
+        [Tooltip("Multiplier applied only when commanding backward motion; <1 reduces backward max speed without affecting forward.")]
+        [Min(0.1f)] public float backwardSpeedMultiplier = 1f;
+
+        [Tooltip("Multiplier applied only to backward acceleration authority while pitch input is active.")]
+        [Min(0.1f)] public float backwardAccelerationMultiplier = 1f;
+
+        [Tooltip("Multiplier applied to forward/back stop strength when neutralizing from backward motion.")]
+        [Min(0.1f)] public float backwardStopMultiplier = 1f;
+
         [Header("Vertical translation")]
         [Tooltip("Maximum climb speed in meters per second.")]
         [FormerlySerializedAs("maxVerticalSpeed")]

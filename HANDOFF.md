@@ -1,4 +1,4 @@
-# DJI Mini 4 Pro Flight Simulator — Project Handoff
+# DJI Mini 5 Pro Flight Simulator — Project Handoff
 
 > Last updated: 2026-04-13 after expanded Normal benchmark audit (`session_20260413_142657`).
 

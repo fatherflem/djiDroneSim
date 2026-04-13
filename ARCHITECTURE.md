@@ -93,6 +93,7 @@ Tune in each **DroneFlightModeConfig** asset:
 - `forwardAcceleration` / `lateralAcceleration`
 - `forwardStopStrength` / `lateralStopStrength`
 - `lateralRightSpeedMultiplier` / `lateralRightAccelerationMultiplier` / `lateralRightStopMultiplier`
+- `backwardSpeedMultiplier` / `backwardAccelerationMultiplier` / `backwardStopMultiplier`
 - `maxClimbSpeed` / `maxDescentSpeed`
 - `verticalAcceleration`
 - `maxYawRateDegrees`

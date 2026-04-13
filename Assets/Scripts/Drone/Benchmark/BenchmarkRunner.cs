@@ -115,6 +115,9 @@ namespace DroneSim.Drone.Benchmark
             public float lateral_right_speed_multiplier;
             public float lateral_right_acceleration_multiplier;
             public float lateral_right_stop_multiplier;
+            public float backward_speed_multiplier;
+            public float backward_acceleration_multiplier;
+            public float backward_stop_multiplier;
             public float max_climb_speed;
             public float max_descent_speed;
             public float vertical_acceleration;
@@ -679,6 +682,9 @@ namespace DroneSim.Drone.Benchmark
                 lateral_right_speed_multiplier = config.lateralRightSpeedMultiplier,
                 lateral_right_acceleration_multiplier = config.lateralRightAccelerationMultiplier,
                 lateral_right_stop_multiplier = config.lateralRightStopMultiplier,
+                backward_speed_multiplier = config.backwardSpeedMultiplier,
+                backward_acceleration_multiplier = config.backwardAccelerationMultiplier,
+                backward_stop_multiplier = config.backwardStopMultiplier,
                 max_climb_speed = config.maxClimbSpeed,
                 max_descent_speed = config.maxDescentSpeed,
                 vertical_acceleration = config.verticalAcceleration,
