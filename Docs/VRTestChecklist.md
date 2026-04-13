@@ -2,6 +2,7 @@
 
 ## Milestone scope (what this build is)
 Target headset: **Meta Quest 3** (Quest 3 family devices where behavior is equivalent).
+- Drone: **DJI Mini 5 Pro**.
 
 This milestone is a **practical in-headset test slice** for the Normal-mode training prototype:
 - stationary pilot stance,

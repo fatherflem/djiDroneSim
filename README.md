@@ -1,4 +1,4 @@
-# DJI Drone Simulator (Unity 6 Vertical Slice)
+# DJI Mini 5 Pro Simulator (Unity 6 Vertical Slice)
 
 This repository contains a first-pass **Unity 6** vertical slice for a DJI-style classroom drone training simulator using:
 - **C#**
@@ -11,6 +11,7 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 
 - A desktop training prototype with DJI-style assisted/stabilized controls.
 - Flight modes: **Cine / Normal / Sport**.
+- Target drone: **DJI Mini 5 Pro** in Normal/Cine/Sport modes.
 - Active braking behavior when stick input returns near center.
 - A simple hover-box training drill plus telemetry/debug HUD.
 - Runtime bootstrap that can assemble a runnable test setup quickly.

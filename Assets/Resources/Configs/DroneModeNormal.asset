@@ -24,6 +24,9 @@ MonoBehaviour:
   lateralRightSpeedMultiplier: 0.88
   lateralRightAccelerationMultiplier: 0.92
   lateralRightStopMultiplier: 1
+  backwardSpeedMultiplier: 1
+  backwardAccelerationMultiplier: 1
+  backwardStopMultiplier: 1
   maxClimbSpeed: 4.35
   maxDescentSpeed: 3.7
   verticalAcceleration: 1.6

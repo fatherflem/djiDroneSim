@@ -137,8 +137,9 @@ namespace DroneSim.Drone.Flight
             Vector3 currentLocalHorizontal = Quaternion.Inverse(transform.rotation) * currentHorizontalVelocity;
 
             float rightLateralSpeedScale = input.Roll >= 0f ? config.lateralRightSpeedMultiplier : 1f;
+            float backwardSpeedScale = input.Pitch < 0f ? config.backwardSpeedMultiplier : 1f;
             float targetLateralSpeed = input.Roll * config.maxLateralSpeed * rightLateralSpeedScale;
-            float targetForwardSpeed = input.Pitch * config.maxForwardSpeed;
+            float targetForwardSpeed = input.Pitch * config.maxForwardSpeed * backwardSpeedScale;
 
             float lateralVelocityError = targetLateralSpeed - currentLocalHorizontal.x;
             float forwardVelocityError = targetForwardSpeed - currentLocalHorizontal.z;
@@ -148,9 +149,11 @@ namespace DroneSim.Drone.Flight
             float lateralAuthority = lateralNeutral
                 ? config.lateralStopStrength * (movingRightLaterally ? config.lateralRightStopMultiplier : 1f)
                 : config.lateralAcceleration * (input.Roll > 0f ? config.lateralRightAccelerationMultiplier : 1f);
-            float forwardAuthority = Mathf.Abs(input.Pitch) < brakingInputDeadband
-                ? config.forwardStopStrength
-                : config.forwardAcceleration;
+            bool forwardNeutral = Mathf.Abs(input.Pitch) < brakingInputDeadband;
+            bool movingBackward = currentLocalHorizontal.z < 0f;
+            float forwardAuthority = forwardNeutral
+                ? config.forwardStopStrength * (movingBackward ? config.backwardStopMultiplier : 1f)
+                : config.forwardAcceleration * (input.Pitch < 0f ? config.backwardAccelerationMultiplier : 1f);
 
             float localAccelX = Mathf.Clamp(lateralVelocityError * lateralAuthority, -globalLateralAccelLimit, globalLateralAccelLimit);
             float localAccelZ = Mathf.Clamp(forwardVelocityError * forwardAuthority, -globalForwardAccelLimit, globalForwardAccelLimit);
