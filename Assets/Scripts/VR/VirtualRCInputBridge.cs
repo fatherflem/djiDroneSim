@@ -8,6 +8,9 @@ namespace DroneSim.VR
         [SerializeField] private DroneInputReader inputReader;
         [SerializeField] private VirtualRCControllerRig controllerRig;
         [SerializeField] private float maxStickAngleDegrees = 18f;
+        [SerializeField] private float inputDiscoveryRetrySeconds = 0.5f;
+
+        private float nextDiscoveryTime;
 
         public void SetInputReader(DroneInputReader reader)
         {
@@ -18,10 +21,17 @@ namespace DroneSim.VR
         {
             inputReader ??= FindFirstObjectByType<DroneInputReader>();
             controllerRig ??= GetComponent<VirtualRCControllerRig>();
+            nextDiscoveryTime = Time.unscaledTime;
         }
 
         private void LateUpdate()
         {
+            if (inputReader == null && Time.unscaledTime >= nextDiscoveryTime)
+            {
+                inputReader = FindFirstObjectByType<DroneInputReader>();
+                nextDiscoveryTime = Time.unscaledTime + Mathf.Max(0.1f, inputDiscoveryRetrySeconds);
+            }
+
             if (inputReader == null || controllerRig == null)
             {
                 return;

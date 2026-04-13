@@ -67,6 +67,23 @@ Latest exploratory artifacts for the Apr 10 free-fly log:
 3. Press Play.
 4. The scene now includes authored runtime objects (drone instance, training scenario, HUD), and bootstrap only fills in missing pieces as a fallback.
 
+## VR test entry point (current milestone)
+
+For the stationary, no-hands VR prototype, use:
+
+1. Open `Assets/Scenes/VR/VRPilotScene.unity`.
+2. Press Play with your headset runtime already active.
+3. Expect:
+   - head tracking through `XROrigin`/OpenXR,
+   - no locomotion or teleport systems,
+   - no virtual hand meshes/rays,
+   - a visible virtual RC when looking down,
+   - live onboard drone feed on the RC screen,
+   - RC stick visuals moving with input,
+   - unchanged Normal-mode flight behavior.
+
+If XR tracking does not start, see `Docs/VRTestChecklist.md` for required OpenXR/Project Settings checks that may still need one-time local setup in Unity.
+
 ## Scene + prefab workflow
 
 ### What is scene-authored

@@ -17,6 +17,7 @@ Key behaviors:
 4. Virtual RC presence: procedural DJI-RC-style body always visible in pilot space.
 5. Live screen: drone onboard feed via `DroneVideoFeed` -> `DroneFeedDisplaySurface` on RC screen.
 6. Input-reactive RC sticks: left/right stick transforms animate from `DroneInputReader.CurrentInput`.
+7. Test-readiness guardrails: bootstrap retries fragile references (feed/input), avoids duplicate rig creation, and adds a minimal floor/light context for first-run headset validation.
 
 ## Pose architecture for future tracked physical prop
 Interface:
@@ -44,13 +45,20 @@ Planned flow:
 - No Cine or Sport VR-specific behavior work.
 - No retuning of Normal flight model.
 
+## Practical OpenXR setup status
+
+Committed in repo:
+- `Packages/manifest.json` includes:
+  - `com.unity.xr.management`
+  - `com.unity.xr.openxr`
+  - `com.unity.xr.core-utils`
+
+Not reliably commit-safe in this environment:
+- Per-platform XR Plug-in Management toggles and OpenXR interaction profile feature checkboxes are typically stored in additional Unity-generated project setting assets that may vary by Unity install/platform target.
+
+Therefore:
+- Treat first open on target hardware as requiring a one-time Project Settings verification (see `Docs/VRTestChecklist.md`).
+- Do not assume headset tracking will run until those checks are confirmed locally in Unity.
+
 ## Manual setup and playtest checklist
-1. Open `Assets/Scenes/VR/VRPilotScene.unity`.
-2. Confirm XR packages are resolved (`com.unity.xr.management`, `com.unity.xr.openxr`, `com.unity.xr.core-utils`).
-3. Enter Play mode with headset active.
-4. Verify HMD head tracking drives camera pose.
-5. Verify there is no teleport/snap-turn/hand rendering.
-6. Look down: confirm virtual RC is visible and stable.
-7. Confirm RC screen shows live drone feed.
-8. Move physical controller sticks: confirm virtual RC sticks animate.
-9. Fly drone: confirm existing Normal-mode behavior remains active.
+Use `Docs/VRTestChecklist.md` as the authoritative current checklist.
