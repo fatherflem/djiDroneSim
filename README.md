@@ -16,6 +16,18 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 - Runtime bootstrap that can assemble a runnable test setup quickly.
 
 
+## Project status at a glance (Apr 13, 2026)
+
+This repo now has two parallel strands with different maturity:
+
+1. **Normal-mode benchmark tuning (primary validated flight baseline):**
+   - The closed-loop tuning journey reached a stable baseline (`session_20260413_142657`).
+   - Normal mode is **frozen for now** (PATH A) as "good enough for current training goals".
+   - Remaining known gaps are documented and intentionally not being chased in this pass unless training impact evidence appears.
+2. **VR prototype direction (current implementation frontier):**
+   - Target hardware is **Meta Quest 3** (and Quest 3 family devices where equivalent runtime behavior applies).
+   - Current VR slice is a **stationary pilot prototype** (headset-testable, not final tracked-prop alignment).
+
 ## Benchmark protocol status (Apr 13, 2026)
 
 - The default F9 protocol now includes 11 maneuvers by adding:
@@ -69,6 +81,8 @@ Latest exploratory artifacts for the Apr 10 free-fly log:
 
 ## VR test entry point (current milestone)
 
+Target headset for this milestone: **Meta Quest 3** (Quest 3 family devices).
+
 For the stationary, no-hands VR prototype, use:
 
 1. Open `Assets/Scenes/VR/VRPilotScene.unity`.
@@ -83,6 +97,17 @@ For the stationary, no-hands VR prototype, use:
    - unchanged Normal-mode flight behavior.
 
 If XR tracking does not start, see `Docs/VRTestChecklist.md` for required OpenXR/Project Settings checks that may still need one-time local setup in Unity.
+
+
+### Current VR limitations (intentional for this milestone)
+
+- No true tracked physical-controller alignment pipeline yet (tracked-prop provider is still placeholder-level scaffolding).
+- No end-user calibration flow for aligning a real RC to the virtual RC yet.
+- No finished production DJI RC art pass yet (current virtual RC is a practical prototype representation).
+- No virtual hands by design.
+- No locomotion/teleport/snap-turn by design.
+- No polished one-click Quest 3 deployment workflow yet; OpenXR settings still require manual local verification.
+
 
 ## Scene + prefab workflow
 

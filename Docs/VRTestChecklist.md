@@ -1,6 +1,8 @@
-# VR Test Checklist (Stationary Normal-Mode Prototype)
+# VR Test Checklist (Stationary Normal-Mode Prototype, Quest 3 Target)
 
 ## Milestone scope (what this build is)
+Target headset: **Meta Quest 3** (Quest 3 family devices where behavior is equivalent).
+
 This milestone is a **practical in-headset test slice** for the Normal-mode training prototype:
 - stationary pilot stance,
 - no virtual hands,
@@ -18,7 +20,7 @@ Not included yet:
 ## One-time Unity setup checks (target machine)
 1. Open **Project Settings > XR Plug-in Management**.
 2. For your active build target, ensure **OpenXR** loader is enabled.
-3. Open **Project Settings > XR Plug-in Management > OpenXR** and enable the required interaction/runtime features for your headset/runtime.
+3. Open **Project Settings > XR Plug-in Management > OpenXR** and enable the required interaction/runtime features for **Meta Quest 3** runtime usage.
 4. Confirm Input System backend remains enabled (project currently uses `activeInputHandler: Both`).
 5. Reopen Unity once if package/XR backend prompts appear.
 
@@ -53,3 +55,10 @@ A run is considered successful if all nine checks above pass in one play session
 - Keep virtual RC + live feed as core in-headset reference.
 - Add tracked physical-controller pose alignment/calibration later.
 - Add hardware-specific pose integration and polish only after this test loop is stable.
+
+
+## Physical-space and comfort assumptions (stationary Quest 3 use)
+- User is expected to remain stationary (seated or standing in-place).
+- Ensure a clear local area around the user even though locomotion is disabled.
+- Prefer short validation sessions first to check comfort and RC readability.
+- Treat RC placement/pose comfort issues as Phase 2 roadmap items (not Phase 1 blockers unless severe).

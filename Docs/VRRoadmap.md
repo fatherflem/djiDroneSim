@@ -1,64 +1,80 @@
-# VR Roadmap and Milestone V1 (Stationary Pilot)
+# VR Roadmap and Milestones (Stationary Pilot, Quest 3 Target)
 
-## North-star
-Build a stationary VR drone-training setup where the user holds a real physical controller and sees a matching virtual DJI-RC with live drone camera feed.
+## Hardware target and design stance
+- Primary target hardware: **Meta Quest 3** (Quest 3 family devices where equivalent behavior applies).
+- Design stance: stationary pilot using a real physical controller, no VR locomotion, no virtual-hand dependency.
 
-## V1 delivered in this repo
+## Project-state context
+- Normal mode benchmark tuning is currently **frozen for now** (PATH A) as a stable baseline.
+- VR implementation/testing is now the active frontier.
+
+## Current delivered slice (Phase 1 prototype baseline)
 Scene entry point:
 - `Assets/Scenes/VR/VRPilotScene.unity`
 
 Runtime bootstrap:
 - `Assets/Scripts/VR/VRPilotBootstrap.cs`
 
-Key behaviors:
-1. XR shell: runtime `XROrigin` + headset camera only.
-2. Stationary experience: no locomotion systems are created.
-3. Hands-free presentation: no virtual hand models, rays, or grab interactions.
-4. Virtual RC presence: procedural DJI-RC-style body always visible in pilot space.
-5. Live screen: drone onboard feed via `DroneVideoFeed` -> `DroneFeedDisplaySurface` on RC screen.
-6. Input-reactive RC sticks: left/right stick transforms animate from `DroneInputReader.CurrentInput`.
-7. Test-readiness guardrails: bootstrap retries fragile references (feed/input), avoids duplicate rig creation, and adds a minimal floor/light context for first-run headset validation.
+What works now:
+1. XR shell with runtime `XROrigin` + headset camera.
+2. Stationary pilot setup (no locomotion systems created).
+3. No hands/rays/grab interactions by design.
+4. Virtual DJI-RC-style controller visible in pilot space.
+5. Live drone onboard feed on RC screen (`DroneVideoFeed` -> `DroneFeedDisplaySurface`).
+6. Input-reactive RC stick visuals from `DroneInputReader.CurrentInput`.
+7. Startup guardrails for first-run testability (retry wiring, duplicate-rig avoidance, simple floor/light context).
 
-## Pose architecture for future tracked physical prop
+## What is not done yet (explicit limitations)
+- No true tracked physical-controller alignment pipeline end-to-end.
+- No completed user calibration flow for real RC ↔ virtual RC alignment.
+- No finalized production RC art/model polish pass.
+- No polished one-click Quest 3 deployment workflow; OpenXR setup is still partly manual.
+
+## Pose architecture for tracked physical prop (future)
 Interface:
 - `IControllerPoseProvider`
 
 Current providers:
-- `AnchoredControllerPoseProvider` (active fallback): positions RC relative to headset/chest with offset.
-- `PlaceholderTrackedPropPoseProvider` (not fully integrated hardware tracking): returns pose from a future tracked prop transform + calibration offsets.
+- `AnchoredControllerPoseProvider` (active fallback; headset/chest-relative placement)
+- `PlaceholderTrackedPropPoseProvider` (future integration hook + offsets)
 
 Resolver behavior in `VirtualRCControllerRig`:
 - Prefer tracked provider if available and valid.
 - Fall back to anchored provider otherwise.
 
-## Calibration path (future)
-Planned flow:
-1. Acquire tracked prop pose source from target hardware SDK/OpenXR extension.
-2. Capture user-confirmed alignment pose while holding real RC.
-3. Compute and persist calibration offsets (position + rotation) into tracked provider.
-4. Apply offsets every frame before driving virtual RC transform.
+## Milestone phases
 
-## What V1 explicitly does not do
-- No full tracked physical-controller alignment workflow.
-- No hand-interaction model (grab/press).
-- No locomotion / teleport / snap turn.
-- No Cine or Sport VR-specific behavior work.
-- No retuning of Normal flight model.
+### Phase 1 — Headset-testable prototype (current)
+- XR shell works.
+- Stationary user.
+- No hands.
+- Virtual RC visible.
+- Live screen visible.
+- Input visible/connected.
+- Manual Meta Quest 3 testing path documented.
+
+### Phase 2 — Better physical-controller alignment
+- Tracked prop strategy clarified for Quest 3-compatible workflow.
+- Calibration workflow for real-controller alignment.
+- RC pose refinement.
+- Comfort/usability improvements on Quest 3.
+
+### Phase 3 — Training-ready VR experience
+- Better RC visuals.
+- Stable headset workflow.
+- Better environment grounding.
+- Performance/polish pass for Quest 3.
+- Clear operator workflow for training sessions.
 
 ## Practical OpenXR setup status
-
 Committed in repo:
-- `Packages/manifest.json` includes:
-  - `com.unity.xr.management`
-  - `com.unity.xr.openxr`
-  - `com.unity.xr.core-utils`
+- `Packages/manifest.json` includes `com.unity.xr.management`, `com.unity.xr.openxr`, `com.unity.xr.core-utils`.
 
-Not reliably commit-safe in this environment:
-- Per-platform XR Plug-in Management toggles and OpenXR interaction profile feature checkboxes are typically stored in additional Unity-generated project setting assets that may vary by Unity install/platform target.
+Still local/manual:
+- Per-platform XR Plug-in Management toggles and OpenXR feature checkboxes may require one-time Unity Project Settings confirmation on each target machine.
 
-Therefore:
-- Treat first open on target hardware as requiring a one-time Project Settings verification (see `Docs/VRTestChecklist.md`).
-- Do not assume headset tracking will run until those checks are confirmed locally in Unity.
+Use `Docs/VRTestChecklist.md` as the runbook for Quest 3 bring-up and regression checks.
 
-## Manual setup and playtest checklist
-Use `Docs/VRTestChecklist.md` as the authoritative current checklist.
+## Intentionally postponed
+- Additional Normal-mode tuning unless explicit reopen gates are met.
+- Hand interaction UX and locomotion systems (outside current stationary pilot scope).

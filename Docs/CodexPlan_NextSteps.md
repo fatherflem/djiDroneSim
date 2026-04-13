@@ -59,3 +59,43 @@ python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv \
   --session session_20260410_135709 \
   --session session_20260413_142657
 ```
+
+
+## 7) VR direction now in focus (Meta Quest 3 target)
+
+Primary headset target is **Meta Quest 3** (Quest 3 family devices where equivalent). Current planning assumes:
+- OpenXR-based runtime path,
+- stationary user model,
+- performance/comfort decisions validated on Quest 3 hardware,
+- tracked physical-controller alignment deferred to a dedicated phase.
+
+Current prototype truth:
+- headset-testable stationary shell exists,
+- no virtual hands,
+- no locomotion,
+- virtual RC is visible,
+- RC screen can show live drone feed,
+- tracked-prop alignment + calibration are not finished.
+
+## 8) VR milestones (staged)
+
+### Phase 1 — Headset-testable prototype (current)
+- XR shell works.
+- Stationary user.
+- No hands.
+- Virtual RC visible.
+- Live screen visible.
+- Input visualization connected.
+- Manual Quest 3 testing path documented.
+
+### Phase 2 — Better physical-controller alignment
+- Tracked prop strategy clarified.
+- Calibration workflow implemented.
+- RC pose refinement and comfort iteration for Quest 3.
+
+### Phase 3 — Training-ready VR experience
+- Better RC visuals.
+- Stable headset workflow.
+- Better environment grounding.
+- Quest 3 polish/performance pass.
+- Clearer operator workflow for sessions.
