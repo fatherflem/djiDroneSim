@@ -78,3 +78,17 @@ Architecture note:
 Non-goals in this milestone:
 - No claim that tracked physical prop alignment is complete.
 - No Normal-mode retuning.
+
+## 7. VR in-headset testability status (Apr 13, 2026)
+
+Current VR entry point:
+- `Assets/Scenes/VR/VRPilotScene.unity` (single bootstrap scene by design).
+
+Stabilization updates made for practical headset testing:
+- `VRPilotBootstrap` now avoids duplicate runtime rigs, ensures a `TrackedPoseDriver` is present on the XR camera, and builds a minimal readable test environment (directional light + floor) so first-run tests are not in a void.
+- RC/input/feed bridges now retry discovery instead of failing permanently if init order is delayed.
+- RC screen feed path now emits a clear warning if no `DroneVideoFeed` appears after startup.
+
+Important caveat:
+- XR/OpenXR package dependencies are committed, but full per-device OpenXR feature toggles are Unity Editor project settings that can still require one-time local configuration on the target headset/runtime.
+- Use `Docs/VRTestChecklist.md` for exact manual steps and a short troubleshooting list.
