@@ -16,11 +16,12 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 - Runtime bootstrap that can assemble a runnable test setup quickly.
 
 
-## Benchmark protocol status (Apr 10, 2026)
+## Benchmark protocol status (Apr 13, 2026)
 
-- The default F9 protocol now includes 10 maneuvers by adding:
+- The default F9 protocol now includes 11 maneuvers by adding:
   - `climb_long` (2.5s vertical input hold)
   - `descent_long` (2.5s vertical input hold)
+  - `backward_step` (1.0s pitch-back input hold)
 - The original 1.0s `climb` and `descent` maneuvers remain in the protocol for same-session comparison.
 - `BenchmarkRunner` now supports a runtime `protocolModeOverride` (None/Cine/Normal/Sport) so the same maneuver set can be executed in Cine/Sport without duplicating benchmark assets.
 - Current acceptance status is tracked in `Docs/AcceptanceCriteria.md`.
@@ -33,10 +34,11 @@ The current focus is clarity and tunability, not high-fidelity aerodynamics.
 4. `session_20260409_183817` and `session_20260409_190056` validated forward brake-slew tuning and reduced carryover to ~0.50 m/s.
 5. `session_20260410_120548` is the first archived 10-maneuver Normal run, adding `climb_long` and `descent_long` and proving vertical is now a measured mismatch (not just a blocked hypothesis).
 6. `session_20260410_135709` validated the vertical-only patch: `climb_long` dropped to ~4.194 m/s and `descent_long` dropped to ~3.578 m/s while forward/yaw/lateral stayed effectively unchanged.
+7. `session_20260413_142657` expanded the Normal protocol to 11 maneuvers by adding `backward_step`; it confirmed the same tuned state rather than introducing a new tuning breakthrough.
 
 ### Current priority
 
-- **Latest decisive evidence:** `session_20260410_135709`.
+- **Latest decisive evidence:** `session_20260413_142657` (11-maneuver Normal coverage run).
 - **Yaw:** done for now (~79.89 °/s vs ~82 °/s real, release settle ~0.26 s).
 - **Forward:** shape is materially improved and stable enough to freeze for now (2.220 m/s input-phase, ~0.500 m/s carryover).
 - **Vertical:** long-window climb/descent now pass current ±15% criteria (`climb_long` 4.194 vs ~4.33, `descent_long` 3.578 vs ~3.67).
@@ -47,7 +49,7 @@ Default project posture is now **Normal-mode tuning freeze (PATH A)** unless fut
 ### Evidence tiers (must stay separate)
 
 - **Tier 1 — Structured benchmark evidence (acceptance-grade):**
-  archived `BenchmarkRuns/session_*` protocol runs, especially `session_20260410_135709`.
+  archived `BenchmarkRuns/session_*` protocol runs, especially `session_20260413_142657`.
   These are the only runs used for acceptance/tuning sign-off.
 - **Tier 2 — Exploratory real-flight evidence (non-protocol):**
   opportunistic AirData captures (for example `Apr-10th-2026-02-12PM-Flight-Airdata.csv`) mined for candidate maneuver windows.
