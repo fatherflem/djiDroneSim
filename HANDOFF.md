@@ -1,73 +1,59 @@
 # DJI Mini 4 Pro Flight Simulator — Project Handoff
 
-> Last updated: 2026-04-10 after post-vertical-fix audit (`session_20260410_135709`).
+> Last updated: 2026-04-13 after expanded Normal benchmark audit (`session_20260413_142657`).
 
 ## 1. Current truth snapshot
 
-- **Latest decisive evidence session:** `BenchmarkRuns/session_20260410_135709.zip`
-- This confirms the vertical-only patch from the prior iteration.
-- Real reference log: `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
+- **Latest meaningful Normal benchmark:** `BenchmarkRuns/session_20260413_142657.zip`
+- This run adds `backward_step` to the default Normal protocol (11 maneuvers total).
+- Real reference log remains: `Apr-8th-2026-08-15AM-Flight-Airdata.csv`
 
-Observed input-phase peaks (from protocol run CSVs):
+Observed input-phase peaks from `session_20260413_142657`:
 
-| Category | 164309 | 170224 | 180413 | 183817 | 190056 | 120548 | 135709 | Net story |
-|---|---:|---:|---:|---:|---:|---:|---:|---|
-| forward_step input peak | 2.112 | 2.112 | 2.220 | 2.220 | 2.220 | 2.220 | 2.220 | forward onset improved vs pre-`pitch=1.0` and stable |
-| forward carryover (full-input delta) | 0.288 | 0.288 | 0.840 | 0.500 | 0.500 | 0.500 | 0.500 | brake-slew patch holds |
-| lateral_right input peak | 8.925 | 8.925 | 8.925 | 8.925 | 8.925 | 8.925 | 8.925 | still somewhat high vs real |
-| lateral_left input peak | 9.812 | 9.812 | 9.812 | 9.812 | 9.812 | 9.812 | 9.812 | near real |
-| yaw_right input peak (°/s) | 79.893 | 79.893 | 79.893 | 79.893 | 79.893 | 79.893 | 79.893 | fixed and stable |
-| yaw_left input peak (°/s) | 79.892 | 79.892 | 79.892 | 79.894 | 79.894 | 79.894 | 79.892 | fixed and stable |
-| climb_long input peak | - | - | - | - | - | 6.490 | 4.194 | improved into target zone |
-| descent_long input peak | - | - | - | - | - | 5.301 | 3.578 | improved into target zone |
+| Category | Value | Interpretation |
+|---|---:|---|
+| forward_step input peak | 2.220 m/s | still slightly low vs ~2.63 real (borderline miss) |
+| forward_step full-run peak | 2.720 m/s | carryover control remains stable |
+| forward carryover (full - input) | 0.500 m/s | pass at threshold |
+| backward_step input peak | 2.220 m/s | sim-side coverage now present (real-matched acceptance still provisional) |
+| backward_step full-run peak | 2.720 m/s | symmetric with forward |
+| backward carryover (full - input) | 0.500 m/s | pass on sim-side policy threshold |
+| lateral_right input peak | 8.925 m/s | still somewhat high vs ~7.44 real |
+| lateral_left input peak | 9.812 m/s | near real (~10.04) |
+| yaw_right / yaw_left input peak | ~79.89 °/s | stable and healthy |
+| climb_long input peak | 4.194 m/s | in target zone |
+| descent_long input peak | 3.578 m/s | in target zone |
 
-## 2. What changed in this patch
+## 2. Decision posture
 
-### Documentation updates (no additional controller retune)
-- `README.md`
-- `Docs/AcceptanceCriteria.md`
-- `Docs/CodexPlan_NextSteps.md`
-- `Docs/ClosedLoopValidation_Apr09_2026.md`
-- `HANDOFF.md` (this file)
+Decision: **PATH A — freeze Normal mode now.**
 
-## 3. Current decision posture
+Why:
+- No yaw regression, forward carryover regression, or vertical regression in the newest run.
+- `142657` behaves like confirmation-plus-coverage (added backward protocol evidence), not a new tuning inflection point.
+- Remaining misses (forward onset, right-lateral) are narrow enough that another retune cycle is higher risk than value right now.
 
-Decision: **PATH A — freeze Normal tuning for now.**
+## 3. What changed in this iteration
 
-Reasoning:
-- Vertical no longer blocks acceptance after `135709`.
-- Yaw remains healthy and stable.
-- Forward shape is much better than pre-brake-slew state, with only a borderline onset miss remaining.
-- Right-lateral remains high, but benefit/risk of another micro-patch is not compelling without stronger training-impact evidence.
+- Runtime tuning: **no changes** (freeze maintained).
+- Documentation/acceptance updates to align repo truth with `session_20260413_142657`:
+  - `README.md`
+  - `Docs/AcceptanceCriteria.md`
+  - `Docs/CodexPlan_NextSteps.md`
+  - `Docs/ClosedLoopValidation_Apr09_2026.md`
+  - `HANDOFF.md`
 
-## 4. Exploratory free-fly AirData update (Apr 10, 2026 2:12 PM)
+## 4. Reopen gates (Normal mode)
 
-- New non-protocol log assessed: `Apr-10th-2026-02-12PM-Flight-Airdata.csv`.
-- Classification: **exploratory evidence only** (not acceptance-grade).
-- Durable outputs:
-  - `Docs/airdata_apr10_2026_1412_exploratory_maneuvers.json`
-  - `Docs/Airdata_Apr10_2026_Exploratory_Maneuver_Mining.md`
-  - `Docs/Airdata_Apr10_2026_Exploratory_Assessment.md`
-- Practical takeaway:
-  - the file is good enough to mine many candidate windows (including useful forward/lateral/vertical/yaw samples),
-  - but mixed inputs and highly variable hold lengths make it unsuitable for replacing structured benchmark sessions.
+Reopen Normal tuning only if one of these occurs:
+1. Pilot/training feedback shows the forward-onset or right-lateral mismatch harms instruction outcomes.
+2. New baseline data materially changes target values/tolerances.
+3. Cine/Sport or controller/physics changes cause measurable Normal regression.
 
-## 5. Next run checklist (mode coverage, not Normal retune)
+## 5. Immediate next evidence work
 
-1. Run one F9 full protocol in Cine mode (`protocolModeOverride = Cine`).
-2. Run one F9 full protocol in Sport mode (`protocolModeOverride = Sport`).
-3. Confirm archives include all 10 maneuvers.
-4. Analyze with:
-
-```bash
-python3 Tools/analyze_airdata.py Apr-8th-2026-08-15AM-Flight-Airdata.csv --session <new_session_id>
-```
-
-5. Compare mode runs against Normal anchor `session_20260410_135709`.
-
-## 6. Known open issues
-
-- Forward input-phase peak remains just outside threshold (~15.6% low).
-- Right-lateral remains somewhat high relative to real (~20% high).
-- Cine/Sport full-protocol evidence remains pending.
-- Hover-box completion-time evidence remains pending.
+- No immediate Normal retune benchmark is required.
+- Highest-value next runs are still mode-coverage and scenario evidence:
+  1. one archived full-protocol Cine run,
+  2. one archived full-protocol Sport run,
+  3. hover-box completion timing by mode.

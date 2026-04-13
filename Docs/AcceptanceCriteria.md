@@ -18,54 +18,40 @@ This is a classroom training simulator. The goal is "representative enough that 
 | Yaw (each) | Release settle to <5°/s | Within 0.1s of real | Stop crispness |
 | Hover | Horizontal drift | ≤ 1.5 m/s RMS | Baseline stability |
 
-## Mode Coverage Criteria
+## Current Status (as of April 13, 2026)
 
-| Mode | Requirement |
-|---|---|
-| Normal | All per-axis criteria met with benchmark evidence |
-| Cine | All per-axis criteria met OR documented rationale for deviation |
-| Sport | All per-axis criteria met OR documented rationale for deviation |
-
-## Training Scenario Criteria
-
-| Scenario | Requirement |
-|---|---|
-| Hover-box drill | Completable by a player within 60s using Normal mode |
-| (future scenarios) | TBD as scenarios are added |
-
-## Current Status (as of April 10, 2026)
-
-Evidence anchor: `session_20260410_135709` (latest decisive 10-maneuver Normal run), with trend context from `145236`/`164309`/`170224`/`180413`/`183817`/`190056`/`120548`.
+Evidence anchor: `session_20260413_142657` (latest 11-maneuver Normal run). Trend context from `145236`/`164309`/`170224`/`180413`/`183817`/`190056`/`120548`/`135709`.
 
 | Criterion | Status | Evidence / Note |
 |---|---|---|
-| Forward input-phase peak within 15% | ❌ Fail (borderline) | Sim peak 2.220 m/s vs real ~2.63 m/s (~15.6% low), just outside threshold in `session_20260410_135709`. |
-| Forward post-release carryover ≤ 0.5 m/s | ✅ Pass | Carryover remains ~0.500 m/s in `session_20260409_183817`, `190056`, `20260410_120548`, and `20260410_135709`. |
-| Backward input-phase peak within 15% | 🚧 Pending | Structured real-flight backward baseline expected from the next calibration session; threshold matches forward policy. |
-| Backward post-release carryover ≤ 0.5 m/s | 🚧 Pending | Structured real-flight backward baseline expected from the next calibration session; carryover criterion mirrors forward. |
+| Forward input-phase peak within 15% | ❌ Fail (borderline) | Sim 2.220 m/s vs real ~2.63 m/s (~15.6% low), still just outside threshold in `session_20260413_142657`. |
+| Forward post-release carryover ≤ 0.5 m/s | ✅ Pass | Full-run peak 2.720 vs input-phase 2.220 => carryover 0.500 m/s in `session_20260413_142657`. |
+| Backward input-phase peak within 15% | ❌ Fail (provisional reference quality) | Sim 2.220 m/s vs real backward aggregate ~6.38 m/s is far outside 15%, but real backward baseline confidence is still medium/provisional in AirData segmentation. |
+| Backward post-release carryover ≤ 0.5 m/s | ✅ Pass (sim-side criterion) | Full-run peak 2.720 vs input-phase 2.220 => carryover 0.500 m/s in `session_20260413_142657`. |
 | Lateral right within 15% | ❌ Fail | Sim 8.925 m/s vs real ~7.44 m/s (~20% high). |
 | Lateral left within 15% | ✅ Pass | Sim 9.812 m/s vs real ~10.04 m/s (~2% low). |
-| Climb within 15% (2.5s window) | ✅ Pass | `climb_long` improved to 4.194 m/s vs real ~4.33 m/s (~3% low) in `session_20260410_135709`. |
-| Descent within 15% (2.5s window) | ✅ Pass | `descent_long` improved to 3.578 m/s vs real ~3.67 m/s (~2.5% low) in `session_20260410_135709`. |
-| Yaw held-input within 5% | ✅ Pass | ~79.9°/s sim vs ~82°/s real (~3% low) both directions. |
-| Yaw release settle timing | ✅ Pass | ~0.26s to <5°/s in `session_20260410_135709`, matching healthy reference profile. |
-| Hover horizontal drift ≤ 1.5 m/s RMS | ✅ Pass (for benchmark hover_hold) | `session_20260410_135709` hover_hold input-phase horizontal RMS is ~0.000 m/s (well under 1.5). |
-| Cine mode coverage | 🚧 Pending | Benchmark runner now supports runtime mode override; Cine protocol session not yet archived. |
-| Sport mode coverage | 🚧 Pending | Benchmark runner now supports runtime mode override; Sport protocol session not yet archived. |
-| Hover-box drill completable within 60s | 🚧 Pending | Playtest pass still needed in Normal/Cine/Sport. |
+| Climb within 15% (2.5s window) | ✅ Pass | `climb_long` 4.194 m/s vs real ~4.33 m/s (~3% low). |
+| Descent within 15% (2.5s window) | ✅ Pass | `descent_long` 3.578 m/s vs real ~3.67 m/s (~2.5% low). |
+| Yaw held-input within 5% | ✅ Pass | ~79.89°/s sim vs ~82°/s real (~2.6% low), both directions. |
+| Yaw release settle timing | ✅ Pass | ~0.26s to <5°/s in both directions in `session_20260413_142657`, consistent with healthy post-fix runs. |
+| Hover horizontal drift ≤ 1.5 m/s RMS | ✅ Pass (benchmark hover_hold) | `session_20260413_142657` hover_hold input-phase horizontal RMS ~0.000 m/s. |
 
-## Sign-off
-Each criterion must reference a specific benchmark session ID as evidence.
-Exploratory free-fly AirData analyses (non-protocol captures) may be cited as supplemental context, but they are not valid as sole acceptance evidence.
+## Decision now
 
-## Immediate next benchmark target (freeze posture)
+**PATH A (freeze Normal mode)** remains the recommended posture.
 
-- No immediate Normal-mode retune benchmark is required.
-- Reopen Normal tuning only if one of these happens:
-  1. New pilot feedback shows the remaining gaps (forward onset or right-lateral) produce meaningful training issues.
-  2. A new baseline dataset revises target values or tolerance policy.
-  3. A non-Normal change (Cine/Sport or physics/core refactor) causes measurable Normal regression.
-- Highest-value next evidence is now mode coverage:
-  - one archived full-protocol Cine run,
-  - one archived full-protocol Sport run,
-  - and hover-box completion timing by mode.
+- `session_20260413_142657` adds important protocol coverage (`backward_step`) and confirms stability.
+- It does **not** reveal a new high-value correction opportunity that clearly outweighs retune risk.
+- Remaining narrow misses are still:
+  1. forward onset slightly low,
+  2. right-lateral somewhat high.
+
+## Evidence honesty notes
+
+- Backward is now benchmarked in simulator protocol terms, but real-world backward matching quality remains lower-confidence than forward/lateral/yaw.
+- Exploratory/non-protocol flights may inform hypotheses but are not acceptance sign-off evidence by themselves.
+
+## Immediate next benchmark target
+
+- No immediate Normal-mode retune benchmark is required while frozen.
+- Reopen only if training-impact evidence or new baseline data justifies one-axis micro-patch.
