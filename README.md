@@ -350,3 +350,22 @@ A practical deadzone is often around **0.12-0.18** depending on radio jitter and
 - `ARCHITECTURE.md` — plain-English architecture overview and tuning map.
 - `TUNING_GUIDE.md` — practical feel tuning workflow for Cine/Normal/Sport.
 - `Docs/VerticalSlice.md` — original vertical-slice notes.
+
+## VR Pilot Milestone (Stationary Normal-mode training)
+
+A first VR vertical slice is now available at `Assets/Scenes/VR/VRPilotScene.unity`.
+
+What this milestone includes:
+- XR-ready pilot shell (Unity XR Plugin packages + OpenXR package dependencies in `manifest.json`).
+- Stationary pilot rig using `XROrigin` at runtime (no locomotion systems are created).
+- No virtual hands, no rays, and no grab interactions.
+- Virtual DJI-RC-style controller visible in pilot space when looking down.
+- Live onboard drone camera feed rendered to the controller screen using `DroneVideoFeed` + `DroneFeedDisplaySurface`.
+- Virtual stick animation driven directly by active `DroneInputReader.CurrentInput` values.
+
+What it intentionally does **not** include yet:
+- Full tracked physical-prop alignment implementation.
+- Calibration UX.
+- Cine/Sport VR tuning work.
+
+See `Docs/VRRoadmap.md` for architecture and follow-on steps.

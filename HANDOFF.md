@@ -57,3 +57,24 @@ Reopen Normal tuning only if one of these occurs:
   1. one archived full-protocol Cine run,
   2. one archived full-protocol Sport run,
   3. hover-box completion timing by mode.
+
+## 6. VR milestone (stationary Normal-mode pilot shell)
+
+Added first serious VR slice under `Assets/Scenes/VR/VRPilotScene.unity`.
+
+Scope delivered:
+- Stationary XR pilot shell with runtime `XROrigin` bootstrap (`VRPilotBootstrap`).
+- No locomotion/teleport/snap-turn systems.
+- No hand meshes or XR interaction toolkit hand/ray UX.
+- Virtual DJI-RC-style controller model in pilot space.
+- Live onboard drone feed (`DroneVideoFeed`) shown on RC screen (`DroneFeedDisplaySurface`).
+- Virtual stick animation via `DroneInputReader.CurrentInput` through `VirtualRCInputBridge`.
+
+Architecture note:
+- Controller pose is abstracted via `IControllerPoseProvider` with:
+  - `AnchoredControllerPoseProvider` (implemented fallback)
+  - `PlaceholderTrackedPropPoseProvider` (extension hook for future tracked-prop integration)
+
+Non-goals in this milestone:
+- No claim that tracked physical prop alignment is complete.
+- No Normal-mode retuning.
