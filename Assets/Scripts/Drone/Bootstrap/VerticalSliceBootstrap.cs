@@ -5,6 +5,7 @@ using DroneSim.Drone.Physics;
 using DroneSim.Drone.Benchmark;
 using DroneSim.Drone.Training;
 using DroneSim.Drone.UI;
+using DroneSim.Drone.Rendering;
 using UnityEngine;
 using UnityCamera = UnityEngine.Camera;
 using LegacyInput = UnityEngine.Input;
@@ -579,7 +580,7 @@ namespace DroneSim.Drone.Bootstrap
             Material baseMaterial = renderer.sharedMaterial;
             Material material = baseMaterial != null
                 ? new Material(baseMaterial)
-                : new Material(Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
+                : new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
 
             material.color = color;
             return material;

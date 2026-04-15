@@ -1,3 +1,4 @@
+using DroneSim.Drone.Rendering;
 using UnityEngine;
 
 namespace DroneSim.VR
@@ -76,7 +77,7 @@ namespace DroneSim.VR
             screen.transform.localPosition = new Vector3(0f, 0.013f, -0.005f);
             screenRenderer = screen.GetComponent<Renderer>();
             Object.Destroy(screen.GetComponent<Collider>());
-            screenRenderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit"))
+            screenRenderer.material = new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"))
             {
                 color = Color.black
             };
@@ -90,7 +91,7 @@ namespace DroneSim.VR
             part.transform.localScale = scale;
             part.transform.localPosition = localPosition;
             Renderer renderer = part.GetComponent<Renderer>();
-            renderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit")) { color = color };
+            renderer.material = new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = color };
             Object.Destroy(part.GetComponent<Collider>());
             return part.transform;
         }

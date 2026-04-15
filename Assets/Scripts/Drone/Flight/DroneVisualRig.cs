@@ -1,3 +1,4 @@
+using DroneSim.Drone.Rendering;
 using UnityEngine;
 
 namespace DroneSim.Drone.Flight
@@ -44,17 +45,17 @@ namespace DroneSim.Drone.Flight
             CreatePart("Body", tiltRoot, PrimitiveType.Cube, new Vector3(0f, 0f, 0f), new Vector3(0.55f, 0.12f, 0.55f), new Color(0.18f, 0.2f, 0.22f));
             CreatePart("CameraNose", tiltRoot, PrimitiveType.Cube, new Vector3(0f, -0.05f, 0.34f), new Vector3(0.18f, 0.12f, 0.18f), new Color(0.05f, 0.05f, 0.06f));
 
-            CreateArm(new Vector3(0.42f, 0f, 0.42f));
-            CreateArm(new Vector3(-0.42f, 0f, 0.42f));
-            CreateArm(new Vector3(0.42f, 0f, -0.42f));
-            CreateArm(new Vector3(-0.42f, 0f, -0.42f));
+            CreateArm(0, new Vector3(0.42f, 0f, 0.42f));
+            CreateArm(1, new Vector3(-0.42f, 0f, 0.42f));
+            CreateArm(2, new Vector3(0.42f, 0f, -0.42f));
+            CreateArm(3, new Vector3(-0.42f, 0f, -0.42f));
         }
 
-        private void CreateArm(Vector3 position)
+        private void CreateArm(int armIndex, Vector3 position)
         {
-            GameObject arm = CreatePart("Arm", tiltRoot, PrimitiveType.Cylinder, position * 0.5f, new Vector3(0.06f, 0.25f, 0.06f), new Color(0.36f, 0.36f, 0.38f));
+            GameObject arm = CreatePart($"Arm_{armIndex}", tiltRoot, PrimitiveType.Cylinder, position * 0.5f, new Vector3(0.06f, 0.25f, 0.06f), new Color(0.36f, 0.36f, 0.38f));
             arm.transform.LookAt(tiltRoot.position + position);
-            CreatePart("Rotor", tiltRoot, PrimitiveType.Cylinder, position, new Vector3(0.18f, 0.01f, 0.18f), new Color(0.1f, 0.1f, 0.1f));
+            CreatePart($"Rotor_{armIndex}", tiltRoot, PrimitiveType.Cylinder, position, new Vector3(0.18f, 0.01f, 0.18f), new Color(0.1f, 0.1f, 0.1f));
         }
 
         private GameObject CreatePart(string name, Transform parent, PrimitiveType primitiveType, Vector3 localPosition, Vector3 localScale, Color color)
@@ -77,7 +78,7 @@ namespace DroneSim.Drone.Flight
                 Material baseMaterial = renderer.sharedMaterial;
                 Material material = baseMaterial != null
                     ? new Material(baseMaterial)
-                    : new Material(Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
+                    : new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
                 material.color = color;
                 renderer.sharedMaterial = material;
             }
