@@ -4,6 +4,7 @@ using DroneSim.Drone.Input;
 using DroneSim.Drone.Physics;
 using DroneSim.Drone.Training;
 using Unity.XR.CoreUtils;
+using DroneSim.Drone.Rendering;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
@@ -171,7 +172,7 @@ namespace DroneSim.VR
                 floor.transform.position = Vector3.zero;
                 floor.transform.localScale = new Vector3(3f, 1f, 3f);
                 Renderer renderer = floor.GetComponent<Renderer>();
-                renderer.material = new Material(Shader.Find("Universal Render Pipeline/Lit"))
+                renderer.material = new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"))
                 {
                     color = new Color(0.22f, 0.22f, 0.24f)
                 };
