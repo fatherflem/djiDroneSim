@@ -21,5 +21,10 @@ namespace DroneSim.VR
                 trackedPropTransform.rotation * Quaternion.Euler(calibrationEulerOffset));
             return true;
         }
+
+        public void SetTrackedPropTransform(Transform trackedTransform)
+        {
+            trackedPropTransform = trackedTransform;
+        }
     }
 }
