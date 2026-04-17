@@ -13,7 +13,7 @@ This milestone is a **practical in-headset test slice** for the Normal-mode trai
 - drone still flies with existing Normal-mode behavior.
 
 Not included yet:
-- tracked physical-controller alignment calibration workflow,
+- tracked physical-controller calibration UI,
 - hand interaction UX,
 - locomotion/teleport/snap-turn,
 - Cine/Sport VR-specific tuning passes.
@@ -23,7 +23,8 @@ Not included yet:
 2. For your active build target, ensure **OpenXR** loader is enabled.
 3. Open **Project Settings > XR Plug-in Management > OpenXR** and enable the required interaction/runtime features for **Meta Quest 3** runtime usage.
 4. Confirm Input System backend remains enabled (project currently uses `activeInputHandler: Both`).
-5. Reopen Unity once if package/XR backend prompts appear.
+5. Confirm XR Interaction Toolkit package is present in Package Manager.
+6. Reopen Unity once if package/XR backend prompts appear.
 
 ## Manual in-headset validation steps
 1. Open scene: `Assets/Scenes/VR/VRPilotScene.unity`.
@@ -35,31 +36,33 @@ Not included yet:
 7. Verify RC screen shows live drone camera feed.
 8. Move physical controller sticks and verify RC stick meshes animate.
 9. Fly drone and confirm Normal-mode behavior is unchanged.
+10. Confirm the pilot feels aligned to the operator placeholder stance (no obvious offset between expected chest/controller relationship and headset view).
 
 ## Success criteria
-A run is considered successful if all nine checks above pass in one play session without manual scene rewiring.
+A run is considered successful if all ten checks above pass in one play session without manual scene rewiring.
 
-## Quick troubleshooting (check these 5 first)
-1. **No headset tracking**  
+## Quick troubleshooting (check these 6 first)
+1. **No headset tracking**
    - Check XR Plug-in Management/OpenXR loader enabled for current build target.
-2. **RC not visible**  
-   - Confirm `VirtualDJIRC` exists in Play mode and `AnchoredControllerPoseProvider` is active.
-3. **RC screen dark**  
+2. **RC not visible**
+   - Confirm `VirtualDJIRC` exists in Play mode and either `PlaceholderTrackedPropPoseProvider` or `AnchoredControllerPoseProvider` is active.
+3. **RC appears detached from pilot body concept**
+   - Confirm `VRUserPlaceholder` exists and has `ControllerPropAnchor`; verify `VRPilotBootstrap` alignment is enabled.
+4. **RC screen dark**
    - Check Console for `DroneScreenFeedBridge` warning, then verify `DroneVideoFeed` exists on drone camera rig.
-4. **Sticks not animating**  
+5. **Sticks not animating**
    - Confirm `DroneInputReader` is present and receiving input from `DroneInputConfig` bindings.
-5. **Drone not flying as expected**  
+6. **Drone not flying as expected**
    - Verify scene is VRPilotScene (not another test scene) and mode remains Normal.
 
 ## Long-term direction (unchanged)
 - Preserve stationary pilot philosophy with real physical controller.
 - Keep virtual RC + live feed as core in-headset reference.
-- Add tracked physical-controller pose alignment/calibration later.
+- Add tracked physical-controller calibration later.
 - Add hardware-specific pose integration and polish only after this test loop is stable.
-
 
 ## Physical-space and comfort assumptions (stationary Quest 3 use)
 - User is expected to remain stationary (seated or standing in-place).
 - Ensure a clear local area around the user even though locomotion is disabled.
 - Prefer short validation sessions first to check comfort and RC readability.
-- Treat RC placement/pose comfort issues as Phase 2 roadmap items (not Phase 1 blockers unless severe).
+- Treat RC placement/pose comfort issues as tuning tasks, not invitations to add full locomotion/interaction systems.

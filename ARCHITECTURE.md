@@ -147,3 +147,22 @@ If you are new to this repo, start with:
 2. `DJIStyleFlightController`
 3. `DroneFlightModeConfig` assets under `Assets/Resources/Configs/`
 4. `DroneDebugHUD` while testing in Play mode.
+
+## VR pilot architecture (scoped integration)
+
+VR mode is intentionally a **stationary pilot slice**, not a full sandbox VR framework.
+
+`VRPilotBootstrap -> XROrigin/OpenXR -> VRUserPlaceholder anchors -> VirtualRC controller + live feed`
+
+- `VRPilotBootstrap` creates/locates the XR Origin, aligns it to the existing operator placeholder concept, and wires the drone flight stack without replacing existing flight/camera architecture.
+- `VRUserPlaceholder` remains the conceptual pilot rig with explicit head/chest/controller anchors.
+- `PlaceholderTrackedPropPoseProvider` can use `VRUserPlaceholder.ControllerPropAnchor` as the preferred controller pose source.
+- `AnchoredControllerPoseProvider` provides a chest/head-relative fallback plus small readability-biased pose offsets for VR.
+- `VirtualRCControllerRig` resolves provider priority and presents the in-headset controller prop.
+- `DroneScreenFeedBridge` preserves the existing live video-feed pipeline onto the controller screen.
+
+### Intentional non-goals in this slice
+- No hand grab/interact framework rollout.
+- No locomotion/teleport/snap-turn.
+- No multiplayer/operator networking.
+- No rewrite of benchmark, Airdata, or non-VR camera workflows.

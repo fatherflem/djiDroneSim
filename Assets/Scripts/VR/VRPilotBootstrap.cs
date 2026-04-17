@@ -1,3 +1,4 @@
+using DroneSim.Drone.Bootstrap;
 using DroneSim.Drone.Camera;
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
@@ -10,6 +11,10 @@ using UnityEngine.InputSystem.XR;
 
 namespace DroneSim.VR
 {
+    /// <summary>
+    /// Scoped VR bootstrap for a stationary pilot workflow.
+    /// Preserves existing drone/controller/feed architecture and bridges it to XR Origin.
+    /// </summary>
     public class VRPilotBootstrap : MonoBehaviour
     {
         [Header("Resources")]
@@ -26,9 +31,15 @@ namespace DroneSim.VR
         [SerializeField] private bool ensureMinimalTestEnvironment = true;
         [SerializeField] private bool logBootstrapDiagnostics = true;
 
+        [Header("VR pilot tuning")]
+        [SerializeField] private float operatorStandingHeightMeters = 1.67f;
+        [SerializeField] private bool alignXrOriginToOperatorPlaceholder = true;
+
         private void Start()
         {
-            SetupXR();
+            VRUserPlaceholder vrUserPlaceholder = EnsureOperatorPlaceholder();
+            XROrigin origin = SetupXR(vrUserPlaceholder);
+
             if (ensureMinimalTestEnvironment)
             {
                 EnsureMinimalTestEnvironment();
@@ -38,10 +49,24 @@ namespace DroneSim.VR
             DroneInputReader inputReader = EnsureFlightStack(drone);
             DroneVideoFeed feed = EnsureDroneCameraFeed(drone);
             EnsureTrainingScenario(drone.GetComponent<DronePhysicsBody>());
-            BuildVirtualController(inputReader, feed);
+            BuildVirtualController(inputReader, feed, vrUserPlaceholder, origin);
         }
 
-        private void SetupXR()
+        private VRUserPlaceholder EnsureOperatorPlaceholder()
+        {
+            VRUserPlaceholder placeholder = FindFirstObjectByType<VRUserPlaceholder>();
+            if (placeholder == null)
+            {
+                GameObject placeholderRoot = new("VRUserPlaceholder");
+                placeholder = placeholderRoot.AddComponent<VRUserPlaceholder>();
+            }
+
+            placeholder.transform.SetPositionAndRotation(pilotRigPosition, Quaternion.Euler(pilotRigEuler));
+            placeholder.EnsurePlaceholderHierarchy();
+            return placeholder;
+        }
+
+        private XROrigin SetupXR(VRUserPlaceholder placeholder)
         {
             XROrigin origin = FindFirstObjectByType<XROrigin>();
             if (origin == null)
@@ -62,6 +87,28 @@ namespace DroneSim.VR
             {
                 origin.Camera.gameObject.AddComponent<TrackedPoseDriver>();
             }
+
+            if (origin.CameraFloorOffsetObject != null)
+            {
+                Vector3 offset = origin.CameraFloorOffsetObject.transform.localPosition;
+                offset.y = Mathf.Max(1.0f, operatorStandingHeightMeters);
+                origin.CameraFloorOffsetObject.transform.localPosition = offset;
+            }
+
+            if (alignXrOriginToOperatorPlaceholder && placeholder != null)
+            {
+                Transform desiredHead = placeholder.VRCameraAnchor != null ? placeholder.VRCameraAnchor : placeholder.HeadAnchor;
+                Transform xrHead = origin.Camera != null ? origin.Camera.transform : null;
+                if (desiredHead != null && xrHead != null)
+                {
+                    Vector3 headDelta = desiredHead.position - xrHead.position;
+                    origin.transform.position += headDelta;
+                }
+
+                origin.transform.rotation = placeholder.transform.rotation;
+            }
+
+            return origin;
         }
 
         private GameObject GetOrSpawnDrone()
@@ -134,15 +181,26 @@ namespace DroneSim.VR
             scenario.Initialize(physicsBody);
         }
 
-        private void BuildVirtualController(DroneInputReader input, DroneVideoFeed feed)
+        private void BuildVirtualController(
+            DroneInputReader input,
+            DroneVideoFeed feed,
+            VRUserPlaceholder placeholder,
+            XROrigin origin)
         {
             VirtualRCControllerRig rig = FindFirstObjectByType<VirtualRCControllerRig>();
             GameObject rigObj = rig != null ? rig.gameObject : new GameObject("VirtualDJIRC");
             rig ??= rigObj.AddComponent<VirtualRCControllerRig>();
+
             AnchoredControllerPoseProvider anchored = rigObj.GetComponent<AnchoredControllerPoseProvider>()
                                                     ?? rigObj.AddComponent<AnchoredControllerPoseProvider>();
             PlaceholderTrackedPropPoseProvider tracked = rigObj.GetComponent<PlaceholderTrackedPropPoseProvider>()
                                                            ?? rigObj.AddComponent<PlaceholderTrackedPropPoseProvider>();
+            tracked.SetTrackedPropTransform(placeholder != null ? placeholder.ControllerPropAnchor : null);
+            anchored.Configure(
+                origin,
+                origin != null && origin.Camera != null ? origin.Camera.transform : null,
+                placeholder != null ? placeholder.ChestAnchor : null);
+
             rig.InjectPoseProviders(anchored, tracked);
 
             VirtualRCInputBridge inputBridge = rigObj.GetComponent<VirtualRCInputBridge>()
@@ -180,7 +238,7 @@ namespace DroneSim.VR
 
             if (logBootstrapDiagnostics)
             {
-                Debug.Log("VRPilotBootstrap ready: stationary XR shell + floor + RC/feed bridge initialized.");
+                Debug.Log("VRPilotBootstrap ready: stationary XR pilot + operator-aligned RC/feed bridge initialized.");
             }
         }
     }
