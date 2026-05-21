@@ -49,8 +49,20 @@ namespace DroneSim.Drone.Training
         private void Awake()
         {
             droneBody ??= FindFirstObjectByType<DronePhysicsBody>();
+            ApplyFieldOverrides();
             BuildPath();
             BuildMarkers();
+        }
+
+        private void ApplyFieldOverrides()
+        {
+            var loader = DroneSim.Drone.Environment.FieldLoader.Active;
+            if (loader == null) return;
+
+            waypointAltitude = loader.RecommendedAltitude + loader.GroundY;
+            safetyEnvelopeSize = Mathf.Max(loader.OperatingAreaSize.x, loader.OperatingAreaSize.y);
+            safetyAltitudeMin = loader.GroundY + 0.5f;
+            safetyAltitudeMax = loader.GroundY + loader.MaxAltitude;
         }
 
         private void Update()
