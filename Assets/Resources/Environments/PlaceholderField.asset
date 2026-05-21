@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aabfcb505ea0440bb942800275863a08, type: 3}
+  m_Name: PlaceholderField
+  m_EditorClassIdentifier: 
+  fieldName: Placeholder Training Field
+  captureLocation: Synthetic — flat ground with boundary markers
+  captureDate: 
+  fieldPrefab: {fileID: 0}
+  groundY: 0
+  recommendedDrillAltitude: 2
+  operatingAreaSize: {x: 12, y: 12}
+  maxAltitude: 8
+  notes: Default placeholder used when no real photogrammetry capture is available. Replace with a captured field by assigning a new fieldPrefab to a new FieldDefinition asset.

@@ -17,7 +17,7 @@ namespace DroneSim.Drone.Training
             Destroy(cylinder.GetComponent<Collider>());
 
             cylinderRenderer = cylinder.GetComponent<Renderer>();
-            mat = new Material(Shader.Find("Standard"));
+            mat = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
             mat.SetFloat("_Mode", 3f);
             mat.color = new Color(0.7f, 0.7f, 0.7f, 0.2f);
             cylinderRenderer.material = mat;
@@ -30,7 +30,7 @@ namespace DroneSim.Drone.Training
             Destroy(ringObj.GetComponent<Collider>());
             ring = ringObj.transform;
             Renderer ringRenderer = ringObj.GetComponent<Renderer>();
-            ringRenderer.material = new Material(Shader.Find("Standard")) { color = new Color(1f, 1f, 0f, 0.2f) };
+            ringRenderer.material = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = new Color(1f, 1f, 0f, 0.2f) };
             ringObj.SetActive(false);
         }
 

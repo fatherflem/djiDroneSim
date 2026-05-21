@@ -1,4 +1,3 @@
-using DroneSim.Drone.Physics;
 using DroneSim.VR;
 using UnityEngine;
 
@@ -10,11 +9,7 @@ namespace DroneSim.Drone.Training
 
         private void Start()
         {
-            DronePhysicsBody body = FindFirstObjectByType<DronePhysicsBody>();
-            if (body == null && !vrMode)
-            {
-                body = FindFirstObjectByType<DronePhysicsBody>();
-            }
+            EnsureFieldLoader();
 
             HoverBoxDrill drill = FindFirstObjectByType<HoverBoxDrill>();
             if (drill == null)
@@ -41,6 +36,19 @@ namespace DroneSim.Drone.Training
                     new GameObject("HoverBoxDrillDesktopUI").AddComponent<HoverBoxDrillDesktopUI>();
                 }
             }
+        }
+
+        private static void EnsureFieldLoader()
+        {
+            if (FindFirstObjectByType<DroneSim.Drone.Environment.FieldLoader>() != null)
+            {
+                return;
+            }
+
+            GameObject loaderObj = new GameObject("FieldLoader");
+            var loader = loaderObj.AddComponent<DroneSim.Drone.Environment.FieldLoader>();
+            var def = Resources.Load<DroneSim.Drone.Environment.FieldDefinition>("Environments/PlaceholderField");
+            loader.SetField(def);
         }
     }
 }
