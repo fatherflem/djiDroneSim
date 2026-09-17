@@ -113,6 +113,9 @@ namespace DroneSim.Drone.Training
                 ? Mathf.Clamp(100f - outOfBoundsSeconds * 2f - interruptedHolds * 2f, 0f, 100f)
                 : 0f;
             result.summary = $"{summary} {CompletedWaypoints}/5 waypoints, {outOfBoundsSeconds:F1}s out of bounds, {interruptedHolds} interrupted holds.";
+            result.metrics.Add(new TrainingMetric("waypointsCompleted", "Waypoints completed", CompletedWaypoints));
+            result.metrics.Add(new TrainingMetric("outOfBoundsSeconds", "Time out of bounds", outOfBoundsSeconds, "s"));
+            result.metrics.Add(new TrainingMetric("interruptedHolds", "Interrupted holds", interruptedHolds));
             return result;
         }
 
