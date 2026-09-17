@@ -26,6 +26,9 @@ namespace DroneSim.Drone.Training
             status.text = GetStatusText();
             holdBar.maxValue = drill.RequiredHoldSeconds;
             holdBar.value = drill.HoldTimer;
+            bool running = drill.State == DrillState.Running;
+            stability.gameObject.SetActive(running);
+            holdBar.gameObject.SetActive(running);
             stability.text = $"H:{drill.HorizontalSpeed:F2}  V:{drill.VerticalSpeed:F2}  Y:{drill.YawRateDegPerSec:F1}";
             stability.color = drill.IsStable ? Color.green : Color.red;
             completion.text = GetProgressText();
@@ -41,13 +44,13 @@ namespace DroneSim.Drone.Training
             c.gameObject.AddComponent<CanvasScaler>();
             c.gameObject.AddComponent<GraphicRaycaster>();
             Transform root = c.transform;
-            status = CreateText(root, new Vector2(170, -30), "Waypoint: A");
+            status = CreateText(root, new Vector2(20, -20), "Waypoint: A", new Vector2(520, 100));
             holdBar = new GameObject("HoldBar").AddComponent<Slider>();
             holdBar.transform.SetParent(root, false);
             RectTransform hb = holdBar.GetComponent<RectTransform>(); hb.anchorMin = hb.anchorMax = new Vector2(0,1); hb.pivot=new Vector2(0,1); hb.sizeDelta = new Vector2(220,20); hb.anchoredPosition = new Vector2(20,-60);
-            stability = CreateText(root, new Vector2(170, -90), "");
-            completion = CreateText(root, new Vector2(170, -120), "Waypoints: 0/5");
-            outOfBounds = CreateText(root, new Vector2(220, -150), "Out of bounds — return to course");
+            stability = CreateText(root, new Vector2(20, -95), "");
+            completion = CreateText(root, new Vector2(20, -125), "Waypoints: 0/5");
+            outOfBounds = CreateText(root, new Vector2(20, -155), "Out of bounds — return to course", new Vector2(420, 28));
             outOfBounds.color = Color.red;
             restart = CreateRestartButton(root);
             restart.onClick.AddListener(HandleAction);
@@ -76,7 +79,9 @@ namespace DroneSim.Drone.Training
                 return $"Score: {drill.LatestResult.score:F0}  Time: {drill.LatestResult.elapsedSeconds:F1}s";
             }
 
-            return $"Waypoints: {drill.CompletedWaypoints}/5  Time: {drill.RunElapsedSeconds:F1}s";
+            return drill.State == DrillState.Running
+                ? $"Waypoints: {drill.CompletedWaypoints}/5  Time: {drill.RunElapsedSeconds:F1}s"
+                : "Press Start Drill when ready";
         }
 
         private void UpdateActionButton()
@@ -101,12 +106,12 @@ namespace DroneSim.Drone.Training
             }
         }
 
-        private Text CreateText(Transform parent, Vector2 pos, string value)
+        private Text CreateText(Transform parent, Vector2 pos, string value, Vector2? size = null)
         {
             Text t = new GameObject("Text").AddComponent<Text>();
             t.transform.SetParent(parent, false);
             RectTransform rt = t.GetComponent<RectTransform>();
-            rt.anchorMin = rt.anchorMax = new Vector2(0,1); rt.pivot = new Vector2(0,1); rt.anchoredPosition = pos; rt.sizeDelta = new Vector2(360,28);
+            rt.anchorMin = rt.anchorMax = new Vector2(0,1); rt.pivot = new Vector2(0,1); rt.anchoredPosition = pos; rt.sizeDelta = size ?? new Vector2(420,28);
             t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             t.text = value;
             t.color = Color.white;

@@ -107,14 +107,6 @@ namespace DroneSim.Drone.Training
             SetState(DrillState.Instructions);
         }
 
-        public void ShowResults()
-        {
-            if (State == DrillState.Completed || State == DrillState.Failed)
-            {
-                SetState(DrillState.Results);
-            }
-        }
-
         protected abstract void UpdateRunning(float deltaTime);
 
         protected virtual void ResetDrill()
@@ -165,6 +157,7 @@ namespace DroneSim.Drone.Training
             LatestResult = BuildResult(succeeded, summary);
             SetState(succeeded ? DrillState.Completed : DrillState.Failed);
             ResultAvailable?.Invoke(LatestResult);
+            SetState(DrillState.Results);
         }
 
         private void ResetCommonState()

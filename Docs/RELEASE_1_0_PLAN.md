@@ -56,7 +56,7 @@
 ### Training
 
 - Hover Box has ordered 3D markers, configurable hold/stability requirements, field-derived bounds, live feedback, desktop and VR views, and retry support.
-- The first reusable training layer now provides `TrainingDrill`, `TrainingDrillDefinition`, `DrillState`, and `TrainingResult`. Hover Box uses the shared instruction/countdown/run/terminal lifecycle while retaining its existing evaluation rules.
+- The first reusable training layer now provides `TrainingDrill`, `TrainingDrillDefinition`, `DrillState`, and `TrainingResult`. Both committed Hover Box scenes now explicitly bootstrap it, use the shared Instructions → Countdown → Running → Completed/Failed → Results lifecycle, lock/reset the aircraft between attempts, and expose keyed drill metrics while retaining the existing evaluation rules. Desktop supplies Input System-backed clickable controls; VR uses the physical controller's gamepad South button. Full Play Mode verification remains required on a Unity-capable workstation.
 - Hover Box results report elapsed time, a simple score, out-of-bounds time, and interrupted holds.
 - `SimpleTrainingScenario` remains a separate legacy vertical-slice exercise and should not be used as the template for new drills.
 

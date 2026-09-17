@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace DroneSim.Drone.Training
 {
@@ -12,5 +13,30 @@ namespace DroneSim.Drone.Training
         public float elapsedSeconds;
         public float score;
         public string summary;
+        public List<TrainingMetric> metrics = new();
+
+        public bool TryGetMetric(string key, out double value)
+        {
+            TrainingMetric metric = metrics.Find(item => item.key == key);
+            value = metric != null ? metric.value : 0d;
+            return metric != null;
+        }
+    }
+
+    [Serializable]
+    public class TrainingMetric
+    {
+        public string key;
+        public string displayLabel;
+        public double value;
+        public string unit;
+
+        public TrainingMetric(string key, string displayLabel, double value, string unit = "")
+        {
+            this.key = key;
+            this.displayLabel = displayLabel;
+            this.value = value;
+            this.unit = unit;
+        }
     }
 }

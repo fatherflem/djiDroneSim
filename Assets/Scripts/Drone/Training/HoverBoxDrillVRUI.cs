@@ -29,7 +29,7 @@ namespace DroneSim.Drone.Training
             waypointText.text = GetStatusText();
             completionText.text = drill.LatestResult != null
                 ? $"Score {drill.LatestResult.score:F0} | {drill.LatestResult.elapsedSeconds:F1}s"
-                : $"{drill.CompletedWaypoints}/5 | {drill.RunElapsedSeconds:F1}s";
+                : drill.State == DrillState.Running ? $"{drill.CompletedWaypoints}/5 | {drill.RunElapsedSeconds:F1}s" : "Press A to start";
             UpdateActionButton();
             if (drill.State == DrillState.Running && drill.IsOutOfBounds)
             {
@@ -40,7 +40,7 @@ namespace DroneSim.Drone.Training
             }
             else
             {
-                stabilityText.text = drill.IsStable ? "Stable" : "Drifting";
+                stabilityText.text = drill.State == DrillState.Running ? (drill.IsStable ? "Stable" : "Drifting") : string.Empty;
                 stabilityText.color = drill.IsStable ? Color.green : Color.yellow;
                 worldWarningText.gameObject.SetActive(false);
             }
@@ -55,10 +55,10 @@ namespace DroneSim.Drone.Training
             canvas.transform.localPosition = new Vector3(0.06f, 0.04f, -0.02f);
             canvas.transform.localRotation = Quaternion.Euler(80f, 0f, 0f);
             RectTransform rt = canvas.GetComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(180, 80);
-            waypointText = CreateText(canvas.transform, new Vector2(10,-10), "WP: A");
-            completionText = CreateText(canvas.transform, new Vector2(10,-30), "0/5");
-            stabilityText = CreateText(canvas.transform, new Vector2(10,-50), "Stable");
+            rt.sizeDelta = new Vector2(240, 130);
+            waypointText = CreateText(canvas.transform, new Vector2(10,-10), "WP: A", new Vector2(220, 55));
+            completionText = CreateText(canvas.transform, new Vector2(10,-70), "0/5");
+            stabilityText = CreateText(canvas.transform, new Vector2(10,-90), "");
             restart = CreateRestartButton(canvas.transform);
             restart.onClick.AddListener(HandleAction);
             actionButtonLabel = restart.GetComponentInChildren<Text>();
@@ -69,11 +69,11 @@ namespace DroneSim.Drone.Training
         {
             return drill.State switch
             {
-                DrillState.Instructions => "Ready: review instructions",
+                DrillState.Instructions => drill.Instructions,
                 DrillState.Countdown => $"Start in {Mathf.CeilToInt(drill.CountdownRemaining)}",
                 DrillState.Completed => "Drill complete",
                 DrillState.Failed => "Drill failed",
-                DrillState.Results => "Results",
+                DrillState.Results => drill.LatestResult?.summary ?? "Results",
                 DrillState.Running => $"WP: {drill.ActiveWaypointLetter}",
                 _ => drill.DisplayName
             };
@@ -112,7 +112,7 @@ namespace DroneSim.Drone.Training
             worldWarningText.gameObject.SetActive(false);
         }
 
-        private Text CreateText(Transform parent, Vector2 pos, string value)
+        private Text CreateText(Transform parent, Vector2 pos, string value, Vector2? size = null)
         {
             Text t = new GameObject("Text").AddComponent<Text>();
             t.transform.SetParent(parent, false);
@@ -120,11 +120,13 @@ namespace DroneSim.Drone.Training
             rt.anchorMin = rt.anchorMax = new Vector2(0, 1);
             rt.pivot = new Vector2(0, 1);
             rt.anchoredPosition = pos;
-            rt.sizeDelta = new Vector2(160, 18);
+            rt.sizeDelta = size ?? new Vector2(220, 18);
             t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             t.text = value;
             t.color = Color.white;
             t.fontSize = 14;
+            t.horizontalOverflow = HorizontalWrapMode.Wrap;
+            t.verticalOverflow = VerticalWrapMode.Overflow;
             return t;
         }
 
@@ -136,8 +138,8 @@ namespace DroneSim.Drone.Training
             rt.anchorMin = new Vector2(0f, 1f);
             rt.anchorMax = new Vector2(0f, 1f);
             rt.pivot = new Vector2(0f, 1f);
-            rt.anchoredPosition = new Vector2(10f, -70f);
-            rt.sizeDelta = new Vector2(160f, 22f);
+            rt.anchoredPosition = new Vector2(10f, -110f);
+            rt.sizeDelta = new Vector2(220f, 22f);
             img.color = new Color(0.2f, 0.7f, 0.3f, 0.95f);
 
             Button button = img.gameObject.AddComponent<Button>();
