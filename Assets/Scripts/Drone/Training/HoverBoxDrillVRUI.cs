@@ -13,6 +13,7 @@ namespace DroneSim.Drone.Training
         [SerializeField] private Text stabilityText;
         [SerializeField] private TextMesh worldWarningText;
         [SerializeField] private Button restart;
+        private Text actionButtonLabel;
 
         private void Awake()
         {
@@ -25,10 +26,12 @@ namespace DroneSim.Drone.Training
         private void Update()
         {
             if (drill == null) return;
-            waypointText.text = drill.IsComplete ? "Drill complete" : $"WP: {drill.ActiveWaypointLetter}";
-            completionText.text = $"{drill.CompletedWaypoints}/5";
-            restart.gameObject.SetActive(drill.IsComplete);
-            if (drill.IsOutOfBounds)
+            waypointText.text = GetStatusText();
+            completionText.text = drill.LatestResult != null
+                ? $"Score {drill.LatestResult.score:F0} | {drill.LatestResult.elapsedSeconds:F1}s"
+                : $"{drill.CompletedWaypoints}/5 | {drill.RunElapsedSeconds:F1}s";
+            UpdateActionButton();
+            if (drill.State == DrillState.Running && drill.IsOutOfBounds)
             {
                 stabilityText.text = "Out of bounds";
                 stabilityText.color = Color.red;
@@ -37,9 +40,8 @@ namespace DroneSim.Drone.Training
             }
             else
             {
-                bool stable = drill.HorizontalSpeed <= 0.3f && drill.VerticalSpeed <= 0.3f && drill.YawRateDegPerSec <= 10f;
-                stabilityText.text = stable ? "Stable" : "Drifting";
-                stabilityText.color = stable ? Color.green : Color.yellow;
+                stabilityText.text = drill.IsStable ? "Stable" : "Drifting";
+                stabilityText.color = drill.IsStable ? Color.green : Color.yellow;
                 worldWarningText.gameObject.SetActive(false);
             }
         }
@@ -58,8 +60,45 @@ namespace DroneSim.Drone.Training
             completionText = CreateText(canvas.transform, new Vector2(10,-30), "0/5");
             stabilityText = CreateText(canvas.transform, new Vector2(10,-50), "Stable");
             restart = CreateRestartButton(canvas.transform);
-            restart.onClick.AddListener(() => drill.RestartDrill());
-            restart.gameObject.SetActive(false);
+            restart.onClick.AddListener(HandleAction);
+            actionButtonLabel = restart.GetComponentInChildren<Text>();
+            restart.gameObject.SetActive(true);
+        }
+
+        private string GetStatusText()
+        {
+            return drill.State switch
+            {
+                DrillState.Instructions => "Ready: review instructions",
+                DrillState.Countdown => $"Start in {Mathf.CeilToInt(drill.CountdownRemaining)}",
+                DrillState.Completed => "Drill complete",
+                DrillState.Failed => "Drill failed",
+                DrillState.Results => "Results",
+                DrillState.Running => $"WP: {drill.ActiveWaypointLetter}",
+                _ => drill.DisplayName
+            };
+        }
+
+        private void UpdateActionButton()
+        {
+            bool visible = drill.State == DrillState.Instructions || (drill.IsTerminal && drill.CanRestart);
+            restart.gameObject.SetActive(visible);
+            if (actionButtonLabel != null)
+            {
+                actionButtonLabel.text = drill.State == DrillState.Instructions ? "Start Drill" : "Retry Drill";
+            }
+        }
+
+        private void HandleAction()
+        {
+            if (drill.State == DrillState.Instructions)
+            {
+                drill.ContinueFromInstructions();
+            }
+            else if (drill.IsTerminal)
+            {
+                drill.RestartDrill();
+            }
         }
 
         private void BuildWorldWarning()
@@ -114,6 +153,7 @@ namespace DroneSim.Drone.Training
             text.fontSize = 14;
             text.color = Color.black;
             text.alignment = TextAnchor.MiddleCenter;
+            actionButtonLabel = text;
             return button;
         }
     }

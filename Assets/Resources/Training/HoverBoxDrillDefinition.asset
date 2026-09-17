@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e17a8bb66fa747289e4b673d34802672, type: 3}
+  m_Name: HoverBoxDrillDefinition
+  m_EditorClassIdentifier: 
+  drillId: hover-box
+  displayName: Hover Box
+  instructions: Fly to each marker in order. Hold a stable hover until the marker completes,
+    then continue around the box and return to the first marker.
+  countdownSeconds: 3
+  timeLimitSeconds: 0
+  allowRestart: 1

@@ -12,6 +12,7 @@ namespace DroneSim.Drone.Training
         [SerializeField] private Text completion;
         [SerializeField] private Text outOfBounds;
         [SerializeField] private Button restart;
+        private Text actionButtonLabel;
 
         private void Awake()
         {
@@ -22,14 +23,14 @@ namespace DroneSim.Drone.Training
         private void Update()
         {
             if (drill == null) return;
-            status.text = drill.IsComplete ? "Drill complete" : $"Waypoint: {drill.ActiveWaypointLetter}";
+            status.text = GetStatusText();
             holdBar.maxValue = drill.RequiredHoldSeconds;
             holdBar.value = drill.HoldTimer;
             stability.text = $"H:{drill.HorizontalSpeed:F2}  V:{drill.VerticalSpeed:F2}  Y:{drill.YawRateDegPerSec:F1}";
-            stability.color = (drill.HorizontalSpeed <= 0.3f && drill.VerticalSpeed <= 0.3f && drill.YawRateDegPerSec <= 10f) ? Color.green : Color.red;
-            completion.text = $"Waypoints: {drill.CompletedWaypoints}/5";
-            outOfBounds.gameObject.SetActive(drill.IsOutOfBounds);
-            restart.gameObject.SetActive(drill.IsComplete);
+            stability.color = drill.IsStable ? Color.green : Color.red;
+            completion.text = GetProgressText();
+            outOfBounds.gameObject.SetActive(drill.State == DrillState.Running && drill.IsOutOfBounds);
+            UpdateActionButton();
         }
 
         private void EnsureCanvas()
@@ -49,8 +50,55 @@ namespace DroneSim.Drone.Training
             outOfBounds = CreateText(root, new Vector2(220, -150), "Out of bounds — return to course");
             outOfBounds.color = Color.red;
             restart = CreateRestartButton(root);
-            restart.onClick.AddListener(() => drill.RestartDrill());
-            restart.gameObject.SetActive(false);
+            restart.onClick.AddListener(HandleAction);
+            actionButtonLabel = restart.GetComponentInChildren<Text>();
+            restart.gameObject.SetActive(true);
+        }
+
+        private string GetStatusText()
+        {
+            return drill.State switch
+            {
+                DrillState.Instructions => string.IsNullOrWhiteSpace(drill.Instructions) ? "Ready to begin" : drill.Instructions,
+                DrillState.Countdown => $"Starting in {Mathf.CeilToInt(drill.CountdownRemaining)}",
+                DrillState.Completed => "Drill complete",
+                DrillState.Failed => "Drill failed",
+                DrillState.Results => drill.LatestResult?.summary ?? "Results",
+                DrillState.Running => $"Waypoint: {drill.ActiveWaypointLetter}",
+                _ => drill.DisplayName
+            };
+        }
+
+        private string GetProgressText()
+        {
+            if (drill.LatestResult != null)
+            {
+                return $"Score: {drill.LatestResult.score:F0}  Time: {drill.LatestResult.elapsedSeconds:F1}s";
+            }
+
+            return $"Waypoints: {drill.CompletedWaypoints}/5  Time: {drill.RunElapsedSeconds:F1}s";
+        }
+
+        private void UpdateActionButton()
+        {
+            bool visible = drill.State == DrillState.Instructions || (drill.IsTerminal && drill.CanRestart);
+            restart.gameObject.SetActive(visible);
+            if (actionButtonLabel != null)
+            {
+                actionButtonLabel.text = drill.State == DrillState.Instructions ? "Start Drill" : "Retry Drill";
+            }
+        }
+
+        private void HandleAction()
+        {
+            if (drill.State == DrillState.Instructions)
+            {
+                drill.ContinueFromInstructions();
+            }
+            else if (drill.IsTerminal)
+            {
+                drill.RestartDrill();
+            }
         }
 
         private Text CreateText(Transform parent, Vector2 pos, string value)
@@ -62,6 +110,8 @@ namespace DroneSim.Drone.Training
             t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             t.text = value;
             t.color = Color.white;
+            t.horizontalOverflow = HorizontalWrapMode.Wrap;
+            t.verticalOverflow = VerticalWrapMode.Overflow;
             return t;
         }
 
@@ -90,6 +140,7 @@ namespace DroneSim.Drone.Training
             text.color = Color.white;
             text.fontSize = 18;
             text.alignment = TextAnchor.MiddleCenter;
+            actionButtonLabel = text;
             return b;
         }
     }
