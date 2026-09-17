@@ -17,6 +17,12 @@ namespace DroneSim.Drone.Training
                 drill = new GameObject("HoverBoxDrill").AddComponent<HoverBoxDrill>();
             }
 
+            var definition = Resources.Load<TrainingDrillDefinition>("Training/HoverBoxDrillDefinition");
+            if (definition != null)
+            {
+                drill.Configure(definition);
+            }
+
             if (vrMode)
             {
                 if (FindFirstObjectByType<VRPilotBootstrap>() == null)

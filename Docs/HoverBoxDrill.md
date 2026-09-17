@@ -1,5 +1,14 @@
 # Hover Box Drill
 
+## Role in the training system
+Hover Box is the reference implementation for reusable training drills. `HoverBoxDrill` inherits the common `TrainingDrill` lifecycle and uses `Resources/Training/HoverBoxDrillDefinition` for its student-facing name, instructions, countdown, optional time limit, and restart policy.
+
+The common lifecycle is:
+
+`NotStarted → Instructions → Countdown → Running → Completed/Failed → Results`
+
+Desktop and VR presenters read the same drill instance; neither UI owns waypoint evaluation or scoring. Future drills should reuse the lifecycle and `TrainingResult`, while keeping their small, drill-specific evaluation logic in their own component.
+
 ## Purpose
 The Hover Box drill teaches controlled, precise hovering in Normal mode. Completion requires stability, not speed.
 
@@ -20,6 +29,9 @@ To complete each waypoint hit, the drone must remain inside the waypoint cylinde
 - Yaw rate ≤ 10°/s
 
 Leaving the cylinder or exceeding any threshold resets the hold timer.
+
+## Result Metrics
+A completed run reports elapsed time and a 0–100 coaching score. The score starts at 100 and deducts two points per second outside the safety envelope and two points per interrupted hold. These deductions do not alter waypoint pass criteria or flight-model behavior.
 
 ## Difficulty Tuning
 For first-time students, start easier:

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace DroneSim.Drone.Training
 {
-    public class HoverBoxDrill : MonoBehaviour
+    public class HoverBoxDrill : TrainingDrill
     {
         [Header("References")]
         [SerializeField] private DronePhysicsBody droneBody;
@@ -32,10 +32,12 @@ namespace DroneSim.Drone.Training
         private float holdTimer;
         private float previousYaw;
         private bool hasPreviousYaw;
+        private float outOfBoundsSeconds;
+        private int interruptedHolds;
 
         public int ActiveWaypointIndex { get; private set; }
         public int CompletedWaypoints { get; private set; }
-        public bool IsComplete { get; private set; }
+        public bool IsComplete => State == DrillState.Completed || State == DrillState.Results;
         public bool IsHolding { get; private set; }
         public bool IsOutOfBounds { get; private set; }
         public float HoldTimer => holdTimer;
@@ -43,8 +45,11 @@ namespace DroneSim.Drone.Training
         public float HorizontalSpeed { get; private set; }
         public float VerticalSpeed { get; private set; }
         public float YawRateDegPerSec { get; private set; }
+        public bool IsStable => HorizontalSpeed <= maxHorizontalSpeed && VerticalSpeed <= maxVerticalSpeed && YawRateDegPerSec <= maxYawRate;
         public string ActiveWaypointLetter => "ABCD"[Mathf.Min(ActiveWaypointIndex, 3)].ToString();
         public Vector3 LastOutOfBoundsPosition { get; private set; }
+        public float OutOfBoundsSeconds => outOfBoundsSeconds;
+        public int InterruptedHolds => interruptedHolds;
 
         private void Awake()
         {
@@ -65,28 +70,50 @@ namespace DroneSim.Drone.Training
             safetyAltitudeMax = loader.GroundY + loader.MaxAltitude;
         }
 
-        private void Update()
+        protected override void UpdateRunning(float deltaTime)
         {
-            if (droneBody == null || IsComplete)
+            if (droneBody == null)
             {
                 return;
             }
 
             UpdateMetrics();
-            UpdateBounds();
-            EvaluateActiveWaypoint();
+            UpdateBounds(deltaTime);
+            EvaluateActiveWaypoint(deltaTime);
             RefreshMarkerVisuals();
         }
 
-        public void RestartDrill()
+        protected override void ResetDrill()
         {
             ActiveWaypointIndex = 0;
             CompletedWaypoints = 0;
-            IsComplete = false;
             holdTimer = 0f;
             IsHolding = false;
+            IsOutOfBounds = false;
+            HorizontalSpeed = 0f;
+            VerticalSpeed = 0f;
+            YawRateDegPerSec = 0f;
             hasPreviousYaw = false;
+            outOfBoundsSeconds = 0f;
+            interruptedHolds = 0;
             RefreshMarkerVisuals();
+        }
+
+        protected override void OnRunStarted()
+        {
+            ResetDrill();
+        }
+
+        protected override TrainingResult BuildResult(bool succeeded, string summary)
+        {
+            TrainingResult result = base.BuildResult(succeeded, summary);
+            // Completion is worth most of the score; boundary time and broken holds provide
+            // understandable coaching deductions without changing the flight or pass criteria.
+            result.score = succeeded
+                ? Mathf.Clamp(100f - outOfBoundsSeconds * 2f - interruptedHolds * 2f, 0f, 100f)
+                : 0f;
+            result.summary = $"{summary} {CompletedWaypoints}/5 waypoints, {outOfBoundsSeconds:F1}s out of bounds, {interruptedHolds} interrupted holds.";
+            return result;
         }
 
         public Vector3 GetWaypoint(int i) => basePath[Mathf.Clamp(i, 0, basePath.Length - 1)];
@@ -131,7 +158,7 @@ namespace DroneSim.Drone.Training
             hasPreviousYaw = true;
         }
 
-        private void UpdateBounds()
+        private void UpdateBounds(float deltaTime)
         {
             Vector3 pos = droneBody.transform.position;
             float half = safetyEnvelopeSize * 0.5f;
@@ -141,22 +168,25 @@ namespace DroneSim.Drone.Training
                 LastOutOfBoundsPosition = pos;
             }
             IsOutOfBounds = !inside;
+            if (IsOutOfBounds)
+            {
+                outOfBoundsSeconds += deltaTime;
+            }
         }
 
-        private void EvaluateActiveWaypoint()
+        private void EvaluateActiveWaypoint(float deltaTime)
         {
             Vector3 center = basePath[ActiveWaypointIndex];
             Vector3 pos = droneBody.transform.position;
             float halfHeight = waypointHeight * 0.5f;
             bool insideHorizontal = Vector2.Distance(new Vector2(pos.x, pos.z), new Vector2(center.x, center.z)) <= waypointRadius;
             bool insideVertical = Mathf.Abs(pos.y - center.y) <= halfHeight;
-            bool stable = HorizontalSpeed <= maxHorizontalSpeed && VerticalSpeed <= maxVerticalSpeed && YawRateDegPerSec <= maxYawRate;
-            bool valid = insideHorizontal && insideVertical && stable;
+            bool valid = insideHorizontal && insideVertical && IsStable;
 
             if (valid)
             {
                 IsHolding = true;
-                holdTimer += Time.deltaTime;
+                holdTimer += deltaTime;
                 if (holdTimer >= requiredHoldSeconds)
                 {
                     CompletedWaypoints++;
@@ -165,7 +195,7 @@ namespace DroneSim.Drone.Training
                     IsHolding = false;
                     if (CompletedWaypoints >= 5)
                     {
-                        IsComplete = true;
+                        CompleteDrill("Hover Box completed.");
                     }
                 }
             }
@@ -174,6 +204,7 @@ namespace DroneSim.Drone.Training
                 if (holdTimer > 0f && ActiveWaypointIndex < markers.Count)
                 {
                     markers[ActiveWaypointIndex].FlashFailed();
+                    interruptedHolds++;
                 }
                 holdTimer = 0f;
                 IsHolding = false;
