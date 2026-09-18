@@ -1,4 +1,5 @@
 using DroneSim.Drone.Camera;
+using DroneSim.Drone.Rendering;
 using UnityEngine;
 
 namespace DroneSim.Drone.Bootstrap
@@ -147,9 +148,7 @@ namespace DroneSim.Drone.Bootstrap
                 Renderer renderer = primitiveObject.GetComponent<Renderer>();
                 if (renderer != null)
                 {
-                    Material material = renderer.sharedMaterial != null
-                        ? new Material(renderer.sharedMaterial)
-                        : new Material(Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
+                    Material material = new Material(RuntimeShaderCache.LitShader);
                     material.color = color;
                     renderer.sharedMaterial = material;
                 }

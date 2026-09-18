@@ -79,7 +79,7 @@ namespace DroneSim.VR
             screen.transform.localPosition = screenOffset;
             screenRenderer = screen.GetComponent<Renderer>();
             Destroy(screen.GetComponent<Collider>());
-            screenRenderer.material = new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = Color.black };
+            screenRenderer.material = new Material(RuntimeShaderCache.LitShader) { color = Color.black };
         }
 
         private Transform BuildBody(string name, Vector3 scale, Vector3 localPosition, Color color)
@@ -90,7 +90,7 @@ namespace DroneSim.VR
             part.transform.localScale = scale;
             part.transform.localPosition = localPosition;
             Renderer renderer = part.GetComponent<Renderer>();
-            renderer.material = new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = color };
+            renderer.material = new Material(RuntimeShaderCache.LitShader) { color = color };
             Destroy(part.GetComponent<Collider>());
             return part.transform;
         }

@@ -1,9 +1,10 @@
-# DJI Mini 5 Pro Simulator (Unity 6 Vertical Slice)
+# DJI Mini 5 Pro Simulator (Unity 6.3 LTS Vertical Slice)
 
-This repository contains a first-pass **Unity 6** vertical slice for a DJI-style classroom drone training simulator using:
+This repository targets **Unity 6.3 LTS (6000.3.17f1)** and contains a first-pass vertical slice for a DJI-style classroom drone training simulator using:
 - **C#**
 - **Unity Input System**
 - **Rigidbody-based stabilized flight control**
+- **Universal Render Pipeline (URP) 17.0.3**
 
 The current focus is clarity and tunability, not high-fidelity aerodynamics.
 
@@ -75,7 +76,7 @@ Latest exploratory artifacts for the Apr 10 free-fly log:
 
 ## Quick start (scene-authored default)
 
-1. Open the project in **Unity 6**.
+1. Open the project in **Unity 6.3 LTS (6000.3.17f1)**.
 2. Open scene: `Assets/Scenes/DroneTrainingVerticalSlice.unity`.
 3. Press Play.
 4. The scene now includes authored runtime objects (drone instance, training scenario, HUD), and bootstrap only fills in missing pieces as a fallback.
