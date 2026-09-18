@@ -111,14 +111,27 @@ namespace DroneSim.Drone.Flight
             }
         }
 
-        private void Reset() => AutoWireReferences();
-        private void Awake() => AutoWireReferences();
+        private void Reset() => DiscoverExistingReferences();
+
+        private void Awake()
+        {
+            DiscoverExistingReferences();
+            if (visualTiltRoot == null)
+            {
+                DroneVisualRig visualRig = GetComponent<DroneVisualRig>();
+                if (visualRig != null)
+                {
+                    visualRig.EnsureVisuals();
+                    visualTiltRoot = visualRig.ConfiguredTiltRoot;
+                }
+            }
+        }
 
         private void OnValidate()
         {
             if (!Application.isPlaying)
             {
-                AutoWireReferences();
+                DiscoverExistingReferences();
             }
         }
 
@@ -253,7 +266,7 @@ namespace DroneSim.Drone.Flight
             visualTiltRoot.localRotation = Quaternion.Slerp(visualTiltRoot.localRotation, targetTilt, blend);
         }
 
-        private void AutoWireReferences()
+        private void DiscoverExistingReferences()
         {
             inputReader ??= GetComponent<DroneInputReader>();
             physicsBody ??= GetComponent<DronePhysicsBody>();
@@ -263,8 +276,7 @@ namespace DroneSim.Drone.Flight
                 DroneVisualRig visualRig = GetComponent<DroneVisualRig>();
                 if (visualRig != null)
                 {
-                    visualRig.EnsureVisuals();
-                    visualTiltRoot = visualRig.TiltRoot;
+                    visualTiltRoot = visualRig.ConfiguredTiltRoot;
                 }
             }
         }

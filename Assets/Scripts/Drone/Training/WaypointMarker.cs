@@ -20,7 +20,6 @@ namespace DroneSim.Drone.Training
 
             cylinderRenderer = cylinder.GetComponent<Renderer>();
             Shader markerShader = DroneSim.Drone.Rendering.RuntimeShaderCache.UnlitShader
-                ?? Shader.Find("Unlit/Color")
                 ?? DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader;
             mat = new Material(markerShader);
             ConfigureTransparentMaterial(mat);

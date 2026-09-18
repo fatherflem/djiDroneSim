@@ -20,6 +20,9 @@ namespace DroneSim.Drone.Flight
 
         public Transform TiltRoot => tiltRoot != null ? tiltRoot : transform;
 
+        /// <summary>The dedicated visual root, or null before runtime visuals are constructed.</summary>
+        public Transform ConfiguredTiltRoot => tiltRoot;
+
         private void Awake()
         {
             if (buildOnAwake)
@@ -30,6 +33,12 @@ namespace DroneSim.Drone.Flight
 
         public void EnsureVisuals()
         {
+            if (!Application.isPlaying)
+            {
+                Debug.LogWarning("DroneVisualRig visuals are runtime-only and cannot be constructed in Edit Mode.", this);
+                return;
+            }
+
             if (tiltRoot == null)
             {
                 GameObject tiltObject = new GameObject("VisualTiltRoot");
@@ -75,10 +84,7 @@ namespace DroneSim.Drone.Flight
             Renderer renderer = part.GetComponent<Renderer>();
             if (renderer != null)
             {
-                Material baseMaterial = renderer.sharedMaterial;
-                Material material = baseMaterial != null
-                    ? new Material(baseMaterial)
-                    : new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
+                Material material = new Material(RuntimeShaderCache.LitShader);
                 material.color = color;
                 renderer.sharedMaterial = material;
             }

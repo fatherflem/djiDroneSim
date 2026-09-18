@@ -236,7 +236,7 @@ namespace DroneSim.VR
                 floor.transform.position = Vector3.zero;
                 floor.transform.localScale = new Vector3(3f, 1f, 3f);
                 Renderer renderer = floor.GetComponent<Renderer>();
-                renderer.material = new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"))
+                renderer.material = new Material(RuntimeShaderCache.LitShader)
                 {
                     color = new Color(0.22f, 0.22f, 0.24f)
                 };

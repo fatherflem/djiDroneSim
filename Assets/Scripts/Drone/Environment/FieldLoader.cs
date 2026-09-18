@@ -95,7 +95,7 @@ namespace DroneSim.Drone.Environment
             ground.transform.localPosition = Vector3.zero;
             ground.transform.localScale = new Vector3(3f, 1f, 3f);
             Renderer gRenderer = ground.GetComponent<Renderer>();
-            gRenderer.material = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = new Color(0.3f, 0.45f, 0.2f) };
+            gRenderer.material = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader) { color = new Color(0.3f, 0.45f, 0.2f) };
 
             float half = 6f;
             Vector3[] corners = {
@@ -114,7 +114,7 @@ namespace DroneSim.Drone.Environment
                 post.transform.localScale = new Vector3(0.1f, 0.5f, 0.1f);
                 Destroy(post.GetComponent<Collider>());
                 Renderer postRenderer = post.GetComponent<Renderer>();
-                postRenderer.material = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = new Color(0.9f, 0.6f, 0.1f) };
+                postRenderer.material = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader) { color = new Color(0.9f, 0.6f, 0.1f) };
             }
 
             if (FindFirstObjectByType<Light>() == null)

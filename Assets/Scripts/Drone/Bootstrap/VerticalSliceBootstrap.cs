@@ -595,10 +595,7 @@ namespace DroneSim.Drone.Bootstrap
 
         private static Material CreateCompatibleMaterial(Renderer renderer, Color color)
         {
-            Material baseMaterial = renderer.sharedMaterial;
-            Material material = baseMaterial != null
-                ? new Material(baseMaterial)
-                : new Material(RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
+            Material material = new Material(RuntimeShaderCache.LitShader);
 
             material.color = color;
             return material;
