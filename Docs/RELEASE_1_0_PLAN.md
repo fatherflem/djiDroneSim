@@ -15,7 +15,7 @@
 
 | Area | Repository truth |
 |---|---|
-| Unity | Unity `6000.0.26f1` (Unity 6). |
+| Unity | Unity `6000.3.17f1` (Unity 6.3 LTS). |
 | Rendering | Universal Render Pipeline `17.0.3`; runtime material fallbacks are centralized by `RuntimeShaderCache`. |
 | Input | Input System `1.11.2`, with both old and new backends enabled (`activeInputHandler: 2`). `DroneInputReader` creates actions from configurable binding strings and supports externally supplied benchmark/VR frames. |
 | Scenes | Desktop vertical slice, desktop Hover Box, VR pilot, and VR Hover Box scenes exist under `Assets/Scenes`. |

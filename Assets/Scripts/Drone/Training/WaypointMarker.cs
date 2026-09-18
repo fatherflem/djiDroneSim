@@ -7,6 +7,8 @@ namespace DroneSim.Drone.Training
         private Renderer cylinderRenderer;
         private Transform ring;
         private Material mat;
+        private Material ringMaterial;
+        private Vector3 ringFullScale;
         private float failFlashUntil;
 
         public void Configure(float radius, float height)
@@ -17,9 +19,12 @@ namespace DroneSim.Drone.Training
             Destroy(cylinder.GetComponent<Collider>());
 
             cylinderRenderer = cylinder.GetComponent<Renderer>();
-            mat = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color"));
-            mat.SetFloat("_Mode", 3f);
-            mat.color = new Color(0.7f, 0.7f, 0.7f, 0.2f);
+            Shader markerShader = DroneSim.Drone.Rendering.RuntimeShaderCache.UnlitShader
+                ?? Shader.Find("Unlit/Color")
+                ?? DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader;
+            mat = new Material(markerShader);
+            ConfigureTransparentMaterial(mat);
+            mat.color = new Color(0.55f, 0.65f, 0.75f, 0.38f);
             cylinderRenderer.material = mat;
 
             GameObject ringObj = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -29,8 +34,12 @@ namespace DroneSim.Drone.Training
             ringObj.transform.localScale = new Vector3(radius * 2.2f, 0.01f, radius * 2.2f);
             Destroy(ringObj.GetComponent<Collider>());
             ring = ringObj.transform;
+            ringFullScale = ring.localScale;
             Renderer ringRenderer = ringObj.GetComponent<Renderer>();
-            ringRenderer.material = new Material(DroneSim.Drone.Rendering.RuntimeShaderCache.LitShader ?? Shader.Find("Standard") ?? Shader.Find("Unlit/Color")) { color = new Color(1f, 1f, 0f, 0.2f) };
+            ringMaterial = new Material(markerShader);
+            ConfigureTransparentMaterial(ringMaterial);
+            ringMaterial.color = new Color(1f, 0.85f, 0f, 0.95f);
+            ringRenderer.material = ringMaterial;
             ringObj.SetActive(false);
         }
 
@@ -48,12 +57,15 @@ namespace DroneSim.Drone.Training
                 c *= 1.1f + Mathf.PingPong(Time.time * 2f, 0.3f);
             }
 
-            SetColor(c, 0.3f);
+            SetColor(c, holding ? 0.82f : 0.72f);
             if (ring != null)
             {
                 ring.gameObject.SetActive(true);
                 float scale = Mathf.Lerp(0.2f, 1f, Mathf.Clamp01(progress01));
-                ring.localScale = new Vector3(ring.localScale.x, ring.localScale.y, ring.localScale.z * scale);
+                ring.localScale = new Vector3(ringFullScale.x, ringFullScale.y, ringFullScale.z * scale);
+                if (ringMaterial != null) ringMaterial.color = holding
+                    ? new Color(0.2f, 1f, 0.25f, 0.98f)
+                    : new Color(1f, 0.85f, 0f, 0.98f);
             }
         }
 
@@ -64,7 +76,7 @@ namespace DroneSim.Drone.Training
                 return;
             }
 
-            SetColor(new Color(0.2f, 0.7f, 0.2f), 0.2f);
+            SetColor(new Color(0.15f, 0.85f, 0.25f), 0.48f);
             if (ring != null) ring.gameObject.SetActive(false);
         }
 
@@ -75,14 +87,14 @@ namespace DroneSim.Drone.Training
                 return;
             }
 
-            SetColor(new Color(0.5f, 0.5f, 0.5f), 0.15f);
+            SetColor(new Color(0.5f, 0.65f, 0.8f), 0.34f);
             if (ring != null) ring.gameObject.SetActive(false);
         }
 
         public void FlashFailed()
         {
             failFlashUntil = Time.time + 0.2f;
-            SetColor(Color.red, 0.5f);
+            SetColor(new Color(1f, 0.05f, 0.02f), 0.9f);
             if (ring != null) ring.gameObject.SetActive(false);
         }
 
@@ -91,6 +103,18 @@ namespace DroneSim.Drone.Training
             if (mat == null) return;
             color.a = alpha;
             mat.color = color;
+        }
+
+        private static void ConfigureTransparentMaterial(Material material)
+        {
+            // URP transparency uses _Surface/blend state; _Mode belongs to the old Standard shader.
+            if (material.HasProperty("_Surface")) material.SetFloat("_Surface", 1f);
+            if (material.HasProperty("_Blend")) material.SetFloat("_Blend", 0f);
+            if (material.HasProperty("_SrcBlend")) material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            if (material.HasProperty("_DstBlend")) material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            if (material.HasProperty("_ZWrite")) material.SetFloat("_ZWrite", 0f);
+            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
         }
     }
 }

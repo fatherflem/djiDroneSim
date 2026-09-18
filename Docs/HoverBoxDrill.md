@@ -14,7 +14,7 @@ Desktop and VR presenters read the same drill instance; neither UI owns waypoint
 ## Runtime wiring and attempt reset
 Both committed Hover Box scenes contain `HoverBoxDrillSceneBootstrap`. It runs after the desktop or VR flight-stack bootstrap, loads the shared definition from `Resources`, creates the drill and appropriate presenter once, and reports a single clear error if the definition or initialized aircraft is missing. Desktop also creates exactly one `EventSystem` with an `InputSystemUIInputModule` and default UI actions when the scene does not already provide one.
 
-`TrainingAircraftReset` owns the scene-configured start pose. Instructions and countdown lock the existing `DroneInputReader` to a neutral external frame and make the Rigidbody kinematic. Starting the countdown and entering `Running` both restore the configured pose and clear linear/angular velocity; entering `Running` releases the lock. Results lock the aircraft, and Retry clears common/drill state, restores the aircraft, and returns to Instructions.
+`TrainingAircraftReset` owns the scene-configured start pose. Instructions and countdown lock the existing `DroneInputReader` to a neutral external frame and make the Rigidbody kinematic. Motion is cleared before that transition; pose-only resets never write velocity while kinematic. Entering `Running` restores the pose, original dynamic/collision state, and zero velocity before releasing input. Results stop motion before locking the aircraft, and Retry clears common/drill state, restores the aircraft, and returns to Instructions.
 
 Desktop Start/Retry remain normal clickable UI buttons. Enter or Space also starts, and R retries. In VR the RC workflow uses gamepad button South (A/Cross) for Start/Retry; keyboard controls remain available for development. No hand, ray, or locomotion interaction system is required.
 
@@ -55,6 +55,8 @@ Then tighten to default values when students are consistent.
 - Both presentations show the authored `TrainingDrillDefinition.instructions` and suppress stability/timing observations until the drill is actually running.
 
 ## Manual Play Mode verification
+Unity 6.3 (`6000.3.17f1`) smoke testing exposed and prompted repairs for a missing configured runtime URP shader, an invalid angular-velocity write while the aircraft was kinematic, the unreadable desktop HUD, and waypoint visibility/URP material handling. The shader cache now self-repairs package shader references, while the desktop panel and unlit markers are intentionally high contrast.
+
 1. Open `Assets/Scenes/HoverBoxDrill.unity`, enter Play Mode, and confirm one drill, one canvas, and one EventSystem exist with no repeated console errors.
 2. Confirm the authored instructions are readable. Attempt flight input and verify the aircraft remains at `(0, 1.25, -4)`.
 3. Click **Start Drill**. Verify the three-second countdown, neutral controls, and zero motion; verify controls release only when `Running` begins.
