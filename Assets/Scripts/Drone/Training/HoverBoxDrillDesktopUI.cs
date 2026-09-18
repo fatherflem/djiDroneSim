@@ -62,8 +62,8 @@ namespace DroneSim.Drone.Training
         {
             return drill.State switch
             {
-                DrillState.Instructions => string.IsNullOrWhiteSpace(drill.Instructions) ? "Ready to begin" : drill.Instructions,
-                DrillState.Countdown => $"Starting in {Mathf.CeilToInt(drill.CountdownRemaining)}",
+                DrillState.Instructions => $"{drill.DisplayName}\n{drill.Instructions}\nPress Enter/Space or Start Drill",
+                DrillState.Countdown => $"Starting in {Mathf.CeilToInt(drill.CountdownRemaining)} — controls locked",
                 DrillState.Completed => "Drill complete",
                 DrillState.Failed => "Drill failed",
                 DrillState.Results => drill.LatestResult?.summary ?? "Results",

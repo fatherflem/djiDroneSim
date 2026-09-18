@@ -13,6 +13,8 @@ namespace DroneSim.Drone.Training
         private Vector3 startPosition;
         private Quaternion startRotation;
         private bool unlockedIsKinematic;
+        private CollisionDetectionMode unlockedCollisionDetectionMode;
+        private bool initialized;
 
         public bool Initialize(TrainingDrill trainingDrill, DronePhysicsBody physicsBody, Vector3 position, Quaternion rotation)
         {
@@ -22,13 +24,20 @@ namespace DroneSim.Drone.Training
                 return false;
             }
 
+            if (initialized && drill != null)
+            {
+                drill.StateChanged -= OnStateChanged;
+            }
+
             drill = trainingDrill;
             body = physicsBody.Body;
             input = physicsBody.GetComponent<DroneInputReader>();
             startPosition = position;
             startRotation = rotation;
             unlockedIsKinematic = body.isKinematic;
+            unlockedCollisionDetectionMode = body.collisionDetectionMode;
             drill.StateChanged += OnStateChanged;
+            initialized = true;
             ResetAircraft();
             SetLocked(true);
             return true;
@@ -59,6 +68,8 @@ namespace DroneSim.Drone.Training
 
         public void ResetAircraft()
         {
+            if (body == null) return;
+
             body.position = startPosition;
             body.rotation = startRotation;
             body.linearVelocity = Vector3.zero;
@@ -69,21 +80,34 @@ namespace DroneSim.Drone.Training
 
         private void SetLocked(bool locked)
         {
-            if (input != null)
-            {
-                input.SetExternalInputFrame(default);
-                input.SetExternalInputEnabled(locked);
-            }
-
-            body.isKinematic = locked || unlockedIsKinematic;
             if (locked)
             {
+                if (input != null)
+                {
+                    input.SetExternalInputFrame(default);
+                    input.SetExternalInputEnabled(true);
+                }
+
                 body.linearVelocity = Vector3.zero;
                 body.angularVelocity = Vector3.zero;
+                if (body.collisionDetectionMode == CollisionDetectionMode.ContinuousDynamic)
+                {
+                    body.collisionDetectionMode = CollisionDetectionMode.Discrete;
+                }
+                body.isKinematic = true;
             }
             else
             {
+                body.isKinematic = unlockedIsKinematic;
+                body.collisionDetectionMode = unlockedCollisionDetectionMode;
+                body.linearVelocity = Vector3.zero;
+                body.angularVelocity = Vector3.zero;
                 body.WakeUp();
+                if (input != null)
+                {
+                    input.SetExternalInputFrame(default);
+                    input.SetExternalInputEnabled(false);
+                }
             }
         }
     }

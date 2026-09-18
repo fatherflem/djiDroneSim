@@ -12,17 +12,11 @@ namespace DroneSim.Drone.Training
         [SerializeField] private bool vrMode;
         [SerializeField] private Vector3 aircraftStartPosition = new(0f, 1.25f, -4f);
         [SerializeField] private Vector3 aircraftStartEuler;
+        [Tooltip("Optional verified generic transmitter button path, for example <Joystick>/button3. Empty means no generic joystick training action is bound.")]
+        [SerializeField] private string genericJoystickButtonControlPath = string.Empty;
 
         private void Start()
         {
-            EnsureFieldLoader();
-
-            HoverBoxDrill drill = FindFirstObjectByType<HoverBoxDrill>();
-            if (drill == null)
-            {
-                drill = new GameObject("HoverBoxDrill").AddComponent<HoverBoxDrill>();
-            }
-
             var definition = Resources.Load<TrainingDrillDefinition>("Training/HoverBoxDrillDefinition");
             if (definition == null)
             {
@@ -30,7 +24,6 @@ namespace DroneSim.Drone.Training
                 enabled = false;
                 return;
             }
-            drill.Configure(definition);
 
             DronePhysicsBody drone = FindFirstObjectByType<DronePhysicsBody>();
             if (drone == null || drone.Body == null)
@@ -40,6 +33,15 @@ namespace DroneSim.Drone.Training
                 return;
             }
 
+            EnsureFieldLoader();
+
+            HoverBoxDrill drill = FindFirstObjectByType<HoverBoxDrill>();
+            if (drill == null)
+            {
+                drill = new GameObject("HoverBoxDrill").AddComponent<HoverBoxDrill>();
+            }
+            drill.Configure(definition);
+
             TrainingAircraftReset reset = drill.GetComponent<TrainingAircraftReset>() ?? drill.gameObject.AddComponent<TrainingAircraftReset>();
             if (!reset.Initialize(drill, drone, aircraftStartPosition, Quaternion.Euler(aircraftStartEuler)))
             {
@@ -48,7 +50,7 @@ namespace DroneSim.Drone.Training
             }
 
             TrainingActionInput actionInput = drill.GetComponent<TrainingActionInput>() ?? drill.gameObject.AddComponent<TrainingActionInput>();
-            actionInput.Initialize(drill);
+            actionInput.Initialize(drill, genericJoystickButtonControlPath);
 
             if (vrMode)
             {

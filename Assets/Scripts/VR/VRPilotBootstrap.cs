@@ -31,6 +31,9 @@ namespace DroneSim.VR
         [SerializeField] private bool ensureMinimalTestEnvironment = true;
         [SerializeField] private bool logBootstrapDiagnostics = true;
 
+        [Tooltip("Creates the original SimpleTrainingScenario. Disable this when a newer training drill owns the scene.")]
+        [SerializeField] private bool enableLegacyTrainingScenario = true;
+
         [Header("VR pilot tuning")]
         [SerializeField] private float operatorStandingHeightMeters = 1.67f;
         [SerializeField] private bool alignXrOriginToOperatorPlaceholder = true;
@@ -48,7 +51,10 @@ namespace DroneSim.VR
             GameObject drone = GetOrSpawnDrone();
             DroneInputReader inputReader = EnsureFlightStack(drone);
             DroneVideoFeed feed = EnsureDroneCameraFeed(drone);
-            EnsureTrainingScenario(drone.GetComponent<DronePhysicsBody>());
+            if (enableLegacyTrainingScenario)
+            {
+                EnsureTrainingScenario(drone.GetComponent<DronePhysicsBody>());
+            }
             BuildVirtualController(inputReader, feed, vrUserPlaceholder, origin);
         }
 

@@ -62,7 +62,11 @@ Then tighten to default values when students are consistent.
 5. Leave/re-enter the safety envelope and confirm the warning and accumulated out-of-bounds duration.
 6. Complete A → B → C → D → A. Confirm `Completed → Results`, summary, score, and all three structured metrics in the Inspector/debugger.
 7. Click **Retry Drill**. Confirm Instructions, cleared result/timers/metrics, restored transform, and zero linear/angular velocity; start a second attempt without reloading.
-8. Repeat the presentation checks in `Assets/Scenes/VR/HoverBoxDrillVR.unity`; confirm authored instructions and gamepad button South Start/Retry.
+8. Repeat the presentation checks in `Assets/Scenes/VR/HoverBoxDrillVR.unity`; confirm authored instructions and the configured controller Start/Retry action.
+
+## Tomorrow's First Run
+
+Open `Assets/Scenes/HoverBoxDrill.unity` first. In Play Mode, expect one placeholder field, one five-point Hover Box path, authored Instructions, a locked three-second Countdown, Running telemetry, and automatic Results. Start with Enter, Space, or the desktop button; retry with R or the desktop button. Gamepad South is also bound for Start/Retry. A generic RadioMaster/Joystick button is deliberately **not guessed**: set the scene bootstrap's `genericJoystickButtonControlPath` to the verified Input System path (for example, `<Joystick>/buttonN`) after identifying the transmitter button, and the same button will provide edge-triggered Start/Retry without touching flight axes. If startup fails, read the first Hover Box error in the Console and verify the scene's initialized drone, drill definition, and field asset; do not add a fallback drone. The release remains at the vertical-slice hardening stage described in `Docs/RELEASE_1_0_PLAN.md`, with Unity Play Mode and physical-controller verification still outstanding.
 
 ## VR Notes
 In-headset primary feedback channels are:
