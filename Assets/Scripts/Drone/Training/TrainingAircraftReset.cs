@@ -38,8 +38,7 @@ namespace DroneSim.Drone.Training
             unlockedCollisionDetectionMode = body.collisionDetectionMode;
             drill.StateChanged += OnStateChanged;
             initialized = true;
-            ResetAircraft();
-            SetLocked(true);
+            EnterLockedState(true);
             return true;
         }
 
@@ -52,17 +51,15 @@ namespace DroneSim.Drone.Training
         {
             if (next == DrillState.Instructions || next == DrillState.Countdown)
             {
-                ResetAircraft();
-                SetLocked(true);
+                EnterLockedState(true);
             }
             else if (next == DrillState.Running)
             {
-                ResetAircraft();
-                SetLocked(false);
+                EnterRunningState();
             }
             else if (next == DrillState.Results)
             {
-                SetLocked(true);
+                EnterLockedState(false);
             }
         }
 
@@ -72,43 +69,50 @@ namespace DroneSim.Drone.Training
 
             body.position = startPosition;
             body.rotation = startRotation;
-            body.linearVelocity = Vector3.zero;
-            body.angularVelocity = Vector3.zero;
-            body.Sleep();
             UnityEngine.Physics.SyncTransforms();
         }
 
-        private void SetLocked(bool locked)
+        private void EnterLockedState(bool resetPose)
         {
-            if (locked)
+            if (input != null)
             {
-                if (input != null)
-                {
-                    input.SetExternalInputFrame(default);
-                    input.SetExternalInputEnabled(true);
-                }
+                input.SetExternalInputFrame(default);
+                input.SetExternalInputEnabled(true);
+            }
 
+            // Velocity setters are only valid while this body is dynamic in Unity 6.3.
+            if (!body.isKinematic)
+            {
                 body.linearVelocity = Vector3.zero;
                 body.angularVelocity = Vector3.zero;
-                if (body.collisionDetectionMode == CollisionDetectionMode.ContinuousDynamic)
-                {
-                    body.collisionDetectionMode = CollisionDetectionMode.Discrete;
-                }
-                body.isKinematic = true;
             }
-            else
+            if (body.collisionDetectionMode == CollisionDetectionMode.ContinuousDynamic)
             {
-                body.isKinematic = unlockedIsKinematic;
-                body.collisionDetectionMode = unlockedCollisionDetectionMode;
+                body.collisionDetectionMode = CollisionDetectionMode.Discrete;
+            }
+            body.isKinematic = true;
+            if (resetPose) ResetAircraft();
+        }
+
+        private void EnterRunningState()
+        {
+            // Keep input neutral until pose and the complete dynamic Rigidbody state are restored.
+            if (input != null)
+            {
+                input.SetExternalInputFrame(default);
+                input.SetExternalInputEnabled(true);
+            }
+
+            ResetAircraft();
+            body.isKinematic = unlockedIsKinematic;
+            body.collisionDetectionMode = unlockedCollisionDetectionMode;
+            if (!body.isKinematic)
+            {
                 body.linearVelocity = Vector3.zero;
                 body.angularVelocity = Vector3.zero;
                 body.WakeUp();
-                if (input != null)
-                {
-                    input.SetExternalInputFrame(default);
-                    input.SetExternalInputEnabled(false);
-                }
             }
+            if (input != null) input.SetExternalInputEnabled(false);
         }
     }
 }
