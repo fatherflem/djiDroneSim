@@ -109,8 +109,9 @@ namespace DroneSim.Drone.Training
             TrainingResult result = base.BuildResult(succeeded, summary);
             // Completion is worth most of the score; boundary time and broken holds provide
             // understandable coaching deductions without changing the flight or pass criteria.
-            result.score = succeeded
-                ? Mathf.Clamp(100f - outOfBoundsSeconds * 2f - interruptedHolds * 2f, 0f, 100f)
+            float rawScore = 100f - outOfBoundsSeconds * 2f - interruptedHolds * 2f;
+            result.score = succeeded && !float.IsNaN(rawScore) && !float.IsInfinity(rawScore)
+                ? Mathf.Clamp(rawScore, 0f, 100f)
                 : 0f;
             result.summary = $"{summary} {CompletedWaypoints}/5 waypoints, {outOfBoundsSeconds:F1}s out of bounds, {interruptedHolds} interrupted holds.";
             result.metrics.Add(new TrainingMetric("waypointsCompleted", "Waypoints completed", CompletedWaypoints));

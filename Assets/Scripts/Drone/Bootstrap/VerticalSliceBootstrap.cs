@@ -31,6 +31,10 @@ namespace DroneSim.Drone.Bootstrap
         [Tooltip("Disabled keeps the scene fully authored. FallbackOnly creates only missing objects. ForceRuntimeBuild always rebuilds everything at runtime.")]
         [SerializeField] private BootstrapMode bootstrapMode = BootstrapMode.FallbackOnly;
 
+        [Header("Optional legacy demo content")]
+        [Tooltip("Creates the original SimpleTrainingScenario and demo ground/markers. Disable this when a newer training drill and FieldLoader own the scene.")]
+        [SerializeField] private bool enableLegacyTrainingContent = true;
+
         [Header("Scene-authored references (preferred)")]
         [SerializeField] private GameObject sceneDrone;
         [SerializeField] private SimpleTrainingScenario sceneTrainingScenario;
@@ -45,6 +49,7 @@ namespace DroneSim.Drone.Bootstrap
         [SerializeField] private VRUserPlaceholder sceneVrUserPlaceholder;
 
         [Header("Debug windows")]
+        [SerializeField] private bool showDebugWindowsOnStart = true;
         [SerializeField] private KeyCode toggleAllDebugWindowsKey = KeyCode.F2;
         [SerializeField] private KeyCode resetDebugWindowLayoutKey = KeyCode.F3;
 
@@ -133,15 +138,28 @@ namespace DroneSim.Drone.Bootstrap
             TelemetryRecorder telemetry = drone.GetComponent<TelemetryRecorder>() ?? drone.AddComponent<TelemetryRecorder>();
             telemetry.Initialize(physicsBody, controller);
 
-            SimpleTrainingScenario scenario = ResolveOrCreateTrainingScenario(physicsBody);
+            SimpleTrainingScenario scenario = null;
+            if (enableLegacyTrainingContent)
+            {
+                scenario = ResolveOrCreateTrainingScenario(physicsBody);
+            }
+            else if (sceneTrainingScenario != null)
+            {
+                sceneTrainingScenario.enabled = false;
+            }
             DroneDebugHUD hud = ResolveOrCreateHud(inputReader, physicsBody, controller, scenario, telemetry);
-            _ = hud;
-            ResolveOrCreateJoystickDiagnostics();
+            RawJoystickDiagnosticsOverlay diagnostics = ResolveOrCreateJoystickDiagnostics();
+            areDebugWindowsVisible = showDebugWindowsOnStart;
+            hud.SetWindowVisibility(areDebugWindowsVisible);
+            diagnostics.SetWindowVisibility(areDebugWindowsVisible);
             BenchmarkEnvironmentController benchmarkEnvironmentController = ResolveOrCreateBenchmarkEnvironmentController();
             ResolveOrCreateBenchmarkRunner(inputReader, physicsBody, controller, benchmarkEnvironmentController);
 
-            EnsureGround();
-            EnsureMarkers();
+            if (enableLegacyTrainingContent)
+            {
+                EnsureGround();
+                EnsureMarkers();
+            }
             EnsureLight();
             EnsureFollowCamera(drone.transform);
             VRUserPlaceholder vrUserPlaceholder = EnsureOperatorPlaceholder(drone.transform);
