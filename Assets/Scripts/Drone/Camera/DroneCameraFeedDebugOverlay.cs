@@ -60,6 +60,11 @@ namespace DroneSim.Drone.Camera
             isCollapsed = startCollapsed;
         }
 
+        public void SetWindowVisibility(bool visible)
+        {
+            showOverlay = visible;
+        }
+
         private void Awake()
         {
             ResolveReferences();

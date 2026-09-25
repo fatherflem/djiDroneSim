@@ -7,6 +7,9 @@ namespace DroneSim.Drone.Training
 {
     public class HoverBoxDrill : TrainingDrill
     {
+        private const int PhysicalWaypointCount = 4;
+        private const int LogicalWaypointVisitCount = 5;
+
         [Header("References")]
         [SerializeField] private DronePhysicsBody droneBody;
 
@@ -27,7 +30,7 @@ namespace DroneSim.Drone.Training
         [SerializeField] private float safetyAltitudeMin = 0.5f;
         [SerializeField] private float safetyAltitudeMax = 8f;
 
-        private readonly Vector3[] basePath = new Vector3[5];
+        private readonly Vector3[] basePath = new Vector3[LogicalWaypointVisitCount];
         private readonly List<WaypointMarker> markers = new();
         private float holdTimer;
         private float previousYaw;
@@ -46,7 +49,7 @@ namespace DroneSim.Drone.Training
         public float VerticalSpeed { get; private set; }
         public float YawRateDegPerSec { get; private set; }
         public bool IsStable => HorizontalSpeed <= maxHorizontalSpeed && VerticalSpeed <= maxVerticalSpeed && YawRateDegPerSec <= maxYawRate;
-        public string ActiveWaypointLetter => "ABCD"[Mathf.Min(ActiveWaypointIndex, 3)].ToString();
+        public string ActiveWaypointLetter => GetWaypointLetterForVisit(ActiveWaypointIndex);
         public Vector3 LastOutOfBoundsPosition { get; private set; }
         public float OutOfBoundsSeconds => outOfBoundsSeconds;
         public int InterruptedHolds => interruptedHolds;
@@ -134,7 +137,7 @@ namespace DroneSim.Drone.Training
         private void BuildMarkers()
         {
             markers.Clear();
-            for (int i = 0; i < basePath.Length; i++)
+            for (int i = 0; i < PhysicalWaypointCount; i++)
             {
                 GameObject go = new($"Waypoint_{i}");
                 go.transform.SetParent(transform, false);
@@ -197,7 +200,7 @@ namespace DroneSim.Drone.Training
                     ActiveWaypointIndex++;
                     holdTimer = 0f;
                     IsHolding = false;
-                    if (CompletedWaypoints >= 5)
+                    if (CompletedWaypoints >= LogicalWaypointVisitCount)
                     {
                         CompleteDrill("Hover Box completed.");
                     }
@@ -205,9 +208,9 @@ namespace DroneSim.Drone.Training
             }
             else
             {
-                if (holdTimer > 0f && ActiveWaypointIndex < markers.Count)
+                if (holdTimer > 0f && ActiveWaypointIndex < basePath.Length)
                 {
-                    markers[ActiveWaypointIndex].FlashFailed();
+                    markers[GetPhysicalMarkerIndexForVisit(ActiveWaypointIndex)].FlashFailed();
                     interruptedHolds++;
                 }
                 holdTimer = 0f;
@@ -217,21 +220,48 @@ namespace DroneSim.Drone.Training
 
         private void RefreshMarkerVisuals()
         {
+            int activePhysicalMarker = IsComplete
+                ? -1
+                : GetPhysicalMarkerIndexForVisit(ActiveWaypointIndex);
+
             for (int i = 0; i < markers.Count; i++)
             {
-                if (i < CompletedWaypoints)
-                {
-                    markers[i].SetCompleted();
-                }
-                else if (i == ActiveWaypointIndex && !IsComplete)
+                // Active wins over completed when the final logical visit returns to A.
+                if (i == activePhysicalMarker)
                 {
                     markers[i].SetActive(IsHolding ? holdTimer / requiredHoldSeconds : 0f, IsHolding);
+                }
+                else if (HasCompletedVisitForPhysicalMarker(i))
+                {
+                    markers[i].SetCompleted();
                 }
                 else
                 {
                     markers[i].SetFuture();
                 }
             }
+        }
+        private static int GetPhysicalMarkerIndexForVisit(int logicalVisitIndex)
+        {
+            return Mathf.Clamp(logicalVisitIndex, 0, LogicalWaypointVisitCount - 1) % PhysicalWaypointCount;
+        }
+
+        private static string GetWaypointLetterForVisit(int logicalVisitIndex)
+        {
+            return "ABCD"[GetPhysicalMarkerIndexForVisit(logicalVisitIndex)].ToString();
+        }
+
+        private bool HasCompletedVisitForPhysicalMarker(int physicalMarkerIndex)
+        {
+            for (int visit = 0; visit < CompletedWaypoints; visit++)
+            {
+                if (GetPhysicalMarkerIndexForVisit(visit) == physicalMarkerIndex)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

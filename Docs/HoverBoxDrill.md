@@ -31,6 +31,8 @@ D (0,5) ---- C (5,5)
 
 Path: A → B → C → D → A
 
+The sequence contains five logical visits but only four physical marker GameObjects. The final visit reuses physical marker A; its active state overrides A's earlier completed state until that return hold finishes.
+
 ## Hold Requirements
 To complete each waypoint hit, the drone must remain inside the waypoint cylinder and hold for 2.0 continuous seconds while meeting:
 - Horizontal speed ≤ 0.3 m/s
@@ -50,8 +52,8 @@ For first-time students, start easier:
 Then tighten to default values when students are consistent.
 
 ## Desktop vs VR
-- Desktop scene (`Assets/Scenes/HoverBoxDrill.unity`) uses top-left overlay UI with waypoint, hold bar, live stability metrics, and completion count.
-- VR scene (`Assets/Scenes/VR/HoverBoxDrillVR.unity`) uses spatial feedback: ring progress on the active waypoint and a small RC-mounted status panel.
+- Desktop scene (`Assets/Scenes/HoverBoxDrill.unity`) uses top-left overlay UI with waypoint, hold bar, live stability metrics, and completion count. Developer diagnostics start hidden and F2 toggles the debug HUD, raw-input diagnostics, benchmark window, and camera/feed status together. The desktop bootstrap keeps core chase/FPV camera and video-feed systems but does not spawn VR operator/controller presentation props.
+- VR scene (`Assets/Scenes/VR/HoverBoxDrillVR.unity`) retains its dedicated VR pilot/controller presentation and uses spatial feedback: ring progress on the active waypoint and a small RC-mounted status panel.
 - Both presentations show the authored `TrainingDrillDefinition.instructions` and suppress stability/timing observations until the drill is actually running.
 
 ## Manual Play Mode verification
@@ -68,7 +70,7 @@ Unity 6.3 (`6000.3.17f1`) smoke testing exposed and prompted repairs for a missi
 
 ## Tomorrow's First Run
 
-Open `Assets/Scenes/HoverBoxDrill.unity` first. In Play Mode, expect one placeholder field, one five-point Hover Box path, authored Instructions, a locked three-second Countdown, Running telemetry, and automatic Results. Start with Enter, Space, or the desktop button; retry with R or the desktop button. Gamepad South is also bound for Start/Retry. A generic RadioMaster/Joystick button is deliberately **not guessed**: set the scene bootstrap's `genericJoystickButtonControlPath` to the verified Input System path (for example, `<Joystick>/buttonN`) after identifying the transmitter button, and the same button will provide edge-triggered Start/Retry without touching flight axes. If startup fails, read the first Hover Box error in the Console and verify the scene's initialized drone, drill definition, and field asset; do not add a fallback drone. The release remains at the vertical-slice hardening stage described in `Docs/RELEASE_1_0_PLAN.md`, with Unity Play Mode and physical-controller verification still outstanding.
+Open `Assets/Scenes/HoverBoxDrill.unity` first. In Play Mode, expect one placeholder field, four physical markers representing the five-visit Hover Box path, authored Instructions, a locked three-second Countdown, Running telemetry, and automatic Results. Start with Enter, Space, or the desktop button; retry with R or the desktop button. Gamepad South is also bound for Start/Retry. A generic RadioMaster/Joystick button is deliberately **not guessed**: set the scene bootstrap's `genericJoystickButtonControlPath` to the verified Input System path (for example, `<Joystick>/buttonN`) after identifying the transmitter button, and the same button will provide edge-triggered Start/Retry without touching flight axes. If startup fails, read the first Hover Box error in the Console and verify the scene's initialized drone, drill definition, and field asset; do not add a fallback drone. The release remains at the vertical-slice hardening stage described in `Docs/RELEASE_1_0_PLAN.md`, with Unity Play Mode and physical-controller verification still outstanding.
 
 ## VR Notes
 In-headset primary feedback channels are:
