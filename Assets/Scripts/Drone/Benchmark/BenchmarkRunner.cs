@@ -322,6 +322,11 @@ namespace DroneSim.Drone.Benchmark
             windowRect = DroneSim.Drone.UI.DebugWindowLayoutUtility.ClampToScreen(windowRect);
         }
 
+        public void SetWindowVisibility(bool visible)
+        {
+            showDebugWindow = visible;
+        }
+
         private void DrawDebugWindow(int _)
         {
             GUILayout.BeginVertical();

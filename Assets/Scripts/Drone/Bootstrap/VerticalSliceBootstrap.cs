@@ -35,6 +35,10 @@ namespace DroneSim.Drone.Bootstrap
         [Tooltip("Creates the original SimpleTrainingScenario and demo ground/markers. Disable this when a newer training drill and FieldLoader own the scene.")]
         [SerializeField] private bool enableLegacyTrainingContent = true;
 
+        [Header("Optional VR presentation content")]
+        [Tooltip("Creates the operator/controller placeholder and controller-mounted world display. Core chase/FPV camera and video-feed functionality remains available when disabled.")]
+        [SerializeField] private bool enableVrPresentationContent = true;
+
         [Header("Scene-authored references (preferred)")]
         [SerializeField] private GameObject sceneDrone;
         [SerializeField] private SimpleTrainingScenario sceneTrainingScenario;
@@ -148,10 +152,7 @@ namespace DroneSim.Drone.Bootstrap
                 sceneTrainingScenario.enabled = false;
             }
             DroneDebugHUD hud = ResolveOrCreateHud(inputReader, physicsBody, controller, scenario, telemetry);
-            RawJoystickDiagnosticsOverlay diagnostics = ResolveOrCreateJoystickDiagnostics();
-            areDebugWindowsVisible = showDebugWindowsOnStart;
-            hud.SetWindowVisibility(areDebugWindowsVisible);
-            diagnostics.SetWindowVisibility(areDebugWindowsVisible);
+            ResolveOrCreateJoystickDiagnostics();
             BenchmarkEnvironmentController benchmarkEnvironmentController = ResolveOrCreateBenchmarkEnvironmentController();
             ResolveOrCreateBenchmarkRunner(inputReader, physicsBody, controller, benchmarkEnvironmentController);
 
@@ -162,8 +163,11 @@ namespace DroneSim.Drone.Bootstrap
             }
             EnsureLight();
             EnsureFollowCamera(drone.transform);
-            VRUserPlaceholder vrUserPlaceholder = EnsureOperatorPlaceholder(drone.transform);
+            VRUserPlaceholder vrUserPlaceholder = enableVrPresentationContent
+                ? EnsureOperatorPlaceholder(drone.transform)
+                : null;
             EnsureDroneCameraSystem(drone, hud, inputConfig, vrUserPlaceholder);
+            SetAllDebugWindowVisibility(showDebugWindowsOnStart);
         }
 
 
@@ -171,16 +175,7 @@ namespace DroneSim.Drone.Bootstrap
         {
             if (LegacyInput.GetKeyDown(toggleAllDebugWindowsKey))
             {
-                areDebugWindowsVisible = !areDebugWindowsVisible;
-                if (sceneHud != null)
-                {
-                    sceneHud.SetWindowVisibility(areDebugWindowsVisible);
-                }
-
-                if (sceneJoystickDiagnostics != null)
-                {
-                    sceneJoystickDiagnostics.SetWindowVisibility(areDebugWindowsVisible);
-                }
+                SetAllDebugWindowVisibility(!areDebugWindowsVisible);
             }
 
             if (LegacyInput.GetKeyDown(resetDebugWindowLayoutKey))
@@ -189,6 +184,15 @@ namespace DroneSim.Drone.Bootstrap
                 sceneJoystickDiagnostics?.ResetWindowLayout();
                 sceneCameraFeedOverlay?.ResetWindowLayout();
             }
+        }
+
+        private void SetAllDebugWindowVisibility(bool visible)
+        {
+            areDebugWindowsVisible = visible;
+            sceneHud?.SetWindowVisibility(visible);
+            sceneJoystickDiagnostics?.SetWindowVisibility(visible);
+            sceneBenchmarkRunner?.SetWindowVisibility(visible);
+            sceneCameraFeedOverlay?.SetWindowVisibility(visible);
         }
 
         private VRUserPlaceholder EnsureOperatorPlaceholder(Transform droneTransform)
@@ -376,8 +380,10 @@ namespace DroneSim.Drone.Bootstrap
 
             sceneCameraModeController.Initialize(sceneCamera, followCam, gimbalRig, videoFeed, inputConfig);
 
-            // 4. Controller-mounted live display surface (future VR handheld controller proxy).
-            sceneFeedDisplaySurface = ResolveOrCreateFeedDisplaySurface(drone.transform, videoFeed, vrUserPlaceholder);
+            // 4. Optional controller-mounted live display surface for VR presentation.
+            sceneFeedDisplaySurface = enableVrPresentationContent
+                ? ResolveOrCreateFeedDisplaySurface(drone.transform, videoFeed, vrUserPlaceholder)
+                : null;
 
             // 5. Camera/feed diagnostics overlay for quick validation.
             sceneCameraFeedOverlay = ResolveOrCreateCameraFeedOverlay(
