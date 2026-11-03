@@ -34,3 +34,7 @@ sysinfo.txt
 # Python tool caches
 __pycache__/
 *.py[cod]
+
+# Headless benchmark runner scratch output (the session zip is what gets committed)
+/BenchmarkRuns/headless_benchmark_result.json
+/BenchmarkRuns/session_*/

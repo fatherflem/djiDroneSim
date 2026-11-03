@@ -204,6 +204,14 @@ namespace DroneSim.Drone.Benchmark
         public string CurrentManeuverName => GetSelectedManeuver() != null ? GetSelectedManeuver().maneuverName : "None";
         public int SelectedManeuverIndex => selectedManeuverIndex;
 
+        // Read-only state for automation (headless benchmark runner, tests). No behavior lives here.
+        public bool IsProtocolRunActive => isProtocolRunActive;
+        public bool IsSessionInitialized => !string.IsNullOrEmpty(sessionDirectoryPath);
+        public string SessionId => sessionId;
+        public string SessionDirectoryPath => sessionDirectoryPath;
+        public int CompletedRunCount => runCounter;
+        public int DefaultProtocolManeuverCount => BuildProtocolOrder().Count;
+
         public void Initialize(DroneInputReader reader, DronePhysicsBody body, DJIStyleFlightController flightController, BenchmarkEnvironmentController benchmarkEnvironmentController = null)
         {
             inputReader = reader;
