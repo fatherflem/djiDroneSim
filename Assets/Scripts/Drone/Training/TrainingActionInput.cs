@@ -1,3 +1,4 @@
+using DroneSim.Drone.Input.Calibration;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -65,6 +66,7 @@ namespace DroneSim.Drone.Training
         private void Update()
         {
             if (drill == null) return;
+            if (ControllerSetupService.IsCheckRunning) return; // Start/Retry wait until the controller check is done
             if (drill.State == DrillState.Instructions && startAction.WasPressedThisFrame())
             {
                 drill.ContinueFromInstructions();

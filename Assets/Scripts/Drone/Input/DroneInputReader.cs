@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using DroneSim.Drone.Input.Calibration;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -37,10 +39,19 @@ namespace DroneSim.Drone.Input
         private Vector4 smoothedAxes;
         private bool useExternalInput;
         private DroneInputFrame externalInput;
+        private ControllerCalibrationProfile calibration;
 
         public DroneInputConfig Config => config;
         public DroneInputFrame CurrentInput => currentInput;
         public bool UseExternalInput => useExternalInput;
+
+        /// <summary>Calibration applied to physical-joystick axes only. Null means raw values are used as-is.</summary>
+        public ControllerCalibrationProfile Calibration => calibration;
+
+        public void SetCalibration(ControllerCalibrationProfile profile)
+        {
+            calibration = profile != null && profile.IsUsable ? profile : null;
+        }
 
         public void Initialize(DroneInputConfig inputConfig)
         {
@@ -92,9 +103,9 @@ namespace DroneSim.Drone.Input
             }
 
             Vector4 rawAxes = new Vector4(
-                ReadAxis(rollAction),
-                ReadAxis(pitchAction) * (config.invertPitch ? -1f : 1f),
-                ReadAxis(yawAction),
+                ReadAxis(rollAction, StickAxis.Roll),
+                ReadAxis(pitchAction, StickAxis.Pitch) * (config.invertPitch ? -1f : 1f),
+                ReadAxis(yawAction, StickAxis.Yaw),
                 ReadThrottle());
 
             float smoothing = 1f - Mathf.Exp(-config.inputSmoothing * Time.unscaledDeltaTime);
@@ -121,11 +132,11 @@ namespace DroneSim.Drone.Input
 
         private float ReadThrottle()
         {
-            float primary = ReadAxis(throttleAction) * (config.invertThrottle ? -1f : 1f);
+            float primary = ReadAxis(throttleAction, StickAxis.Throttle) * (config.invertThrottle ? -1f : 1f);
             return Mathf.Clamp(primary, -1f, 1f);
         }
 
-        private float ReadAxis(InputAction action)
+        private float ReadAxis(InputAction action, StickAxis axis)
         {
             if (action == null)
             {
@@ -133,6 +144,12 @@ namespace DroneSim.Drone.Input
             }
 
             float value = action.ReadValue<float>();
+            if (calibration != null && action.activeControl != null && action.activeControl.device is Joystick)
+            {
+                // Correct center offset, uneven travel and reversed channels before deadzone/expo.
+                value = calibration.Apply(axis, value);
+            }
+
             float magnitude = Mathf.Abs(value);
             if (magnitude <= config.stickDeadzone)
             {
@@ -184,14 +201,31 @@ namespace DroneSim.Drone.Input
                 return;
             }
 
-            action.AddBinding(binding);
-            if (TryGetAlternateJoystickAxisBinding(binding, out string alternateBinding))
+            foreach (string expanded in ExpandJoystickAxisBinding(binding))
             {
-                action.AddBinding(alternateBinding);
+                action.AddBinding(expanded);
             }
         }
 
-        private bool TryGetAlternateJoystickAxisBinding(string binding, out string alternateBinding)
+        /// <summary>
+        /// Returns the binding plus its alternate joystick axis spelling (<Joystick>/x vs <Joystick>/stick/x),
+        /// since radios report the same axis under either path. Shared with ControllerSetupService.
+        /// </summary>
+        public static IEnumerable<string> ExpandJoystickAxisBinding(string binding)
+        {
+            if (string.IsNullOrWhiteSpace(binding))
+            {
+                yield break;
+            }
+
+            yield return binding;
+            if (TryGetAlternateJoystickAxisBinding(binding, out string alternateBinding))
+            {
+                yield return alternateBinding;
+            }
+        }
+
+        private static bool TryGetAlternateJoystickAxisBinding(string binding, out string alternateBinding)
         {
             alternateBinding = null;
 

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Runs the pure-C# EditMode tests (controller calibration core) under plain .NET, for machines
+    without Unity. The same test files run in Unity's Test Runner.
+      dotnet test Tools/DotnetChecks/CoreTests
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RepoAssets>$(MSBuildThisFileDirectory)../../../Assets</RepoAssets>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(RepoAssets)/Scripts/Drone/Input/Calibration/Core/**/*.cs" />
+    <Compile Include="$(RepoAssets)/Tests/EditMode/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+  </ItemGroup>
+</Project>

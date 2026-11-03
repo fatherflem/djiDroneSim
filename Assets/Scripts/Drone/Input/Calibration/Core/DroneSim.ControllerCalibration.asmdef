@@ -1,0 +1,14 @@
+{
+    "name": "DroneSim.ControllerCalibration",
+    "rootNamespace": "DroneSim.Drone.Input.Calibration",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

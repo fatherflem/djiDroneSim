@@ -46,14 +46,34 @@ or `/Applications/Unity/Hub/Editor/6000.3.17f1/Unity.app/Contents/MacOS/Unity` (
 - Custom entry points: `-executeMethod Namespace.Class.StaticMethod` (the method must live in an `Editor` folder).
 - The first batch run after a pull can take minutes to reimport. Later runs are much faster.
 
-## Known gaps worth closing early (from the release plan)
+## Verification tools
 
-- No headless benchmark runner. The benchmark protocol currently runs only interactively (F9 in Play Mode).
-  A batch-mode entry point that runs the protocol and writes a `BenchmarkRuns/session_*` folder would let the
-  edit → simulate → `Tools/analyze_airdata.py` loop run unattended.
-- No EditMode/PlayMode test assemblies and no `Editor/` tooling.
+- **Headless benchmark:** `python Tools/run_headless_benchmark.py --fail-on-drift` runs the default Normal protocol
+  in batch mode (`Assets/Editor/Benchmark/HeadlessBenchmarkRunner.cs`), archives it to `BenchmarkRuns/`, and gates it
+  with `Tools/check_acceptance.py` against the freeze baseline `session_20260413_142657`. Also available as
+  **DroneSim → Benchmarks → Run Default Protocol (unattended)** in the Editor.
+- **Acceptance gate alone:** `python3 Tools/check_acceptance.py <session>` scores a session against
+  `Docs/AcceptanceCriteria.md`. Exit code 1 means regression, 2 means drift (with `--fail-on-drift`).
+- **Unity tests:** EditMode tests live in `Assets/Tests/EditMode` (assembly `DroneSim.Tests.EditMode`).
+- **Without Unity (cloud sessions):** `dotnet test Tools/DotnetChecks/CoreTests` runs the pure-C# tests.
+  `python3 Tools/DotnetChecks/fetch_unity_refs.py && dotnet build Tools/DotnetChecks/CompileCheck` compile-checks
+  selected Unity-facing files against Unity reference assemblies plus stubs. Add new files to its csproj. It's a
+  safety net; Unity's own compile is still the real test.
+
+## Controller setup
+
+See `Docs/ControllerSetup.md`. The physical RC (RadioMaster T8L, Mode 2) goes through `ControllerSetupService`,
+which loads per-PC calibration, runs the guided controller check (F4), and handles disconnects. Desktop and VR UIs
+both read that service. Don't read the joystick directly from new drills or menus.
+
+## Known gaps
+
+- Not yet run in Unity: the headless runner, the controller check, and the EditMode tests were written and checked
+  outside Unity. Their first real run is pending (see the checklist in `Docs/ControllerSetup.md`).
+- No PlayMode tests yet.
 - No committed `ProjectSettings/EditorBuildSettings.asset` and no proven player build recipe.
-- Hover Box and VR flows still need real Play Mode verification.
+- Hover Box and VR flows still need real Play Mode and headset verification. The existing Hover Box VR status
+  panel sizes a world-space canvas at scale 1 (pixel units as meters), so check its size in the headset.
 
 ## Analyzer
 

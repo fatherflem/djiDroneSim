@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Compile check for Unity-facing code without a Unity install. Compiles selected project files
+    against Unity 2021-era engine/editor reference assemblies from NuGet, with Stubs.cs standing in
+    for the Input System, uGUI, and unchanged project classes.
+      python3 Tools/DotnetChecks/fetch_unity_refs.py
+      dotnet build Tools/DotnetChecks/CompileCheck
+    It catches typos, wrong signatures and missing members. It can't catch Unity 6-only APIs
+    (they're missing from the 2021 references) or mistakes inside the stubs. Unity's own compile is
+    still the real test.
+  -->
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>CS0436;CS1701;CS1702;MSB3277</NoWarn>
+    <DefineConstants>UNITY_EDITOR</DefineConstants>
+    <RepoAssets>$(MSBuildThisFileDirectory)../../../Assets</RepoAssets>
+    <UnityRefs>$(MSBuildThisFileDirectory)../.unity-refs</UnityRefs>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Stubs.cs" />
+    <Compile Include="$(RepoAssets)/Scripts/Drone/Input/Calibration/**/*.cs" />
+    <Compile Include="$(RepoAssets)/Scripts/Drone/Input/DroneInputReader.cs;$(RepoAssets)/Scripts/Drone/Input/DroneInputConfig.cs;$(RepoAssets)/Scripts/Drone/Input/DroneMode.cs" />
+    <Compile Include="$(RepoAssets)/Scripts/Drone/Training/TrainingActionInput.cs;$(RepoAssets)/Scripts/Drone/Training/DrillState.cs" />
+    <Compile Include="$(RepoAssets)/Scripts/VR/ControllerSetupVRUI.cs;$(RepoAssets)/Scripts/VR/VirtualRCInputBridge.cs" />
+    <Compile Include="$(RepoAssets)/Editor/Benchmark/**/*.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="$(UnityRefs)/engine/*.dll" />
+    <Reference Include="$(UnityRefs)/editor/UnityEditor.dll" />
+  </ItemGroup>
+</Project>

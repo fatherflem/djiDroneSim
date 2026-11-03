@@ -1,4 +1,5 @@
 using DroneSim.Drone.Input;
+using DroneSim.Drone.Input.Calibration;
 using UnityEngine;
 
 namespace DroneSim.VR
@@ -11,6 +12,7 @@ namespace DroneSim.VR
         [SerializeField] private float inputDiscoveryRetrySeconds = 0.5f;
 
         private float nextDiscoveryTime;
+        private ControllerSetupService setupService;
 
         public void SetInputReader(DroneInputReader reader)
         {
@@ -35,6 +37,25 @@ namespace DroneSim.VR
             if (inputReader == null || controllerRig == null)
             {
                 return;
+            }
+
+            if (ControllerSetupService.IsCheckRunning)
+            {
+                // The drone is held at neutral during the controller check, so mirror the physical
+                // sticks directly; otherwise the virtual sticks would sit still while the pilot moves.
+                if (setupService == null)
+                {
+                    setupService = FindFirstObjectByType<ControllerSetupService>();
+                }
+
+                if (setupService != null)
+                {
+                    Vector2 left = setupService.GetStickPreview(true);
+                    Vector2 right = setupService.GetStickPreview(false);
+                    ApplyStick(controllerRig.LeftStick, left.x, left.y);
+                    ApplyStick(controllerRig.RightStick, right.x, right.y);
+                    return;
+                }
             }
 
             DroneInputFrame input = inputReader.CurrentInput;

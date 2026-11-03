@@ -2,6 +2,7 @@ using DroneSim.Drone.Bootstrap;
 using DroneSim.Drone.Camera;
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
+using DroneSim.Drone.Input.Calibration;
 using DroneSim.Drone.Physics;
 using DroneSim.Drone.Training;
 using Unity.XR.CoreUtils;
@@ -216,6 +217,9 @@ namespace DroneSim.VR
 
             inputBridge.SetInputReader(input);
             screenBridge.SetVideoFeed(feed);
+
+            ControllerSetupService controllerSetup = ControllerSetupService.Ensure(input);
+            ControllerSetupVRUI.Ensure(controllerSetup, rig);
         }
 
         private void EnsureMinimalTestEnvironment()

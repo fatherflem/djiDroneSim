@@ -1,6 +1,7 @@
 using DroneSim.Drone.Camera;
 using DroneSim.Drone.Flight;
 using DroneSim.Drone.Input;
+using DroneSim.Drone.Input.Calibration;
 using DroneSim.Drone.Physics;
 using DroneSim.Drone.Benchmark;
 using DroneSim.Drone.Training;
@@ -138,6 +139,9 @@ namespace DroneSim.Drone.Bootstrap
 
             DJIStyleFlightController controller = drone.GetComponent<DJIStyleFlightController>() ?? drone.AddComponent<DJIStyleFlightController>();
             controller.Initialize(inputReader, physicsBody, visualRig.TiltRoot, cineConfig, normalConfig, sportConfig);
+
+            ControllerSetupService controllerSetup = ControllerSetupService.Ensure(inputReader);
+            ControllerSetupDesktopUI.Ensure(controllerSetup);
 
             TelemetryRecorder telemetry = drone.GetComponent<TelemetryRecorder>() ?? drone.AddComponent<TelemetryRecorder>();
             telemetry.Initialize(physicsBody, controller);
