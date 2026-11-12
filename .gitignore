@@ -34,3 +34,4 @@ sysinfo.txt
 # Python tool caches
 __pycache__/
 *.py[cod]
+.claude/settings.local.json
